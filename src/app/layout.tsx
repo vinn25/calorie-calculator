@@ -6,8 +6,8 @@ import { ReduxProvider } from '@/redux/provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'Starter Template',
-    description: 'Nextjs Starter Template',
+    title: 'Calorie Calculator',
+    description: 'Track your calorie intake',
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <link rel="icon" href="/" sizes="any" />
-            <body className={inter.className}>
+            <body className={`${inter.className} text-black`}>
                 <ReduxProvider>{children}</ReduxProvider>
             </body>
         </html>

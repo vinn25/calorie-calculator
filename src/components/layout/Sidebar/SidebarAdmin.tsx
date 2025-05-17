@@ -25,18 +25,6 @@ const SidebarAdmin = (props: {
                     route: '/',
                 },
                 {
-                    id: 'member',
-                    icon: (
-                        <Icon
-                            icon="fluent:card-ui-24-regular"
-                            width="24"
-                            height="24"
-                        />
-                    ),
-                    label: 'Member',
-                    route: '/member',
-                },
-                {
                     id: 'schedule',
                     icon: (
                         <Icon

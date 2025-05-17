@@ -14,7 +14,7 @@ import RadioButtons from '@/components/form/RadioButtons';
 import CreateVendor from '@/components/ui/analysis/create/CreateVendor';
 import { useDispatch, useSelector } from 'react-redux';
 import { Reducers } from '@/redux/types';
-import { getKtpVendorList } from '@/redux/actions/vendor';
+// import { getKtpVendorList } from '@/redux/actions/vendor';
 import useDebouncedSearch from '@/hooks/useDebounceSearch';
 import { getKtpProjectList } from '@/redux/actions/project';
 
@@ -141,7 +141,7 @@ const LayoutCreateRespondent = () => {
         });
         // eslint-disable-next-line
     }, [debouncedQuery]);
-    const vendorState = useSelector((state: Reducers) => state.vendor);
+    // const vendorState = useSelector((state: Reducers) => state.vendor);
     const projectState = useSelector((state: Reducers) => state.project);
 
     const handleChangeVendorType = (e: any) => {
@@ -160,21 +160,21 @@ const LayoutCreateRespondent = () => {
         });
     };
 
-    useEffect(() => {
-        async function vendorList() {
-            await dispatch<any>(
-                getKtpVendorList({
-                    params: {
-                        page: vendorParams.page,
-                        perPage: vendorParams.perPage,
-                        search: vendorParams.search,
-                        type: vendorParams.type,
-                    },
-                })
-            );
-        }
-        vendorList();
-    }, [dispatch, vendorParams]);
+    // useEffect(() => {
+    //     async function vendorList() {
+    //         await dispatch<any>(
+    //             getKtpVendorList({
+    //                 params: {
+    //                     page: vendorParams.page,
+    //                     perPage: vendorParams.perPage,
+    //                     search: vendorParams.search,
+    //                     type: vendorParams.type,
+    //                 },
+    //             })
+    //         );
+    //     }
+    //     vendorList();
+    // }, [dispatch, vendorParams]);
     useEffect(() => {
         async function projectList() {
             await dispatch<any>(
@@ -278,7 +278,7 @@ const LayoutCreateRespondent = () => {
                         />
                     )}
                 </div> */}
-                <div className="text-neutral mb-6 flex items-start justify-between">
+                <div className="mb-6 flex items-start justify-between text-neutral">
                     <span>
                         <div className="w-full text-title-xs font-semibold">
                             Create New Respondent
@@ -645,7 +645,7 @@ const LayoutCreateRespondent = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="max-h-75 w-full overflow-auto">
+                                                    {/* <div className="max-h-75 w-full overflow-auto">
                                                         {vendorState?.list
                                                             ?.loading
                                                             ? 'Loadinng'
@@ -705,7 +705,7 @@ const LayoutCreateRespondent = () => {
                                                                     )
                                                                 )
                                                               : 'No Data to Display'}
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             )}
                                         </div>

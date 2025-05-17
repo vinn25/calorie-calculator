@@ -6,7 +6,7 @@ import { Buttons } from '@/components/button';
 import { LoadingDialog } from '@/components/loading';
 import { useDispatch } from 'react-redux';
 import { postKtpProjectCreate } from '@/redux/actions/project';
-import { postKtpVendorCreate } from '@/redux/actions/vendor';
+// import { postKtpVendorCreate } from '@/redux/actions/vendor';
 
 interface Props {
     setOpenFormVendor: any;
@@ -46,14 +46,14 @@ const CreateVendor = ({ setOpenFormVendor }: Props) => {
         onSubmit: async values => {
             // console.log(values);
             setLoading(true);
-            await dispatch<any>(
-                postKtpVendorCreate({
-                    data: values,
-                    callback: () => {
-                        setOpenFormVendor(false);
-                    },
-                })
-            );
+            // await dispatch<any>(
+            //     postKtpVendorCreate({
+            //         data: values,
+            //         callback: () => {
+            //             setOpenFormVendor(false);
+            //         },
+            //     })
+            // );
             setLoading(false);
         },
     });
@@ -65,7 +65,7 @@ const CreateVendor = ({ setOpenFormVendor }: Props) => {
             <FormikProvider value={formik}>
                 <Form noValidate onSubmit={handleSubmit} className="w-full">
                     <div className="mb-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Name<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">
@@ -81,7 +81,7 @@ const CreateVendor = ({ setOpenFormVendor }: Props) => {
                         </div>
                     </div>
                     <div className="my-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Type<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">

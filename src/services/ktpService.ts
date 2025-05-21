@@ -32,14 +32,3 @@ export const ktpProjectDelete = async (token: string, id: string) => {
     const response = await request.delete(`/projects/${id}`, { token });
     return response;
 }
-
-// Vendor
-export const ktpVendorList = async (token: string, params: any) => {
-    const response = await request.get('/vendors', { token, queries: params });
-    return response;
-}
-
-export const ktpVendorCreate = async (token: string, data: any) => {
-    const response = await request.post('/vendors', data, { token });
-    return response;
-}

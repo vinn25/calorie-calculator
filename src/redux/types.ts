@@ -23,7 +23,6 @@ export interface Action {
 export interface Reducers {
     auth: AuthState;
     project: ProjectState;
-    vendor: VendorState;
 }
 
 export interface AuthState {
@@ -48,25 +47,6 @@ export interface AuthState {
 }
 
 export interface ProjectState {
-    list: {
-        loading: boolean;
-        error: any;
-        data: any;
-    }
-    detail: {
-        loading: boolean;
-        error: any;
-        data: any;
-    }
-    actions?: {
-        loading: boolean;
-        error: any;
-        type: 'success' | 'failed' | null;
-        message: any;
-    };
-}
-
-export interface VendorState {
     list: {
         loading: boolean;
         error: any;

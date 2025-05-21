@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  createdAt DateTime @default(now())
+}
+
+model Food {
+  id                      Int     @id @default(autoincrement())
+  food                    String
+  caloricvalue            Float
+  fat                     Float
+  saturatedfats           Float
+  monounsaturatedfats     Float
+  polyunsaturatedfats     Float
+  carbohydrates           Float
+  sugars                  Float
+  protein                 Float
+  dietaryfiber            Float
+  cholesterol             Float
+  sodium                  Float
+  water                   Float
+  vitamina                Float
+  vitaminb1               Float
+  vitaminb11              Float
+  vitaminb12              Float
+  vitaminb2               Float
+  vitaminb3               Float
+  vitaminb5               Float
+  vitaminb6               Float
+  vitaminc                Float
+  vitamind                Float
+  vitamine                Float
+  vitamink                Float
+  calcium                 Float
+  copper                  Float
+  iron                    Float
+  magnesium               Float
+  manganese               Float
+  phosphorus              Float
+  potassium               Float
+  selenium                Float
+  zinc                    Float
+  nutritiondensity        Float
+}

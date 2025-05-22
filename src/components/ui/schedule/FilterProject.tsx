@@ -97,6 +97,7 @@ const FilterProject = ({ params, setParams }: Props) => {
                             name="active"
                             label=""
                             options={filterStatus}
+                            selectSize="sm"
                             defaultValue={params.active}
                             // onChange={(e: any) =>
                             //     setParams({

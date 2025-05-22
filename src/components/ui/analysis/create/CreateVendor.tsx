@@ -88,6 +88,7 @@ const CreateVendor = ({ setOpenFormVendor }: Props) => {
                             <SelectOptions
                                 name="type"
                                 options={optionVendorType}
+                                selectSize="sm"
                                 onChange={(e: any) => {
                                     setFieldValue('type', e.target.value);
                                 }}

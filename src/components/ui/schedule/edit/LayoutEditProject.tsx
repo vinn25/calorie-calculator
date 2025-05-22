@@ -131,7 +131,7 @@ const LayoutEditProject = () => {
                         />
                     )}
                 </div>
-                <div className="text-neutral mb-6 flex items-start justify-between">
+                <div className="mb-6 flex items-start justify-between text-neutral">
                     <span>
                         <div className="w-full text-title-xs font-semibold">
                             Edit Project
@@ -196,6 +196,7 @@ const LayoutEditProject = () => {
                                         name="derpartment"
                                         label=""
                                         options={optionProjectType}
+                                        selectSize="sm"
                                         onChange={e => {
                                             formik.setFieldValue(
                                                 'department',
@@ -246,6 +247,7 @@ const LayoutEditProject = () => {
                                         name="derpartment"
                                         label=""
                                         options={optionProjectStatus}
+                                        selectSize="sm"
                                         onChange={e => {
                                             formik.setFieldValue(
                                                 'isActive',

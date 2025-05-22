@@ -14,7 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const user = await prisma.user.findUnique({
       where: { email }
     });
-
     if (!user) return res.status(401).json({ message: 'User not found' });
 
     const isMatch = await bcrypt.compare(password, user.password);

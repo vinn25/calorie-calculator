@@ -488,6 +488,7 @@ const LayoutCreateRespondent = () => {
                                                         options={
                                                             filterProjectStatus
                                                         }
+                                                        selectSize="sm"
                                                         defaultValue={
                                                             projectParams.active
                                                         }
@@ -636,6 +637,7 @@ const LayoutCreateRespondent = () => {
                                                                 options={
                                                                     filterVendorType
                                                                 }
+                                                                selectSize="sm"
                                                                 defaultValue={
                                                                     vendorParams.type
                                                                 }

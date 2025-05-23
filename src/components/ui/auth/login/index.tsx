@@ -122,7 +122,7 @@ const LoginLayout = () => {
                             </Button> */}
                         </div>
                         <div className="flex justify-center px-4 text-text-sm">
-                            <span>Don't have an account?</span>
+                            <span>Don&apos;t have an account?</span>
                             <div>&nbsp;</div>
                             <Link href="/register">
                                 <div className="text-secondary">

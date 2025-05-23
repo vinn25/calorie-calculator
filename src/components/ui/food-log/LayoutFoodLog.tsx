@@ -1,37 +1,28 @@
 'use client';
 
 import Alert from '@/components/alert/Alert';
-import Card from '@/components/card/Card';
-import { TextField } from '@/components/form';
 import Pagination from '@/components/Pagination';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
-import TableListHome from '@/components/ui/home/TableListHome';
-import FilterProject from '@/components/ui/schedule/FilterProject';
-import TableListProject from '@/components/ui/schedule/TableListProject';
 import { Reducers } from '@/redux/types';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const dailyCalories = [
     {
-        key: 'goal',
         title: 'Goal',
         calorie: 2000,
     },
     {
-        key: 'consumed',
         title: 'Consumed',
         calorie: 1400,
     },
     {
-        key: 'remaining',
         title: 'Remaining',
         calorie: 600,
     },
 ];
 
-const LayoutHome = () => {
+const LayoutFoodLog = () => {
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState('');
     const projectState = useSelector((state: Reducers) => state.project);
@@ -76,22 +67,7 @@ const LayoutHome = () => {
                         />
                     )}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <Card
-                        cardTitle="Daily Summary"
-                        subCardTitle="Daily Calories"
-                    >
-                        <div className="flex items-center justify-between">
-                            {dailyCalories.map(data => (
-                                <div key={data.key} className="text-center">
-                                    <div>{data.title}</div>
-                                    <div className="text-text-lg font-semibold">
-                                        {data.calorie}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </Card>
+                <div className="w-full max-w-full">
                     <SearchFoodLog
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
@@ -99,9 +75,23 @@ const LayoutHome = () => {
                         params={params}
                     />
                 </div>
+                {/* <div className="fixed bottom-0 left-72.5 right-0 z-999 m-auto h-fit border border-[#EAECF0] bg-neutral-50 px-6 py-3">
+                    <Pagination
+                        params={params}
+                        setParams={setParams}
+                        totalPage={
+                            projectState?.list?.data?.meta?.pagination
+                                ?.totalPage
+                        }
+                        total={
+                            projectState?.list?.data?.meta?.pagination?.total
+                        }
+                        loading={projectState?.list?.loading}
+                    />
+                </div> */}
             </div>
         </div>
     );
 };
 
-export default LayoutHome;
+export default LayoutFoodLog;

@@ -1,75 +1,23 @@
 import BadgeStatus from '@/components/badge/BadgeStatus';
-import { ButtonIcon } from '@/components/button';
+import { ButtonIcon, Buttons } from '@/components/button';
+import { DialogContent } from '@/components/dialog';
 import DialogConfirmation from '@/components/dialog/DialogConfirmation';
+import { SelectOptions, TextField } from '@/components/form';
 import {
     deleteKtpProjectDelete,
     getKtpProjectList,
 } from '@/redux/actions/project';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Form, FormikProvider, useFormik } from 'formik';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-const headerTable = [
-    'Name',
-    'Calorie',
-    'Fat',
-    'Carbohydrate',
-    'Sugar',
-    'Protein',
-    'Action',
-];
-
-const dummyFoodData = [
-    {
-        id: 'food_1',
-        name: 'Cream Cheese',
-        calorie: '51',
-        fat: '5',
-        carbohydrate: '0.8',
-        sugar: '0.5',
-        protein: '0.9',
-    },
-    {
-        id: 'food_2',
-        name: 'Scrambled Eggs',
-        calorie: '100',
-        fat: '7.6',
-        carbohydrate: '1',
-        sugar: '0.8',
-        protein: '6.5',
-    },
-    {
-        id: 'food_3',
-        name: 'Cream Cheese',
-        calorie: '51',
-        fat: '5',
-        carbohydrate: '0.8',
-        sugar: '0.5',
-        protein: '0.9',
-    },
-    {
-        id: 'food_4',
-        name: 'Cream Cheese',
-        calorie: '51',
-        fat: '5',
-        carbohydrate: '0.8',
-        sugar: '0.5',
-        protein: '0.9',
-    },
-    {
-        id: 'food_5',
-        name: 'Cream Cheese',
-        calorie: '51',
-        fat: '5',
-        carbohydrate: '0.8',
-        sugar: '0.5',
-        protein: '0.9',
-    },
-];
+import * as Yup from 'yup';
 
 interface Props {
+    searchTerm: string;
+    setSearchTerm: any;
     params: {
         page: number;
         perPage: number;
@@ -78,25 +26,145 @@ interface Props {
     };
 }
 
-const TableListHome = ({ params }: Props) => {
+interface FoodProps {
+    id: string;
+    name: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+    portion: string;
+}
+
+interface LoggedFoodProps extends FoodProps {
+    mealType: string;
+    portionSize: number;
+    timestamp: number;
+}
+
+interface FoodLogEntryProps {
+    onAddFood?: (food: FoodProps, mealType: string, portion: number) => void;
+}
+
+const headerTable = [
+    'Name',
+    'Calorie',
+    'Fat',
+    'Carbohydrate',
+    'Protein',
+    'Portion',
+    'Action',
+];
+
+const mockFoodDatabase: FoodProps[] = [
+    {
+        id: '1',
+        name: 'Chicken Breast',
+        calories: 165,
+        protein: 31,
+        carbs: 0,
+        fat: 3.6,
+        portion: '100g',
+    },
+    {
+        id: '2',
+        name: 'Brown Rice',
+        calories: 112,
+        protein: 2.6,
+        carbs: 23,
+        fat: 0.9,
+        portion: '100g',
+    },
+    {
+        id: '3',
+        name: 'Avocado',
+        calories: 160,
+        protein: 2,
+        carbs: 8.5,
+        fat: 14.7,
+        portion: '100g',
+    },
+    {
+        id: '4',
+        name: 'Salmon',
+        calories: 208,
+        protein: 20,
+        carbs: 0,
+        fat: 13,
+        portion: '100g',
+    },
+    {
+        id: '5',
+        name: 'Broccoli',
+        calories: 34,
+        protein: 2.8,
+        carbs: 6.6,
+        fat: 0.4,
+        portion: '100g',
+    },
+    {
+        id: '6',
+        name: 'Greek Yogurt',
+        calories: 59,
+        protein: 10,
+        carbs: 3.6,
+        fat: 0.4,
+        portion: '100g',
+    },
+];
+
+const mealTypeFilter = [
+    {
+        key: 'mealType',
+        text: 'Meal Type',
+        value: '',
+    },
+    {
+        key: 'breakfast',
+        text: 'Breakfast',
+        value: 'breakfast',
+    },
+    {
+        key: 'lunch',
+        text: 'Lunch',
+        value: 'lunch',
+    },
+    {
+        key: 'dinner',
+        text: 'Dinner',
+        value: 'dinner',
+    },
+    {
+        key: 'snack',
+        text: 'Snack',
+        value: 'snack',
+    },
+];
+
+const TableListHome = (
+    { params, searchTerm, setSearchTerm }: Props,
+    { onAddFood }: FoodLogEntryProps
+) => {
     const dispatch = useDispatch();
-    const projectState = useSelector((state: Reducers) => state.project);
-    const [getId, setGetId] = useState('');
-    const [openDelete, setOpenDelete] = useState(false);
-    const handleOpenDeleteProject = () => {
-        setOpenDelete(!openDelete);
+    // const projectState = useSelector((state: Reducers) => state.project);
+    const [foodName, setFoodName] = useState<ReactNode>('');
+    const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
+    const [portion, setPortion] = useState(0);
+    const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
+    const handleOpenFoodLogEntry = () => {
+        setOpenFoodLogEntry(!openFoodLogEntry);
     };
-    const submitDeleteProject = async () => {
-        await dispatch<any>(
-            deleteKtpProjectDelete({
-                id: getId,
-                data: {},
-                callback: () => {
-                    window.location.href = '/project';
-                },
-            })
-        );
-        console.log(getId);
+    const filteredFoods = searchTerm
+        ? mockFoodDatabase.filter(food =>
+              food.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : [];
+    const handleSelectFood = (food: FoodProps) => {
+        setSelectedFood(food);
+        setSearchTerm(food.name);
+    };
+    const calculateAdjustedNutrition = (value: number) => {
+        return Math.round(value * portion * 10) / 10;
     };
 
     useEffect(() => {
@@ -115,43 +183,201 @@ const TableListHome = ({ params }: Props) => {
         projectList();
     }, [dispatch, params]);
 
+    const formik = useFormik({
+        initialValues: {
+            name: foodName,
+            calories: selectedFood?.calories,
+            protein: selectedFood?.protein,
+            carbs: selectedFood?.carbs,
+            fat: selectedFood?.fat,
+            mealType: '',
+            portionSize: portion,
+        },
+        onSubmit: async values => {
+            // setIsLoading(true);
+            // await dispatch<any>(
+            //     postAuthLoginUser({
+            //         data: values,
+            //     })
+            // );
+            // setIsLoading(false);
+            console.log(values);
+        },
+    });
+    const { errors, handleSubmit, touched, setFieldValue } = formik;
     return (
         <div className="max-w-full rounded-lg border border-neutral-100 bg-white">
-            <DialogConfirmation
-                isOpen={openDelete}
-                title="Confirmation"
-                textYes="Delete Workspace"
-                textNo="Cancel"
-                color="primary"
-                onConfirm={submitDeleteProject}
-                onDecline={handleOpenDeleteProject}
-                onClose={handleOpenDeleteProject}
-                onClickOutside={handleOpenDeleteProject}
-            >
-                <div className="flex-row text-center">
-                    <Image
-                        src=""
-                        alt="Image"
-                        className="m-auto"
-                        width={250}
-                        height={100}
-                    />
-                    <div className="mt-5 text-text-xxl font-semibold">
-                        Delete Project
+            {selectedFood && (
+                <FormikProvider value={formik}>
+                    <Form noValidate onSubmit={handleSubmit}>
+                        <DialogContent
+                            title="Food Log"
+                            isOpen={openFoodLogEntry}
+                            onClose={handleOpenFoodLogEntry}
+                            onClickOutside={handleOpenFoodLogEntry}
+                        >
+                            <div>
+                                <div className="mb-4 flex items-start justify-between">
+                                    <div>
+                                        <h3 className="font-medium">
+                                            {selectedFood.name}
+                                        </h3>
+                                        <p className="text-muted-foreground text-sm">
+                                            Base: {selectedFood.portion}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="mb-4 grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-sm font-medium">
+                                            Meal Type
+                                        </label>
+                                        <SelectOptions
+                                            name="mealType"
+                                            options={mealTypeFilter}
+                                            selectSize="md"
+                                            onChange={e => {
+                                                setFieldValue(
+                                                    'mealType',
+                                                    e.target.value
+                                                );
+                                            }}
+                                            error={Boolean(
+                                                touched.mealType &&
+                                                    errors.mealType
+                                            )}
+                                            helperText={
+                                                touched.mealType &&
+                                                errors.mealType
+                                            }
+                                        />
+                                    </div>
+                                    <div className="w-full max-w-full">
+                                        <label className="text-sm font-medium">
+                                            Portion Size
+                                        </label>
+                                        <div className="bg-white">
+                                            <TextField
+                                                name="portionSize"
+                                                type="number"
+                                                onChange={e => {
+                                                    setPortion(
+                                                        parseInt(e.target.value)
+                                                    );
+                                                    formik.handleChange(e);
+                                                }}
+                                                error={Boolean(
+                                                    touched.portionSize &&
+                                                        errors.portionSize
+                                                )}
+                                                helperText={
+                                                    touched.portionSize &&
+                                                    errors.portionSize
+                                                }
+                                                placeholder="0"
+                                                min={1}
+                                                max={50}
+                                                align="center"
+                                                fullWidth
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mb-4 rounded-md bg-muted/30 p-3">
+                                    <h4 className="mb-2 text-sm font-medium">
+                                        Nutrition (adjusted for portion)
+                                    </h4>
+                                    <div className="grid grid-cols-4 gap-2 text-center">
+                                        <div>
+                                            <p className="font-bold">
+                                                {calculateAdjustedNutrition(
+                                                    selectedFood.calories
+                                                )}
+                                            </p>
+                                            <p className="text-xs">Calories</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold">
+                                                {calculateAdjustedNutrition(
+                                                    selectedFood.protein
+                                                )}{' '}
+                                                g
+                                            </p>
+                                            <p className="text-xs">Protein</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold">
+                                                {calculateAdjustedNutrition(
+                                                    selectedFood.carbs
+                                                )}
+                                                g
+                                            </p>
+                                            <p className="text-xs">Carbs</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-bold">
+                                                {calculateAdjustedNutrition(
+                                                    selectedFood.fat
+                                                )}
+                                                g
+                                            </p>
+                                            <p className="text-xs">Fat</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="w-full">
+                                    <Buttons
+                                        color="neutral"
+                                        size="sm"
+                                        text="Add to food log"
+                                        type="submit"
+                                        variant="contained"
+                                        fullWidth
+                                    />
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Form>
+                </FormikProvider>
+            )}
+            <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
+                {filteredFoods.length > 0 ? (
+                    <ul>
+                        {filteredFoods.map(food => (
+                            <li
+                                key={food.id}
+                                className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted"
+                                onClick={() => {
+                                    handleSelectFood(food);
+                                    handleOpenFoodLogEntry();
+                                    setFoodName(food.name);
+                                }}
+                            >
+                                <div>
+                                    <p className="font-medium">{food.name}</p>
+                                    <p className="text-muted-foreground text-sm">
+                                        {food.portion}
+                                    </p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-medium">
+                                        {food.calories} kcal
+                                    </p>
+                                    <p className="text-muted-foreground text-xs">
+                                        P: {food.protein}g | C: {food.carbs}g |
+                                        F: {food.fat}g
+                                    </p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div className="text-muted-foreground p-4 text-center">
+                        No foods found. Try a different search term.
                     </div>
-                    <div className="mt-5 flex w-full items-center gap-3 bg-warning-50 px-[18px] py-[10px] text-left text-text-sm">
-                        <Icon
-                            icon="fluent:info-20-regular"
-                            width="20"
-                            height="20"
-                            className="text-text-xl"
-                        />
-                        This action cannot be undone. All data associated with
-                        this workspace will be permanently removed
-                    </div>
-                </div>
-            </DialogConfirmation>
-            <table className="h-fit w-full border-collapse">
+                )}
+            </div>
+            {/* <table className="h-fit w-full border-collapse">
                 <thead>
                     <tr className="[&>td]:border [&>td]:border-neutral-100">
                         {headerTable.map(data => (
@@ -166,7 +392,7 @@ const TableListHome = ({ params }: Props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* {projectState?.list?.loading ? (
+                    {projectState?.list?.loading ? (
                         <tr className="border border-neutral-50">
                             {headerTable.map(data => (
                                 <td className="px-[14px]" key={data}>
@@ -240,18 +466,18 @@ const TableListHome = ({ params }: Props) => {
                                 </div>
                             </td>
                         </tr>
-                    )} */}
+                    )}
                     {dummyFoodData.map(data => (
                         <tr
                             key={data.id}
                             className="cursor-pointer text-text-sm font-medium hover:bg-neutral-50 [&>td]:border-y [&>td]:border-neutral-100 [&>td]:px-[14px] [&>td]:py-5"
                         >
                             <td>{data.name}</td>
-                            <td>{data.calorie}</td>
+                            <td>{data.calories}</td>
                             <td>{data.fat}</td>
-                            <td>{data.carbohydrate}</td>
-                            <td>{data.sugar}</td>
+                            <td>{data.carbs}</td>
                             <td>{data.protein}</td>
+                            <td>{data.portion}</td>
                             <td>
                                 <div className="flex gap-2">
                                     <ButtonIcon
@@ -263,9 +489,9 @@ const TableListHome = ({ params }: Props) => {
                                                 className="hover:text-primary1-500"
                                             />
                                         }
-                                        // onClick={() => {
-                                        //     window.location.href = `/project/edit/${data._id}`;
-                                        // }}
+                                        onClick={() => {
+                                            window.location.href = `/project/edit/${data._id}`;
+                                        }}
                                     />
                                     <ButtonIcon
                                         icon={
@@ -276,9 +502,9 @@ const TableListHome = ({ params }: Props) => {
                                                 className="hover:text-primary1-500"
                                             />
                                         }
-                                        // onClick={() => {
-                                        //     window.location.href = `/project/edit/${data._id}`;
-                                        // }}
+                                        onClick={() => {
+                                            window.location.href = `/project/edit/${data._id}`;
+                                        }}
                                     />
                                     <ButtonIcon
                                         icon={
@@ -289,17 +515,17 @@ const TableListHome = ({ params }: Props) => {
                                                 className="hover:text-danger-500"
                                             />
                                         }
-                                        // onClick={() => {
-                                        //     setGetId(data._id);
-                                        //     handleOpenDeleteProject();
-                                        // }}
+                                        onClick={() => {
+                                            setGetId(data._id);
+                                            handleOpenDeleteProject();
+                                        }}
                                     />
                                 </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table> */}
         </div>
     );
 };

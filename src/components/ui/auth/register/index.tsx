@@ -108,13 +108,14 @@ const RegisterLayout = () => {
         },
         validationSchema: RegisterSchema,
         onSubmit: async values => {
-            setIsLoading(true);
-            await dispatch<any>(
-                postAuthLoginUser({
-                    data: values,
-                })
-            );
-            setIsLoading(false);
+            // setIsLoading(true);
+            // await dispatch<any>(
+            //     postAuthLoginUser({
+            //         data: values,
+            //     })
+            // );
+            // setIsLoading(false);
+            console.log(values);
         },
     });
     const { errors, handleSubmit, touched } = formik;

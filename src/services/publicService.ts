@@ -8,6 +8,6 @@ const request = new Api({
 });
 
 export const publicLoginUser = async (data: any) => {
-    const response = await request.post('/auth/login', data);
+    const response = await request.post('api/auth/register', data);
     return response;
 };

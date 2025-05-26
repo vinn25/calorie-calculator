@@ -11,3 +11,8 @@ export const publicLoginUser = async (data: any) => {
     const response = await request.post('api/auth/register', data);
     return response;
 };
+
+export const publicRegisterUser = async (data: any) => {
+    const response = await request.post('api/auth/register', data);
+    return response;
+};

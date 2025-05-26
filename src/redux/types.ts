@@ -22,12 +22,34 @@ export interface Action {
 
 export interface Reducers {
     auth: AuthState;
+    register: AuthRegisterState;
     project: ProjectState;
 }
 
 export interface AuthState {
     loading: boolean;
     isLogin: boolean;
+    error: any;
+    token: {
+        accessToken: string;
+        refreshToken: string;
+    };
+    profile: {
+        loading: boolean;
+        error: string;
+        data: any;
+    };
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface AuthRegisterState {
+    loading: boolean;
+    isRegister: boolean;
     error: any;
     token: {
         accessToken: string;

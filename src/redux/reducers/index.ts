@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import { authReducers } from '@/redux/reducers/authReducers';
 import type { Action } from '@/redux/types';
 import { projectReducers } from '@/redux/reducers/projectReducers';
+import { authRegisterReducers } from '@/redux/reducers/authRegisterReducers';
 
 interface PersistProps {
     key: string;
@@ -18,6 +19,7 @@ const persistConfig: PersistProps = {
 
 const appReducer = combineReducers({
     auth: authReducers,
+    register: authRegisterReducers,
     project: projectReducers,
 });
 

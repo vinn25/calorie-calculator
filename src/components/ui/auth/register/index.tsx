@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Alert from '@/components/alert/Alert';
 //actions
-import { postAuthLoginUser } from '@/redux/actions/auth';
+import { postAuthLoginUser, postAuthRegisterUser } from '@/redux/actions/auth';
 import { Reducers } from '@/redux/types';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -69,21 +69,25 @@ const selectActivity = [
 
 const RegisterLayout = () => {
     const dispatch = useDispatch();
-    const authState = useSelector((state: Reducers) => state.auth);
+    const authRegisterState = useSelector((state: Reducers) => state.register);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if (authState?.actions?.error) {
+        if (authRegisterState?.actions?.error) {
             setTimeout(() => {
                 dispatch({
                     type: 'AUTH_ACTION_CLEAR',
                 });
             }, 401);
         }
-        if (authState.isLogin) {
+        if (authRegisterState.isRegister) {
             redirect('/login');
         }
-    }, [authState?.actions?.error, authState.isLogin, dispatch]);
+    }, [
+        authRegisterState?.actions?.error,
+        authRegisterState.isRegister,
+        dispatch,
+    ]);
 
     const RegisterSchema = Yup.object().shape({
         email: Yup.string()
@@ -108,24 +112,24 @@ const RegisterLayout = () => {
         },
         validationSchema: RegisterSchema,
         onSubmit: async values => {
-            // setIsLoading(true);
-            // await dispatch<any>(
-            //     postAuthLoginUser({
-            //         data: values,
-            //     })
-            // );
-            // setIsLoading(false);
-            console.log(values);
+            setIsLoading(true);
+            await dispatch<any>(
+                postAuthRegisterUser({
+                    data: values,
+                })
+            );
+            setIsLoading(false);
+            // console.log(values);
         },
     });
     const { errors, handleSubmit, touched } = formik;
     return (
         <div className="flex max-h-screen min-h-screen min-w-full max-w-full flex-col items-center justify-center bg-slate-500 font-Montserrat">
-            {authState?.actions?.error && (
+            {authRegisterState?.actions?.error && (
                 <div className="fixed top-5">
                     <Alert
                         type="error"
-                        text={`${authState?.actions?.error?.meta?.code} : ${authState?.actions?.error?.meta?.message}`}
+                        text={`${authRegisterState?.actions?.error?.meta?.code} : ${authRegisterState?.actions?.error?.meta?.message}`}
                     />
                 </div>
             )}

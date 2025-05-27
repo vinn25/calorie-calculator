@@ -58,7 +58,7 @@ const LoginLayout = () => {
     });
     const { errors, handleSubmit, touched } = formik;
     return (
-        <div className="flex max-h-screen min-h-screen min-w-full max-w-full flex-col items-center justify-center bg-slate-500 font-Montserrat">
+        <div className="flex max-h-screen min-h-screen min-w-full max-w-full flex-col items-center justify-center bg-primary font-Montserrat">
             {authState?.actions?.error && (
                 <div className="fixed top-5">
                     <Alert
@@ -73,7 +73,7 @@ const LoginLayout = () => {
                 </div> */}
                 <div className="mt-5">
                     <h1 className="text-title-sm font-semibold text-black">
-                        Login Page
+                        Calorie Tracker
                     </h1>
                     <p className="text-text-lg text-black">
                         Login into your account

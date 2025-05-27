@@ -36,7 +36,7 @@ const SelectOptions = ({
         <div className={`${fullWidth && 'w-full'}`}>
             <label htmlFor={`${selectId}-outline`}>{label}</label>
             <span
-                className={`relative box-border flex flex-nowrap items-center whitespace-nowrap rounded-md border ${error ? 'border-danger-600' : 'border-[#cfcfcf]'} transition-all focus-within:border-b-2 focus-within:border-b-neutral focus-visible:outline-none`}
+                className={`relative box-border flex flex-nowrap items-center whitespace-nowrap rounded-md border ${error ? 'border-danger-600' : 'border-primary-light'} transition-all focus-within:border-b-2 focus-within:border-b-neutral focus-visible:outline-none`}
             >
                 <select
                     className={`${componentSize} w-full grow cursor-pointer appearance-none rounded-md bg-white px-2 focus-visible:outline-none`}

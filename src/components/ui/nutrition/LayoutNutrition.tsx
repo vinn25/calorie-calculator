@@ -3,6 +3,7 @@
 import Alert from '@/components/alert/Alert';
 import Pagination from '@/components/Pagination';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
+import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import { Reducers } from '@/redux/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,7 +23,7 @@ const dailyCalories = [
     },
 ];
 
-const LayoutFoodLog = () => {
+const LayoutNutrition = () => {
     const dispatch = useDispatch();
     const [searchTerm, setSearchTerm] = useState('');
     const projectState = useSelector((state: Reducers) => state.project);
@@ -68,32 +69,14 @@ const LayoutFoodLog = () => {
                     )}
                 </div>
                 <div className="w-full max-w-full">
-                    <SearchFoodLog
-                        cardTitle="Food Log"
-                        subCardTitle="Food Log Entry"
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                        params={params}
+                    <ChartsNutrition
+                        cardTitle="Nutrition Analytics"
+                        subCardTitle="Nutrition Analytics"
                     />
                 </div>
-                {/* <div className="fixed bottom-0 left-72.5 right-0 z-999 m-auto h-fit border border-[#EAECF0] bg-neutral-50 px-6 py-3">
-                    <Pagination
-                        params={params}
-                        setParams={setParams}
-                        totalPage={
-                            projectState?.list?.data?.meta?.pagination
-                                ?.totalPage
-                        }
-                        total={
-                            projectState?.list?.data?.meta?.pagination?.total
-                        }
-                        loading={projectState?.list?.loading}
-                    />
-                </div> */}
             </div>
         </div>
     );
 };
 
-export default LayoutFoodLog;
+export default LayoutNutrition;

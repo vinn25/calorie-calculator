@@ -4,7 +4,7 @@ import React from 'react';
 
 const CreateRespondentPage = () => {
     return (
-        <DefaultLayout title="New Respondent">
+        <DefaultLayout>
             <LayoutCreateRespondent />
         </DefaultLayout>
     );

@@ -206,7 +206,7 @@ const TableListHome = (
     });
     const { errors, handleSubmit, touched, setFieldValue } = formik;
     return (
-        <div className="max-w-full rounded-lg border border-neutral-100 bg-white">
+        <div className="max-w-full rounded-lg border border-primary-light bg-white">
             {selectedFood && (
                 <FormikProvider value={formik}>
                     <Form noValidate onSubmit={handleSubmit}>
@@ -222,8 +222,11 @@ const TableListHome = (
                                         <h3 className="font-medium">
                                             {selectedFood.name}
                                         </h3>
-                                        <p className="text-muted-foreground text-sm">
-                                            Base: {selectedFood.portion}
+                                        <p className="text-sm">
+                                            Base:{' '}
+                                            <span className="text-secondary">
+                                                {selectedFood.portion}
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
@@ -289,7 +292,7 @@ const TableListHome = (
                                     </h4>
                                     <div className="grid grid-cols-4 gap-2 text-center">
                                         <div>
-                                            <p className="font-bold">
+                                            <p className="font-bold text-secondary">
                                                 {calculateAdjustedNutrition(
                                                     selectedFood.calories
                                                 )}
@@ -297,7 +300,7 @@ const TableListHome = (
                                             <p className="text-xs">Calories</p>
                                         </div>
                                         <div>
-                                            <p className="font-bold">
+                                            <p className="font-bold text-secondary">
                                                 {calculateAdjustedNutrition(
                                                     selectedFood.protein
                                                 )}{' '}
@@ -306,7 +309,7 @@ const TableListHome = (
                                             <p className="text-xs">Protein</p>
                                         </div>
                                         <div>
-                                            <p className="font-bold">
+                                            <p className="font-bold text-secondary">
                                                 {calculateAdjustedNutrition(
                                                     selectedFood.carbs
                                                 )}
@@ -315,7 +318,7 @@ const TableListHome = (
                                             <p className="text-xs">Carbs</p>
                                         </div>
                                         <div>
-                                            <p className="font-bold">
+                                            <p className="font-bold text-secondary">
                                                 {calculateAdjustedNutrition(
                                                     selectedFood.fat
                                                 )}
@@ -327,7 +330,7 @@ const TableListHome = (
                                 </div>
                                 <div className="w-full">
                                     <Buttons
-                                        color="neutral"
+                                        color="primary"
                                         size="sm"
                                         text="Add to food log"
                                         type="submit"
@@ -355,24 +358,38 @@ const TableListHome = (
                             >
                                 <div>
                                     <p className="font-medium">{food.name}</p>
-                                    <p className="text-muted-foreground text-sm">
+                                    <p className="text-sm text-secondary">
                                         {food.portion}
                                     </p>
                                 </div>
                                 <div className="text-right">
                                     <p className="font-medium">
-                                        {food.calories} kcal
+                                        <span className="text-secondary">
+                                            {food.calories}
+                                        </span>{' '}
+                                        kcal
                                     </p>
-                                    <p className="text-muted-foreground text-xs">
-                                        P: {food.protein}g | C: {food.carbs}g |
-                                        F: {food.fat}g
+                                    <p className="text-xs">
+                                        P:{' '}
+                                        <span className="text-secondary">
+                                            {food.protein}
+                                        </span>
+                                        g | C:{' '}
+                                        <span className="text-secondary">
+                                            {food.carbs}
+                                        </span>
+                                        g | F:{' '}
+                                        <span className="text-secondary">
+                                            {food.fat}
+                                        </span>
+                                        g
                                     </p>
                                 </div>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <div className="text-muted-foreground p-4 text-center">
+                    <div className="p-4 text-center text-muted-foreground">
                         No foods found. Try a different search term.
                     </div>
                 )}

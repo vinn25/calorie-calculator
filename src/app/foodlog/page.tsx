@@ -5,7 +5,7 @@ import LayoutFoodLog from '@/components/ui/food-log/LayoutFoodLog';
 
 const FoodLogPage = () => {
     return (
-        <DefaultLayout title="Schedule">
+        <DefaultLayout>
             <LayoutFoodLog />
         </DefaultLayout>
     );

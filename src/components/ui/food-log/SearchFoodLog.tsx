@@ -14,6 +14,8 @@ interface Props {
         search: string;
         active: string;
     };
+    cardTitle: string;
+    subCardTitle?: string;
 }
 
 const SearchFoodLog = ({
@@ -21,9 +23,11 @@ const SearchFoodLog = ({
     setSearchTerm,
     handleSearch,
     params,
+    cardTitle,
+    subCardTitle,
 }: Props) => {
     return (
-        <Card cardTitle="Food Log" subCardTitle="Food Log Entry">
+        <Card cardTitle={cardTitle} subCardTitle={subCardTitle}>
             <div className="w-full max-w-full justify-stretch bg-[#ffffff]">
                 <TextField
                     name="search"

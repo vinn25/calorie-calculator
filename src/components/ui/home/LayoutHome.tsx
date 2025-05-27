@@ -4,8 +4,10 @@ import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
 import { TextField } from '@/components/form';
 import Pagination from '@/components/Pagination';
+import Progress from '@/components/progress/Progress';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
 import TableListHome from '@/components/ui/home/TableListHome';
+import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import FilterProject from '@/components/ui/schedule/FilterProject';
 import TableListProject from '@/components/ui/schedule/TableListProject';
 import { Reducers } from '@/redux/types';
@@ -59,7 +61,7 @@ const LayoutHome = () => {
 
     return (
         <div>
-            <div className="container relative mx-auto max-w-full px-8 py-6">
+            <div className="container relative mx-auto max-w-full py-6">
                 <div className="fixed left-1/2 top-5 z-999">
                     {alertMessage && (
                         <Alert
@@ -85,18 +87,35 @@ const LayoutHome = () => {
                             {dailyCalories.map(data => (
                                 <div key={data.key} className="text-center">
                                     <div>{data.title}</div>
-                                    <div className="text-text-lg font-semibold">
+                                    <div className="text-text-lg font-semibold text-secondary">
                                         {data.calorie}
                                     </div>
                                 </div>
                             ))}
                         </div>
+                        <div className="mt-4">
+                            <Progress
+                                value={70}
+                                style="primary"
+                                fullWidth
+                                label="Daily Progress"
+                                showPercentage
+                            />
+                        </div>
                     </Card>
                     <SearchFoodLog
+                        cardTitle="Quick Add Food"
+                        subCardTitle="Food Log Entry"
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         handleSearch={handleSearch}
                         params={params}
+                    />
+                </div>
+                <div className="mt-5">
+                    <ChartsNutrition
+                        cardTitle="Nutrition Overview"
+                        subCardTitle="Nutrition Analytics"
                     />
                 </div>
             </div>

@@ -4,7 +4,7 @@ import React from 'react';
 
 const Project = () => {
     return (
-        <DefaultLayout title="Project">
+        <DefaultLayout>
             <LayoutProject />
         </DefaultLayout>
     );

@@ -77,10 +77,10 @@ const DropdownUser = () => {
             {dropdownOpen && (
                 <div className="absolute right-0 mt-4 flex w-62.5 flex-col rounded-b-xl border border-stroke bg-white shadow-default">
                     <ul className="flex flex-col border-b border-stroke">
-                        <li className="hover:bg-neutral-100">
+                        <li className="hover:bg-primary-light hover:text-primary-dark">
                             <Link
                                 href="/"
-                                className="text-neutral flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium duration-300 ease-in-out"
+                                className="flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium text-neutral duration-300 ease-in-out"
                             >
                                 {/* <Person16Regular /> */}
                                 <Icon
@@ -91,7 +91,7 @@ const DropdownUser = () => {
                                 My Profile
                             </Link>
                         </li>
-                        <li className="hover:bg-neutral-100">
+                        <li className="hover:bg-primary-light hover:text-primary-dark">
                             <Link
                                 onClick={() => {
                                     dispatch<any>(logoutUser());

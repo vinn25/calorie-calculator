@@ -3,6 +3,7 @@ import { ButtonIcon, Buttons } from '@/components/button';
 import { DialogContent } from '@/components/dialog';
 import DialogConfirmation from '@/components/dialog/DialogConfirmation';
 import { SelectOptions, TextField } from '@/components/form';
+import { getFoodList } from '@/redux/actions/food';
 import {
     deleteKtpProjectDelete,
     getKtpProjectList,
@@ -141,12 +142,12 @@ const mealTypeFilter = [
     },
 ];
 
-const TableListHome = (
+const TableListFood = (
     { params, searchTerm, setSearchTerm }: Props,
     { onAddFood }: FoodLogEntryProps
 ) => {
     const dispatch = useDispatch();
-    // const projectState = useSelector((state: Reducers) => state.project);
+    const foodState = useSelector((state: Reducers) => state.food);
     const [foodName, setFoodName] = useState<ReactNode>('');
     const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
     const [portion, setPortion] = useState(0);
@@ -168,19 +169,10 @@ const TableListHome = (
     };
 
     useEffect(() => {
-        async function projectList() {
-            await dispatch<any>(
-                getKtpProjectList({
-                    params: {
-                        page: params.page,
-                        perPage: params.perPage,
-                        search: params.search,
-                        active: params.active,
-                    },
-                })
-            );
+        async function foodList() {
+            await dispatch<any>(getFoodList({}));
         }
-        projectList();
+        foodList();
     }, [dispatch, params]);
 
     const formik = useFormik({
@@ -344,7 +336,7 @@ const TableListHome = (
                 </FormikProvider>
             )}
             <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
-                {filteredFoods.length > 0 ? (
+                {/* {filteredFoods.length > 0 ? (
                     <ul>
                         {filteredFoods.map(food => (
                             <li
@@ -392,7 +384,70 @@ const TableListHome = (
                     <div className="p-4 text-center text-muted-foreground">
                         No foods found. Try a different search term.
                     </div>
-                )}
+                )} */}
+                {
+                    // foodState?.list?.loading ? (
+                    //     <tr className="border border-neutral-50">
+                    //         {headerTable.map(data => (
+                    //             <td className="px-[14px]" key={data}>
+                    //                 <div
+                    //                     role="status"
+                    //                     className="max-w-full animate-pulse"
+                    //                 >
+                    //                     <div className="mb-4 h-2.5 w-full rounded-full bg-neutral-100 dark:bg-neutral-700" />
+                    //                 </div>
+                    //             </td>
+                    //         ))}
+                    //     </tr>
+                    // ) :
+                    foodState.list.data && foodState.list.data.length > 0 ? (
+                        foodState.list.data.map((data: any) => (
+                            <li
+                                key={data.id}
+                                className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted"
+                                onClick={() => {
+                                    handleSelectFood(data);
+                                    handleOpenFoodLogEntry();
+                                    setFoodName(data.food);
+                                }}
+                            >
+                                <div>
+                                    <p className="font-medium">{data.food}</p>
+                                    {/* <p className="text-sm text-secondary">
+                                        {data.portion}
+                                    </p> */}
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-medium">
+                                        <span className="text-secondary">
+                                            {data.caloricValue}
+                                        </span>{' '}
+                                        kcal
+                                    </p>
+                                    <p className="text-xs">
+                                        P:{' '}
+                                        <span className="text-secondary">
+                                            {data.protein}
+                                        </span>
+                                        g | C:{' '}
+                                        <span className="text-secondary">
+                                            {data.carbohydrates}
+                                        </span>
+                                        g | F:{' '}
+                                        <span className="text-secondary">
+                                            {data.fat}
+                                        </span>
+                                        g
+                                    </p>
+                                </div>
+                            </li>
+                        ))
+                    ) : (
+                        <div className="p-4 text-center text-muted-foreground">
+                            No foods found. Try a different search term.
+                        </div>
+                    )
+                }
             </div>
             {/* <table className="h-fit w-full border-collapse">
                 <thead>
@@ -547,4 +602,4 @@ const TableListHome = (
     );
 };
 
-export default TableListHome;
+export default TableListFood;

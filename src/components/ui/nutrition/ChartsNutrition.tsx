@@ -2,7 +2,6 @@ import Card from '@/components/card/Card';
 import PieCharts from '@/components/chart/PieCharts';
 import { TextField } from '@/components/form';
 import Progress from '@/components/progress/Progress';
-import TableListHome from '@/components/ui/home/TableListHome';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 

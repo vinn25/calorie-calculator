@@ -12,6 +12,29 @@ const Header = (props: {
     sidebarOpen: string | boolean | undefined;
     setSidebarOpen: (arg0: boolean) => void;
 }) => {
+    const navGroups = [
+        {
+            id: 'home',
+            label: 'Home',
+            route: '/',
+        },
+        {
+            id: 'foodlog',
+            label: 'Food Log',
+            route: '/foodlog',
+        },
+        {
+            id: 'nutrition',
+            label: 'Nutrition',
+            route: '/nutrition',
+        },
+        {
+            id: 'recommendation',
+            label: 'Recommendations',
+            route: '/recommendation',
+        },
+    ];
+
     const [isBack, setIsBack] = useState(false);
     const [activeItem, setActiveItem] = useState<string | null>(null);
     const pathname = usePathname();
@@ -41,29 +64,6 @@ const Header = (props: {
         return active;
     };
 
-    const navGroups = [
-        {
-            id: 'home',
-            label: 'Home',
-            route: '/',
-        },
-        {
-            id: 'foodlog',
-            label: 'Food Log',
-            route: '/foodlog',
-        },
-        {
-            id: 'nutrition',
-            label: 'Nutrition',
-            route: '/nutrition',
-        },
-        {
-            id: 'recommendation',
-            label: 'Recommendations',
-            route: '/recommendation',
-        },
-    ];
-
     const isItemActive = isActive(navGroups);
 
     return (
@@ -86,7 +86,7 @@ const Header = (props: {
                         }}
                     /> */}
                     {isBack && <ButtonBack />}
-                    <h4 className="text-text-xl font-semibold text-neutral text-primary">
+                    <h4 className="text-neutral text-text-xl font-semibold text-primary">
                         <Link href="/">Calorie Tracker</Link>
                     </h4>
                 </div>
@@ -98,15 +98,14 @@ const Header = (props: {
             </div>
             <div className="flex items-center gap-5 rounded-[10px] p-4 md:px-6 2xl:px-11">
                 {navGroups.map(items => (
-                    <div
+                    <Link
                         key={items.id}
+                        href={items.route}
                         className={`rounded-md p-1 ${activeItem === items.id ? 'bg-primary text-white' : 'hover:bg-primary-light hover:text-primary-dark'}`}
-                        onClick={() => setActiveItem(items.id)} // Set active item on click
+                        onClick={() => setActiveItem(items.id)}
                     >
-                        <Link href={items.route} className="px-8">
-                            {items.label}
-                        </Link>
-                    </div>
+                        <div className="px-8">{items.label}</div>
+                    </Link>
                 ))}
             </div>
         </header>

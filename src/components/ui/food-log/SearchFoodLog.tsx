@@ -1,6 +1,6 @@
 import Card from '@/components/card/Card';
 import { TextField } from '@/components/form';
-import TableListHome from '@/components/ui/home/TableListHome';
+import TableListFood from '@/components/ui/food-log/TableListFood';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 
@@ -58,7 +58,7 @@ const SearchFoodLog = ({
             </div>
             <div className="mt-5 min-h-full w-full max-w-full">
                 {searchTerm && (
-                    <TableListHome
+                    <TableListFood
                         params={params}
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}

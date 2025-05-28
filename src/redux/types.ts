@@ -23,6 +23,7 @@ export interface Action {
 export interface Reducers {
     auth: AuthState;
     register: AuthRegisterState;
+    food: FoodState,
     project: ProjectState;
 }
 
@@ -60,6 +61,25 @@ export interface AuthRegisterState {
         error: string;
         data: any;
     };
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface FoodState {
+    list: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    detail: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
     actions?: {
         loading: boolean;
         error: any;

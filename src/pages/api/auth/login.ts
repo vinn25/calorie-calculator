@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../../../lib/prisma';
 
-const SECRET_KEY = process.env.SECRET_KEY || 'your-secret-key';
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'access-secret';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'refresh-secret';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -19,13 +20,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Incorrect password' });
 
-    const token = jwt.sign(
+    // Generate Access Token (expires in 15 minutes)
+    const accessToken = jwt.sign(
       { id: user.id, email: user.email },
-      SECRET_KEY,
+      ACCESS_TOKEN_SECRET,
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({ token });
+    // Generate Refresh Token (expires in 7 days)
+    const refreshToken = jwt.sign(
+      { id: user.id, email: user.email },
+      REFRESH_TOKEN_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    // Optional: Save refresh token to DB for revocation support
+    // await prisma.user.update({
+    //   where: { id: user.id },
+    //   data: { refreshToken }
+    // });
+
+    res.status(200).json({ accessToken, refreshToken });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error', error });
   }

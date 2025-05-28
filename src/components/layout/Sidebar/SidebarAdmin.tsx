@@ -25,7 +25,7 @@ const SidebarAdmin = (props: {
                     route: '/',
                 },
                 {
-                    id: 'member',
+                    id: 'foodlog',
                     icon: (
                         <Icon
                             icon="fluent:card-ui-24-regular"
@@ -33,8 +33,20 @@ const SidebarAdmin = (props: {
                             height="24"
                         />
                     ),
-                    label: 'Member',
-                    route: '/member',
+                    label: 'Food Log',
+                    route: 'foodlog',
+                },
+                {
+                    id: 'nutrition',
+                    icon: (
+                        <Icon
+                            icon="fluent:card-ui-24-regular"
+                            width="24"
+                            height="24"
+                        />
+                    ),
+                    label: 'Nutrition',
+                    route: 'nutrition',
                 },
                 {
                     id: 'schedule',

@@ -22,8 +22,9 @@ export interface Action {
 
 export interface Reducers {
     auth: AuthState;
+    register: AuthRegisterState;
+    food: FoodState,
     project: ProjectState;
-    vendor: VendorState;
 }
 
 export interface AuthState {
@@ -47,7 +48,28 @@ export interface AuthState {
     };
 }
 
-export interface ProjectState {
+export interface AuthRegisterState {
+    loading: boolean;
+    isRegister: boolean;
+    error: any;
+    token: {
+        accessToken: string;
+        refreshToken: string;
+    };
+    profile: {
+        loading: boolean;
+        error: string;
+        data: any;
+    };
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface FoodState {
     list: {
         loading: boolean;
         error: any;
@@ -66,7 +88,7 @@ export interface ProjectState {
     };
 }
 
-export interface VendorState {
+export interface ProjectState {
     list: {
         loading: boolean;
         error: any;

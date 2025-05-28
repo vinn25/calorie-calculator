@@ -1,6 +1,6 @@
 import { removeBearer } from '@/helpers/removeBearer';
 import { type Dispatch } from '@/redux/types';
-import { publicLoginUser } from '@/services/publicService';
+import { publicLoginUser, publicRegisterUser } from '@/services/publicService';
 import {
     sharedAuthChangePass,
     sharedAuthRefresh,
@@ -22,6 +22,49 @@ export const postAuthLoginUser =
             });
             try {
                 const response: any = await publicLoginUser(data);
+                dispatch({
+                    type: 'AUTH_SUCCESS',
+                    payload: response.data,
+                });
+                dispatch({
+                    type: 'AUTH_ACTION_SUCCESS',
+                    payload: {
+                        message: response.message,
+                        code: response.code,
+                    },
+                });
+                dispatch({
+                    type: 'USER_SUCCESS',
+                });
+                if (callback) {
+                    callback(response.data);
+                }
+            } catch (error: any) {
+                if (error && error.response) {
+                    dispatch({
+                        type: 'AUTH_ACTION_ERROR',
+                        payload: error.response.data,
+                    });
+                } else {
+                    dispatch({
+                        type: 'AUTH_ACTION_ERROR',
+                        payload: {
+                            message: error.message,
+                            code: error.code,
+                        },
+                    });
+                }
+            }
+        };
+
+export const postAuthRegisterUser =
+    ({ data, callback }: Props) =>
+        async (dispatch: Dispatch) => {
+            dispatch({
+                type: 'AUTH_ACTION_LOADING',
+            });
+            try {
+                const response: any = await publicRegisterUser(data);
                 dispatch({
                     type: 'AUTH_SUCCESS',
                     payload: response.data,

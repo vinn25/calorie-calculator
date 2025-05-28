@@ -8,6 +8,17 @@ const request = new Api({
 });
 
 export const publicLoginUser = async (data: any) => {
-    const response = await request.post('/auth/login', data);
+    const response = await request.post('api/auth/register', data);
     return response;
 };
+
+export const publicRegisterUser = async (data: any) => {
+    const response = await request.post('api/auth/register', data);
+    return response;
+};
+
+export const getFoods = async () => {
+    const response = await request.get('api/food/get-foods')
+    console.log(response)
+    return response
+}

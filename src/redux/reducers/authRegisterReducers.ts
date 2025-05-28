@@ -1,84 +1,94 @@
-import { Action, VendorState, } from "@/redux/types";
+import { type Action, type AuthRegisterState } from '@/redux/types';
 
-const initialState: VendorState = {
-    list: {
-        loading: false,
-        error: '',
-        data: '',
+const initialState: AuthRegisterState = {
+    loading: false,
+    isRegister: false,
+    token: {
+        accessToken: '',
+        refreshToken: '',
     },
-    detail: {
+    error: '',
+    profile: {
         loading: false,
-        error: '',
         data: '',
+        error: '',
     },
     actions: {
         loading: false,
         error: '',
         type: null,
         message: '',
-    }
-}
+    },
+};
 
-const initialActionVendor: Action = {
+const initialActionAuth: Action = {
     type: '',
-}
+};
 
-export const vendorReducers = (
+export const authRegisterReducers = (
     state = initialState,
-    action = initialActionVendor
+    action = initialActionAuth
 ) => {
     switch (action.type) {
-        case 'VENDOR_LIST_SUCCESS':
+        case 'AUTH_LOADING':
             return {
                 ...state,
-                list: {
-                    ...state.list,
-                    loading: false,
-                    data: action.payload,
-                },
+                loading: true,
+                error: '',
             };
-        case 'VENDOR_LIST_LOADING':
+
+        case 'AUTH_SUCCESS':
             return {
                 ...state,
-                list: {
-                    ...state.list,
-                    loading: true,
+                loading: false,
+                isRegister: true,
+                token: action.payload,
+            };
+
+        case 'LOGOUT':
+            return {
+                ...state,
+                loading: false,
+                isRegister: false,
+                token: undefined,
+                actions: {
+                    loading: false,
                     error: '',
-                },
-            };
-        case 'VENDOR_LIST_ERROR':
-            return {
-                ...state,
-                list: {
-                    loading: false,
-                    data: '',
-                    error: action.payload,
+                    type: null,
+                    message: '',
                 },
             };
 
-        // detail
-        case 'VENDOR_DETAIL_SUCCESS':
+        case 'AUTH_ERROR':
             return {
                 ...state,
-                detail: {
-                    ...state.detail,
+                error: action.payload,
+                loading: false,
+            };
+
+        // profile
+        case 'AUTH_PROFILE_SUCCESS':
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
                     loading: false,
                     data: action.payload,
                 },
             };
-        case 'VENDOR_DETAIL_LOADING':
+        case 'AUTH_PROFILE_LOADING':
             return {
                 ...state,
-                detail: {
-                    ...state.detail,
+                profile: {
+                    ...state.profile,
                     loading: true,
                     error: '',
                 },
             };
-        case 'VENDOR_DETAIL_ERROR':
+        case 'AUTH_PROFILE_ERROR':
             return {
                 ...state,
-                detail: {
+                profile: {
                     loading: false,
                     data: '',
                     error: action.payload,
@@ -86,7 +96,7 @@ export const vendorReducers = (
             };
 
         //  actions
-        case 'VENDOR_ACTION_LOADING':
+        case 'AUTH_ACTION_LOADING':
             return {
                 ...state,
                 actions: {
@@ -96,7 +106,7 @@ export const vendorReducers = (
                     message: '',
                 },
             };
-        case 'VENDOR_ACTION_SUCCESS':
+        case 'AUTH_ACTION_SUCCESS':
             return {
                 ...state,
                 actions: {
@@ -106,7 +116,7 @@ export const vendorReducers = (
                     message: action.payload,
                 },
             };
-        case 'VENDOR_ACTION_ERROR':
+        case 'AUTH_ACTION_ERROR':
             return {
                 ...state,
                 actions: {
@@ -116,7 +126,7 @@ export const vendorReducers = (
                     type: 'failed',
                 },
             };
-        case 'VENDOR_ACTION_CLEAR':
+        case 'AUTH_ACTION_CLEAR':
             return {
                 ...state,
                 actions: initialState.actions,
@@ -125,4 +135,4 @@ export const vendorReducers = (
         default:
             return state;
     }
-}
+};

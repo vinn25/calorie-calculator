@@ -5,8 +5,15 @@ import prisma from '../../../lib/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { email, password } = req.body as { email: string; password: string };
-
+  const { email, password, activity, age, gender, height, weight } = req.body as 
+        { email: string; 
+          password: string; 
+          activity: string;
+          age: number;
+          gender: string;
+          height: number;
+          weight: number;
+        };
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -21,6 +28,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     data: {
       email,
       password: hashedPassword,
+      activity,
+      age,
+      gender,
+      height,
+      weight,
     },
   });
 

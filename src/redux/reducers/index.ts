@@ -5,7 +5,8 @@ import storage from 'redux-persist/lib/storage';
 import { authReducers } from '@/redux/reducers/authReducers';
 import type { Action } from '@/redux/types';
 import { projectReducers } from '@/redux/reducers/projectReducers';
-import { vendorReducers } from '@/redux/reducers/vendorReducer';
+import { authRegisterReducers } from '@/redux/reducers/authRegisterReducers';
+import { foodReducers } from '@/redux/reducers/foodReducers';
 
 interface PersistProps {
     key: string;
@@ -19,8 +20,9 @@ const persistConfig: PersistProps = {
 
 const appReducer = combineReducers({
     auth: authReducers,
+    register: authRegisterReducers,
+    food: foodReducers,
     project: projectReducers,
-    vendor: vendorReducers,
 });
 
 const rootReducer = (state: any, action: Action) => {

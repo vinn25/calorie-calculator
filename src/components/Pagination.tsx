@@ -68,6 +68,7 @@ const Pagination = ({
                 <div className="ml-2 flex w-16">
                     <SelectOptions
                         options={optionPagination}
+                        selectSize="sm"
                         name="perPage"
                         fullWidth
                         onChange={e => {

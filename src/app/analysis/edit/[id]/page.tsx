@@ -5,7 +5,7 @@ import EditProject from '@/components/ui/schedule/edit/LayoutEditProject';
 // { params }: { params: { id: string } }
 const EditProjectPage = () => {
     return (
-        <DefaultLayout title="Edit Project">
+        <DefaultLayout>
             <EditProject />
         </DefaultLayout>
     );

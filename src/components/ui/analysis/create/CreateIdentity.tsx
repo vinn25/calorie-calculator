@@ -71,7 +71,7 @@ const CreateIdentity = ({ setOpenFormIdentity }: Props) => {
             <FormikProvider value={formik}>
                 <Form noValidate onSubmit={handleSubmit} className="w-full">
                     <div className="mb-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Name<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">
@@ -91,7 +91,7 @@ const CreateIdentity = ({ setOpenFormIdentity }: Props) => {
                         </div>
                     </div>
                     <div className="my-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Phone Number<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">
@@ -108,13 +108,14 @@ const CreateIdentity = ({ setOpenFormIdentity }: Props) => {
                         </div>
                     </div>
                     <div className="my-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Type<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">
                             <SelectOptions
                                 name="identityType"
                                 options={optionIdentityType}
+                                selectSize="sm"
                                 onChange={e => {
                                     setFieldValue(
                                         'identityType',
@@ -138,7 +139,7 @@ const CreateIdentity = ({ setOpenFormIdentity }: Props) => {
                         </div>
                     </div>
                     <div className="my-5 w-full gap-5">
-                        <div className="text-neutral w-full text-text-sm">
+                        <div className="w-full text-text-sm text-neutral">
                             Identity Number<sup className="text-red">*</sup>
                         </div>
                         <div className="w-full">

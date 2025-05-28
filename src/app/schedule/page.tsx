@@ -4,7 +4,7 @@ import React from 'react';
 
 const Respondent = () => {
     return (
-        <DefaultLayout title="Schedule">
+        <DefaultLayout>
             <LayoutRespondent />
         </DefaultLayout>
     );

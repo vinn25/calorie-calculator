@@ -10,10 +10,8 @@ import { getAuthUserProfile } from '@/redux/actions/auth';
 
 export default function DefaultLayout({
     children,
-    title,
 }: {
     children: React.ReactNode;
-    title: string;
 }) {
     const dispatch = useDispatch();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,22 +36,12 @@ export default function DefaultLayout({
         <div>
             {/* <!-- ===== Page Wrapper Start ===== --> */}
             <div className="flex min-h-screen bg-neutral-50 font-Montserrat">
-                {/* <!-- ===== Sidebar Start ===== --> */}
-                <Sidebar
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                />
-                {/* <!-- ===== Sidebar End ===== --> */}
-
-                {/* <!-- ===== Content Area Start ===== --> */}
-                <div
-                    className={`relative flex flex-1 flex-col ${sidebarOpen ? 'ml-22' : 'ml-72.5'} duration-300 ease-linear`}
-                >
+                {/* <!-- ===== Content Area Start ===== --> ${sidebarOpen ? 'ml-22' : 'ml-72.5'} ease-linear */}
+                <div className={`relative flex flex-1 flex-col duration-300`}>
                     {/* <!-- ===== Header Start ===== --> */}
                     <Header
                         sidebarOpen={sidebarOpen}
                         setSidebarOpen={setSidebarOpen}
-                        title={title}
                     />
                     {/* <!-- ===== Header End ===== --> */}
 

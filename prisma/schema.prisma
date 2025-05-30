@@ -8,17 +8,22 @@ datasource db {
 }
 
 model User {
-  userId    Int    @id @default(autoincrement())
-  email     String @unique
-  password  String
-  activity  String
-  age       Int
-  gender    String
-  height    Int
-  weight    Int
-  createdAt DateTime @default(now())
+  userId        Int      @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  activity      String
+  age           Int
+  gender        String
+  height        Int
+  weight        Int
+  calorieTarget Int
+  proteinTarget Float
+  fatTarget     Float
+  carbTarget    Float
+  goal          String   @default("standard")
+  createdAt     DateTime @default(now())
 
-  mealLogs  MealLog[]
+  mealLogs      MealLog[]
 }
 
 model Food {

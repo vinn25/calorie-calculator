@@ -71,18 +71,55 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       include: {
         items: {
           include: {
-            food: true, // untuk detail makanan
+            food: true,
           },
         },
       },
-      orderBy: {
-        date: 'desc',
-      },
     });
 
-    res.status(200).json({ data: logs });
+    const totals = logs.reduce(
+      (acc, log) => {
+        for (const item of log.items) {
+          const qty = item.quantity;
+          const food = item.food;
+
+          acc.calories += (food.caloricvalue || 0) * qty;
+          acc.fat += (food.fat || 0) * qty;
+          acc.carbs += (food.carbohydrates || 0) * qty;
+          acc.protein += (food.protein || 0) * qty;
+
+          acc.vitaminc += (food.vitaminc || 0) * qty;
+          acc.calcium += (food.calcium || 0) * qty;
+          acc.iron += (food.iron || 0) * qty;
+          acc.vitamind += (food.vitamind || 0) * qty;
+          acc.potassium += (food.potassium || 0) * qty;
+        }
+        return acc;
+      },
+      {
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+        vitaminc: 0,
+        calcium: 0,
+        iron: 0,
+        vitamind: 0,
+        potassium: 0,
+      }
+    );
+
+    // Bulatkan semua nilai ke dua angka di belakang koma
+    const roundedTotals = Object.fromEntries(
+      Object.entries(totals).map(([key, value]) => [key, Math.round(value * 100) / 100])
+    );
+
+    res.status(200).json({ data: roundedTotals });
   } catch (error) {
-    console.error('Error fetching meal logs:', error);
+    console.error('Error calculating nutrients:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
+
+
+
 }

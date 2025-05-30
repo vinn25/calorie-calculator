@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'POST') return res.status(405).end();
 
   try {
-    const filePath = path.join(process.cwd(), 'public', 'FOOD-DATA-GROUP1.csv');
+    const filePath = path.join(process.cwd(), 'public', 'FOOD-DATA-GROUP5.csv');
     const fileContent = fs.readFileSync(filePath, 'utf-8');
 
     const records = parse(fileContent, {

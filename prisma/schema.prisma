@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,20 +8,22 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  activity String
-  age Int
-  gender String
-  height Int
-  weight Int
+  userId    Int    @id @default(autoincrement())
+  email     String @unique
+  password  String
+  activity  String
+  age       Int
+  gender    String
+  height    Int
+  weight    Int
   createdAt DateTime @default(now())
+
+  mealLogs  MealLog[]
 }
 
 model Food {
-  id                      Int     @id @default(autoincrement())
-  food                    String
+  foodId                  Int     @id @default(autoincrement())
+  foodName                String
   caloricvalue            Float
   fat                     Float
   saturatedfats           Float
@@ -62,4 +58,33 @@ model Food {
   selenium                Float
   zinc                    Float
   nutritiondensity        Float
+
+  mealLogItems            MealLogItem[]
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+model MealLog {
+  MealLogId  Int           @id @default(autoincrement())
+  userId     Int
+  user       User          @relation(fields: [userId], references: [userId])
+  date       DateTime
+  mealType   MealType
+  notes      String?
+
+  items      MealLogItem[]
+}
+
+model MealLogItem {
+  MealLogItemid Int     @id @default(autoincrement())
+  mealLogId     Int
+  mealLog       MealLog @relation(fields: [mealLogId], references: [MealLogId])
+  foodId        Int
+  food          Food    @relation(fields: [foodId], references: [foodId])
+  quantity      Float
 }

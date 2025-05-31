@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
 import prisma from '../../../lib/prisma'; 
 import { calculateMacros } from '@/utils/calculateMacros';
+import { getWHOMicronutrientTargets } from '@/utils/calculateMicros';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -32,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     activity,
     goal,
   });
+  const micronutrients = getWHOMicronutrientTargets(gender);
 
   await prisma.user.create({
     data: {
@@ -46,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       proteinTarget: protein,
       fatTarget: fat,
       carbTarget: carbs,
+      ...micronutrients
     },
   });
 

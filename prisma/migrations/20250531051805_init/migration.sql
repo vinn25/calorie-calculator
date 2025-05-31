@@ -13,6 +13,11 @@ CREATE TABLE `User` (
     `fatTarget` DOUBLE NOT NULL,
     `carbTarget` DOUBLE NOT NULL,
     `goal` VARCHAR(191) NOT NULL DEFAULT 'standard',
+    `vitaminCTarget` DOUBLE NOT NULL,
+    `calciumTarget` DOUBLE NOT NULL,
+    `ironTarget` DOUBLE NOT NULL,
+    `vitaminDTarget` DOUBLE NOT NULL,
+    `potassiumTarget` DOUBLE NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `User_email_key`(`email`),
@@ -82,6 +87,17 @@ CREATE TABLE `MealLogItem` (
     PRIMARY KEY (`MealLogItemid`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `FavoriteFood` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `foodId` INTEGER NOT NULL,
+    `quantity` INTEGER NOT NULL,
+
+    UNIQUE INDEX `FavoriteFood_userId_foodId_key`(`userId`, `foodId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `MealLog` ADD CONSTRAINT `MealLog_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`userId`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -90,3 +106,9 @@ ALTER TABLE `MealLogItem` ADD CONSTRAINT `MealLogItem_mealLogId_fkey` FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE `MealLogItem` ADD CONSTRAINT `MealLogItem_foodId_fkey` FOREIGN KEY (`foodId`) REFERENCES `Food`(`foodId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `FavoriteFood` ADD CONSTRAINT `FavoriteFood_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`userId`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `FavoriteFood` ADD CONSTRAINT `FavoriteFood_foodId_fkey` FOREIGN KEY (`foodId`) REFERENCES `Food`(`foodId`) ON DELETE RESTRICT ON UPDATE CASCADE;

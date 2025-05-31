@@ -8,58 +8,70 @@ datasource db {
 }
 
 model User {
-  userId    Int    @id @default(autoincrement())
-  email     String @unique
-  password  String
-  activity  String
-  age       Int
-  gender    String
-  height    Int
-  weight    Int
-  createdAt DateTime @default(now())
+  userId          Int      @id @default(autoincrement())
+  email           String   @unique
+  password        String
+  activity        String
+  age             Int
+  gender          String
+  height          Int
+  weight          Int
+  calorieTarget   Int
+  proteinTarget   Float
+  fatTarget       Float
+  carbTarget      Float
+  goal            String   @default("standard")
+  vitaminCTarget  Float
+  calciumTarget   Float
+  ironTarget      Float
+  vitaminDTarget  Float
+  potassiumTarget Float
+  createdAt       DateTime @default(now())
 
-  mealLogs  MealLog[]
+  mealLogs     MealLog[]
+  FavoriteFood FavoriteFood[]
 }
 
 model Food {
-  foodId                  Int     @id @default(autoincrement())
-  foodName                String
-  caloricvalue            Float
-  fat                     Float
-  saturatedfats           Float
-  monounsaturatedfats     Float
-  polyunsaturatedfats     Float
-  carbohydrates           Float
-  sugars                  Float
-  protein                 Float
-  dietaryfiber            Float
-  cholesterol             Float
-  sodium                  Float
-  water                   Float
-  vitamina                Float
-  vitaminb1               Float
-  vitaminb11              Float
-  vitaminb12              Float
-  vitaminb2               Float
-  vitaminb3               Float
-  vitaminb5               Float
-  vitaminb6               Float
-  vitaminc                Float
-  vitamind                Float
-  vitamine                Float
-  vitamink                Float
-  calcium                 Float
-  copper                  Float
-  iron                    Float
-  magnesium               Float
-  manganese               Float
-  phosphorus              Float
-  potassium               Float
-  selenium                Float
-  zinc                    Float
-  nutritiondensity        Float
+  foodId              Int    @id @default(autoincrement())
+  foodName            String
+  caloricvalue        Float
+  fat                 Float
+  saturatedfats       Float
+  monounsaturatedfats Float
+  polyunsaturatedfats Float
+  carbohydrates       Float
+  sugars              Float
+  protein             Float
+  dietaryfiber        Float
+  cholesterol         Float
+  sodium              Float
+  water               Float
+  vitamina            Float
+  vitaminb1           Float
+  vitaminb11          Float
+  vitaminb12          Float
+  vitaminb2           Float
+  vitaminb3           Float
+  vitaminb5           Float
+  vitaminb6           Float
+  vitaminc            Float
+  vitamind            Float
+  vitamine            Float
+  vitamink            Float
+  calcium             Float
+  copper              Float
+  iron                Float
+  magnesium           Float
+  manganese           Float
+  phosphorus          Float
+  potassium           Float
+  selenium            Float
+  zinc                Float
+  nutritiondensity    Float
 
-  mealLogItems            MealLogItem[]
+  mealLogItems MealLogItem[]
+  FavoriteFood FavoriteFood[]
 }
 
 enum MealType {
@@ -70,14 +82,14 @@ enum MealType {
 }
 
 model MealLog {
-  MealLogId  Int           @id @default(autoincrement())
-  userId     Int
-  user       User          @relation(fields: [userId], references: [userId])
-  date       DateTime
-  mealType   MealType
-  notes      String?
+  MealLogId Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [userId])
+  date      DateTime
+  mealType  MealType
+  notes     String?
 
-  items      MealLogItem[]
+  items MealLogItem[]
 }
 
 model MealLogItem {
@@ -87,4 +99,15 @@ model MealLogItem {
   foodId        Int
   food          Food    @relation(fields: [foodId], references: [foodId])
   quantity      Float
+}
+
+model FavoriteFood {
+  id       Int  @id @default(autoincrement())
+  userId   Int
+  user     User @relation(fields: [userId], references: [userId])
+  foodId   Int
+  food     Food @relation(fields: [foodId], references: [foodId])
+  quantity Int
+
+  @@unique([userId, foodId])
 }

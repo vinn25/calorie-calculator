@@ -2,13 +2,11 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
-import { TextField } from '@/components/form';
-import Pagination from '@/components/Pagination';
 import Progress from '@/components/progress/Progress';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
+import TableListFood from '@/components/ui/food-log/TableListFood';
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
-import FilterProject from '@/components/ui/schedule/FilterProject';
-import TableListProject from '@/components/ui/schedule/TableListProject';
+import TableListRecommendation from '@/components/ui/recommendation/TableListRecommendation';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useEffect, useState } from 'react';
@@ -34,20 +32,11 @@ const dailyCalories = [
 
 const LayoutHome = () => {
     const dispatch = useDispatch();
-    const [searchTerm, setSearchTerm] = useState('');
-    const projectState = useSelector((state: Reducers) => state.project);
+    const foodState = useSelector((state: Reducers) => state.food);
     const [alertMessage, setAlertMessage] = useState(false);
-    const [params, setParams] = useState({
-        page: 1,
-        perPage: 10,
-        search: '',
-        active: 'true',
-    });
-    const handleSearch = (event: any) => {
-        setSearchTerm(event.target.value);
-    };
+    const [params, setParams] = useState('');
     useEffect(() => {
-        if (projectState.actions?.type) {
+        if (foodState.actions?.type) {
             setAlertMessage(true);
             setTimeout(() => {
                 setAlertMessage(false);
@@ -56,7 +45,7 @@ const LayoutHome = () => {
                 });
             }, 4000);
         }
-    }, [dispatch, projectState.actions?.error, projectState.actions?.type]);
+    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
 
     return (
         <div>
@@ -65,14 +54,14 @@ const LayoutHome = () => {
                     {alertMessage && (
                         <Alert
                             type={
-                                projectState?.actions?.type === 'success'
+                                foodState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                projectState?.actions?.type === 'success'
-                                    ? `${projectState?.actions?.message?.data}`
-                                    : `${projectState?.actions?.error?.meta?.code} : ${projectState?.actions?.error?.meta?.message}`
+                                foodState?.actions?.type === 'success'
+                                    ? `${foodState?.actions?.message?.data}`
+                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
@@ -102,20 +91,59 @@ const LayoutHome = () => {
                             />
                         </div>
                     </Card>
-                    <SearchFoodLog
+                    <Card
                         cardTitle="Quick Add Food"
                         subCardTitle="Food Log Entry"
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                        params={params}
-                    />
+                        addOns={
+                            <div className="flex items-center gap-2 rounded-md border border-primary px-2 py-[2px]">
+                                <div>
+                                    <Icon
+                                        icon="fluent:clock-16-regular"
+                                        width="16"
+                                        height="16"
+                                    />
+                                </div>
+                                <div className="text-text-md">Today</div>
+                            </div>
+                        }
+                    >
+                        <SearchFoodLog
+                            params={params}
+                            setParams={setParams}
+                            // searchTerm={searchTerm}
+                            // setSearchTerm={setSearchTerm}
+                        />
+                        <div className="mt-5 min-h-full w-full max-w-full">
+                            {params && (
+                                <TableListFood
+                                    params={params}
+                                    // searchTerm={searchTerm}
+                                    // setSearchTerm={setSearchTerm}
+                                />
+                            )}
+                        </div>
+                    </Card>
                 </div>
                 <div className="mt-5">
-                    <ChartsNutrition
-                        cardTitle="Nutrition Overview"
+                    <Card
+                        cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
-                    />
+                    >
+                        <ChartsNutrition />
+                    </Card>
+                </div>
+                <div className="mt-5">
+                    <Card
+                        cardTitle="Personalized Recommendations"
+                        subCardTitle="Meal Suggestions"
+                        addOns={
+                            <div className="text-text-md">
+                                600 calories remaining
+                            </div>
+                        }
+                    >
+                        <TableListRecommendation />
+                    </Card>
                 </div>
             </div>
         </div>

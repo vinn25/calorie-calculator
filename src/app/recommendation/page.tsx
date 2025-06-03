@@ -2,9 +2,14 @@
 
 import DefaultLayout from '@/components/layout/DefaultLayout';
 import LayoutNutrition from '@/components/ui/nutrition/LayoutNutrition';
+import LayoutRecommendation from '@/components/ui/recommendation/LayoutRecommendation';
 
 const RecommendationsPage = () => {
-    return <DefaultLayout>Recommendations</DefaultLayout>;
+    return (
+        <DefaultLayout>
+            <LayoutRecommendation />
+        </DefaultLayout>
+    );
 };
 
 export default RecommendationsPage;

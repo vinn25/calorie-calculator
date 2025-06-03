@@ -3,99 +3,36 @@ import apiKey from '@/config/apiKey';
 import baseUrl from '@/config/baseUrl';
 
 const request = new Api({
-    baseUrl: baseUrl.API_USER ?? '',
+    baseUrl: baseUrl.URL_KTP ?? '',
     xApiKey: apiKey.API_KEY ?? '',
 });
 
-// tools / claim
-export const userClaimList = async (
-    token: string,
-    workspace: string,
-    params: any
-) => {
-    const response = await request.get(`/claim/list`, {
-        token,
-        workspace,
-        queries: params,
-    });
+// user logs
+export const userListLog = async (id: string) => {
+    const response = await request.get(`api/user/${id}/get-logs`, {});
     return response;
-};
-
-export const userClaimDetail = async (
-    token: string,
-    workspace: string,
-    id: string
-) => {
-    const response = await request.get(`/claim/get/${id}`, {
-        token,
-        workspace,
-    });
+}
+export const userProfile = async (id: string) => {
+    const response = await request.get(`api/user/${id}/get-profile`, {});
     return response;
-};
-
-export const userClaimCreate = async (
-    token: string,
-    data: any,
-    workspace: string
-) => {
-    const response = await request.post(`/claim/create`, data, {
-        token,
-        workspace,
-    });
+}
+export const userGap = async (id: string) => {
+    const response = await request.get(`api/user/${id}/gap`, {});
     return response;
-};
-
-export const userClaimUpdate = async (
-    token: string,
-    data: any,
-    workspace: string,
-    id: string
-) => {
-    const response = await request.put(`/claim/update/${id}`, data, {
-        token,
-        workspace,
-    });
+}
+export const userCreateFoodLog = async (id: string, data: any) => {
+    const response = await request.post(`api/user/${id}/insert-log`, data, {});
     return response;
-};
-
-export const userClaimExport = async (
-    token: string,
-    data: any,
-    workspace: string,
-    id: string
-) => {
-    const response = await request.post(`/claim/export/${id}`, data, {
-        token,
-        workspace,
-    });
+}
+export const userCreateFoodFavorite = async (id: string, data: any) => {
+    const response = await request.post(`api/user/${id}/favorites`, data, {});
     return response;
-};
-
-export const userUpdateMobileNumber = async (token: string, data: any) => {
-    const response = await request.put('/user/update/mobile-number', data, {
-        token,
-    });
+}
+export const userProfileUpdate = async (id: string, data: any) => {
+    const response = await request.put(`api/user/${id}/get-profile`, data, {});
     return response;
-};
-
-export const userWorkspaceList = async (token: string, params: any) => {
-    const response = await request.get('/workspace/list', {
-        token,
-        queries: params,
-    });
+}
+export const userDeleteFoodFavorite = async (id: string) => {
+    const response = await request.delete(`api/user/${id}/favorites`, {});
     return response;
-};
-
-export const userWorkspaceRecent = async (token: string) => {
-    const response = await request.get('/workspace/recent', {
-        token,
-    });
-    return response;
-};
-
-export const userWorkspaceCreateRecent = async (token: string, data: any) => {
-    const response = await request.post('/workspace/create/recent', data, {
-        token,
-    });
-    return response;
-};
+}

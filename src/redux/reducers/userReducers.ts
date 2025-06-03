@@ -1,17 +1,17 @@
-import { Action, FoodState, } from "@/redux/types";
+import { Action, UserState, } from "@/redux/types";
 
-const initialState: FoodState = {
+const initialState: UserState = {
     list: {
         loading: false,
         error: '',
         data: '',
     },
-    detail: {
+    profile: {
         loading: false,
         error: '',
         data: '',
     },
-    search: {
+    gap: {
         loading: false,
         error: '',
         data: '',
@@ -28,12 +28,12 @@ const initialActionProject: Action = {
     type: '',
 }
 
-export const foodReducers = (
+export const userReducers = (
     state = initialState,
     action = initialActionProject
 ) => {
     switch (action.type) {
-        case 'FOOD_LIST_SUCCESS':
+        case 'USER_LIST_SUCCESS':
             return {
                 ...state,
                 list: {
@@ -42,7 +42,7 @@ export const foodReducers = (
                     data: action.payload,
                 },
             };
-        case 'FOOD_LIST_LOADING':
+        case 'USER_LIST_LOADING':
             return {
                 ...state,
                 list: {
@@ -51,7 +51,7 @@ export const foodReducers = (
                     error: '',
                 },
             };
-        case 'FOOD_LIST_ERROR':
+        case 'USER_LIST_ERROR':
             return {
                 ...state,
                 list: {
@@ -61,58 +61,58 @@ export const foodReducers = (
                 },
             };
 
-        // detail
-        case 'FOOD_DETAIL_SUCCESS':
+        // profile
+        case 'USER_PROFILE_SUCCESS':
             return {
                 ...state,
-                detail: {
-                    ...state.detail,
+                profile: {
+                    ...state.profile,
                     loading: false,
                     data: action.payload,
                 },
             };
-        case 'FOOD_DETAIL_LOADING':
+        case 'USER_PROFILE_LOADING':
             return {
                 ...state,
-                detail: {
-                    ...state.detail,
+                profile: {
+                    ...state.profile,
                     loading: true,
                     error: '',
                 },
             };
-        case 'FOOD_DETAIL_ERROR':
+        case 'USER_PROFILE_ERROR':
             return {
                 ...state,
-                detail: {
+                profile: {
                     loading: false,
                     data: '',
                     error: action.payload,
                 },
             };
 
-        // search
-        case 'FOOD_SEARCH_SUCCESS':
+        // gap
+        case 'USER_GAP_SUCCESS':
             return {
                 ...state,
-                search: {
-                    ...state.search,
+                gap: {
+                    ...state.gap,
                     loading: false,
                     data: action.payload,
                 },
             };
-        case 'FOOD_SEARCH_LOADING':
+        case 'USER_GAP_LOADING':
             return {
                 ...state,
-                search: {
-                    ...state.search,
+                gap: {
+                    ...state.gap,
                     loading: true,
                     error: '',
                 },
             };
-        case 'FOOD_SEARCH_ERROR':
+        case 'USER_GAP_ERROR':
             return {
                 ...state,
-                search: {
+                gap: {
                     loading: false,
                     data: '',
                     error: action.payload,
@@ -120,7 +120,7 @@ export const foodReducers = (
             };
 
         //  actions
-        case 'FOOD_ACTION_LOADING':
+        case 'USER_ACTION_LOADING':
             return {
                 ...state,
                 actions: {
@@ -130,7 +130,7 @@ export const foodReducers = (
                     message: '',
                 },
             };
-        case 'FOOD_ACTION_SUCCESS':
+        case 'USER_ACTION_SUCCESS':
             return {
                 ...state,
                 actions: {
@@ -140,7 +140,7 @@ export const foodReducers = (
                     message: action.payload,
                 },
             };
-        case 'FOOD_ACTION_ERROR':
+        case 'USER_ACTION_ERROR':
             return {
                 ...state,
                 actions: {
@@ -150,7 +150,7 @@ export const foodReducers = (
                     type: 'failed',
                 },
             };
-        case 'FOOD_ACTION_CLEAR':
+        case 'USER_ACTION_CLEAR':
             return {
                 ...state,
                 actions: initialState.actions,

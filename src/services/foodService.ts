@@ -7,14 +7,17 @@ const request = new Api({
     xApiKey: apiKey.API_KEY ?? '',
 });
 
-// Project
-export const foodList = async (token: string, params: any) => {
-    const response = await request.get('api/food/get-food', { token, queries: params });
+// Food
+export const foodList = async () => {
+    const response = await request.get('api/food/get-all-foods', {});
     return response;
 }
-
-export const ktpProjectDetail = async (token: string, id: string) => {
-    const response = await request.get(`/projects/${id}`, { token });
+export const foodDetail = async (id: string) => {
+    const response = await request.get(`api/food/${id}`, {});
+    return response;
+}
+export const foodSearch = async (query: string) => {
+    const response = await request.get(`api/food/search?query=${query}`, {});
     return response;
 }
 

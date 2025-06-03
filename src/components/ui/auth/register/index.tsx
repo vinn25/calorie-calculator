@@ -81,7 +81,7 @@ const RegisterLayout = () => {
             }, 401);
         }
         if (authRegisterState.isRegister) {
-            redirect('/login');
+            redirect('/home');
         }
     }, [
         authRegisterState?.actions?.error,
@@ -139,7 +139,7 @@ const RegisterLayout = () => {
                 </div> */}
                 <div className="mt-5">
                     <h1 className="text-title-sm font-semibold text-black">
-                        Calorie Tracker
+                        NutriTrack
                     </h1>
                     <p className="text-text-lg text-black">
                         Register your account

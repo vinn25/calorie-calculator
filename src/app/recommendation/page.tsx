@@ -6,7 +6,7 @@ import LayoutRecommendation from '@/components/ui/recommendation/LayoutRecommend
 
 const RecommendationsPage = () => {
     return (
-        <DefaultLayout>
+        <DefaultLayout title="NutriTrack">
             <LayoutRecommendation />
         </DefaultLayout>
     );

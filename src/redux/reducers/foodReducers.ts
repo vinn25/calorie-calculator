@@ -11,6 +11,11 @@ const initialState: FoodState = {
         error: '',
         data: '',
     },
+    search: {
+        loading: false,
+        error: '',
+        data: '',
+    },
     actions: {
         loading: false,
         error: '',
@@ -79,6 +84,35 @@ export const foodReducers = (
             return {
                 ...state,
                 detail: {
+                    loading: false,
+                    data: '',
+                    error: action.payload,
+                },
+            };
+
+        // search
+        case 'FOOD_SEARCH_SUCCESS':
+            return {
+                ...state,
+                search: {
+                    ...state.search,
+                    loading: false,
+                    data: action.payload,
+                },
+            };
+        case 'FOOD_SEARCH_LOADING':
+            return {
+                ...state,
+                search: {
+                    ...state.search,
+                    loading: true,
+                    error: '',
+                },
+            };
+        case 'FOOD_SEARCH_ERROR':
+            return {
+                ...state,
+                search: {
                     loading: false,
                     data: '',
                     error: action.payload,

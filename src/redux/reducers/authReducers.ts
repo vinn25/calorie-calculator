@@ -1,4 +1,6 @@
 import { type Action, type AuthState } from '@/redux/types';
+import { profile } from 'console';
+import { act } from 'react';
 
 const initialState: AuthState = {
     loading: false,
@@ -10,7 +12,7 @@ const initialState: AuthState = {
     error: '',
     profile: {
         loading: false,
-        data: '',
+        data: null,
         error: '',
     },
     actions: {
@@ -42,7 +44,13 @@ export const authReducers = (
                 ...state,
                 loading: false,
                 isLogin: true,
-                token: action.payload,
+                token: {
+                    accessToken: action.payload?.data.accessToken,
+                    refreshToken: action.payload?.data.refreshToken
+                },
+                profile:{
+                    data: action.payload?.data.user
+                }
             };
 
         case 'LOGOUT':
@@ -57,6 +65,7 @@ export const authReducers = (
                     type: null,
                     message: '',
                 },
+                profile: null
             };
 
         case 'AUTH_ERROR':

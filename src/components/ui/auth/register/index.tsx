@@ -43,27 +43,27 @@ const selectActivity = [
     {
         key: 'sedentary',
         text: 'Sedentary (little or no exercise)',
-        value: '1',
+        value: 'sedentary',
     },
     {
         key: 'lightly',
         text: 'Lightly active (light exercise/sports 1–3 days)',
-        value: '2',
+        value: 'lightly',
     },
     {
         key: 'moderate',
         text: 'Moderately active (moderate exercise 3–5 days)',
-        value: '3',
+        value: 'moderate',
     },
     {
         key: 'very_active',
         text: 'Very active (hard exercise 6–7 days/week)',
-        value: '4',
+        value: 'very_active',
     },
     {
         key: 'extra_active',
         text: 'Extra active (very hard exercise + physical job)',
-        value: '5',
+        value: 'extra_active',
     },
 ];
 
@@ -81,7 +81,7 @@ const RegisterLayout = () => {
             }, 401);
         }
         if (authRegisterState.isRegister) {
-            redirect('/login');
+            redirect('/');
         }
     }, [
         authRegisterState?.actions?.error,
@@ -139,7 +139,7 @@ const RegisterLayout = () => {
                 </div> */}
                 <div className="mt-5">
                     <h1 className="text-title-sm font-semibold text-black">
-                        Calorie Tracker
+                        NutriTrack
                     </h1>
                     <p className="text-text-lg text-black">
                         Register your account

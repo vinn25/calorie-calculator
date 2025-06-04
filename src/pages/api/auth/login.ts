@@ -22,14 +22,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Generate Access Token (expires in 15 minutes)
     const accessToken = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.userId, email: user.email },
       ACCESS_TOKEN_SECRET,
       { expiresIn: '1h' }
     );
 
     // Generate Refresh Token (expires in 7 days)
     const refreshToken = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.userId, email: user.email },
       REFRESH_TOKEN_SECRET,
       { expiresIn: '1d' }
     );
@@ -40,7 +40,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //   data: { refreshToken }
     // });
 
-    res.status(200).json({ accessToken, refreshToken });
+    const { password: _, ...userWithoutPassword } = user;
+    
+    res.status(200).json({ data: {
+      accessToken, 
+      refreshToken,
+      user: userWithoutPassword
+    }});
+
   } catch (error) {
     res.status(500).json({ message: 'Internal server error', error });
   }

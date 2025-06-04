@@ -5,7 +5,7 @@ import LayoutNutrition from '@/components/ui/nutrition/LayoutNutrition';
 
 const NutritionPage = () => {
     return (
-        <DefaultLayout>
+        <DefaultLayout title="NutriTrack">
             <LayoutNutrition />
         </DefaultLayout>
     );

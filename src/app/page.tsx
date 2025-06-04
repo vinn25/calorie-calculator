@@ -5,10 +5,8 @@ import Image from 'next/image';
 
 export default function Home() {
     return (
-        <ReduxProvider>
-            <DefaultLayout title={''}>
-                <LayoutHome />
-            </DefaultLayout>
-        </ReduxProvider>
+        <DefaultLayout title="NutriTrack">
+            <LayoutHome />
+        </DefaultLayout>
     );
 }

@@ -27,6 +27,7 @@ export interface Reducers {
     register: AuthRegisterState;
     food: FoodState,
     user: UserState,
+    suggest: SuggestState;
     project: ProjectState;
 }
 
@@ -41,7 +42,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: User | null
+        data: User
     };
     actions?: {
         loading: boolean;
@@ -109,6 +110,20 @@ export interface UserState {
         data: any;
     }
     gap: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface SuggestState {
+    list: {
         loading: boolean;
         error: any;
         data: any;

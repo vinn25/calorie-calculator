@@ -2,8 +2,11 @@ import Card from '@/components/card/Card';
 import PieCharts from '@/components/chart/PieCharts';
 import { TextField } from '@/components/form';
 import Progress from '@/components/progress/Progress';
+import { getUserListLog, getUserProfile } from '@/redux/actions/user';
+import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
     // searchTerm: string;
@@ -29,6 +32,22 @@ const ChartsNutrition = (
         // subCardTitle,
     }: Props
 ) => {
+    const dispatch = useDispatch();
+    const userState = useSelector((state: Reducers) => state.user);
+    const authState = useSelector((state: Reducers) => state.auth);
+    const id = authState.profile?.data?.userId;
+    useEffect(() => {
+        async function getProfile() {
+            await dispatch<any>(getUserProfile({ id }));
+        }
+        getProfile();
+    }, [dispatch, id]);
+    useEffect(() => {
+        async function getLogs() {
+            await dispatch<any>(getUserListLog({ id }));
+        }
+        getLogs();
+    }, [dispatch, id]);
     return (
         <div className="w-full max-w-full justify-stretch bg-[#ffffff]">
             <div className="grid grid-cols-2 gap-5">
@@ -42,19 +61,25 @@ const ChartsNutrition = (
                     <div>Daily Target vs. Actual</div>
                     <div className="mb-7 grid grid-cols-1 gap-10">
                         <Progress
-                            value={28}
+                            current={userState?.list?.data?.totals?.protein}
+                            target={userState?.profile?.data?.proteinTarget}
+                            type="nutrient"
                             style="primary"
                             label="Protein"
                             fullWidth
                         />
                         <Progress
-                            value={70}
+                            current={userState?.list?.data?.totals?.fat}
+                            target={userState?.profile?.data?.fatTarget}
+                            type="nutrient"
                             style="accent"
                             label="Fat"
                             fullWidth
                         />
                         <Progress
-                            value={72}
+                            current={userState?.list?.data?.totals?.carbs}
+                            target={userState?.profile?.data?.carbTarget}
+                            type="nutrient"
                             style="secondary"
                             label="Carbohydrates"
                             fullWidth

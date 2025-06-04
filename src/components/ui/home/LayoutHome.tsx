@@ -7,70 +7,67 @@ import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
 import TableListFood from '@/components/ui/food-log/TableListFood';
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import TableListRecommendation from '@/components/ui/recommendation/TableListRecommendation';
-import reducers from '@/redux/reducers';
+import { getSuggestions } from '@/redux/actions/suggest';
+import { getUserListLog, getUserProfile } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { parseJwt } from '@/utils/jwt';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Redirect } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-const dailyCalories = [
-    {
-        key: 'goal',
-        title: 'Goal',
-        calorie: 2000,
-    },
-    {
-        key: 'consumed',
-        title: 'Consumed',
-        calorie: 1400,
-    },
-    {
-        key: 'remaining',
-        title: 'Remaining',
-        calorie: 600,
-    },
-];
 
 const LayoutHome = () => {
     const dispatch = useDispatch();
     const foodState = useSelector((state: Reducers) => state.food);
-    const user = useSelector((state: Reducers) => state.auth)
-    console.log(user.profile?.data?.userId)
+    const userState = useSelector((state: Reducers) => state.user);
+    const suggestState = useSelector((state: Reducers) => state.suggest);
+    const authState = useSelector((state: Reducers) => state.auth);
     const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState('');
-
+    const id = authState.profile?.data?.userId;
     useEffect(() => {
-        const token = user?.token?.accessToken;
+        const token = authState?.token?.accessToken;
         if (!token) return;
-
         const payload = parseJwt(token);
         if (!payload || !payload.exp) {
             dispatch({ type: 'LOGOUT' });
-            window.location.href = '/login'
+            window.location.href = '/login';
             return;
         }
-
         const isExpired = Date.now() > payload.exp * 1000;
         if (isExpired) {
             dispatch({ type: 'LOGOUT' });
-            window.location.href = '/login'
+            window.location.href = '/login';
         }
-    }, [user.token?.accessToken, dispatch]);
-
-
+    }, [authState.token?.accessToken, dispatch]);
     useEffect(() => {
         if (foodState.actions?.type) {
             setAlertMessage(true);
             setTimeout(() => {
                 setAlertMessage(false);
                 dispatch<any>({
-                    type: 'PROJECT_ACTION_CLEAR',
+                    type: 'food_ACTION_CLEAR',
                 });
             }, 4000);
         }
     }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    useEffect(() => {
+        async function getProfile() {
+            await dispatch<any>(getUserProfile({ id }));
+        }
+        getProfile();
+    }, [dispatch, id]);
+    useEffect(() => {
+        async function getSuggestRemaining() {
+            await dispatch<any>(getSuggestions({ id }));
+        }
+        getSuggestRemaining();
+    }, [dispatch, id]);
+    useEffect(() => {
+        async function getLogs() {
+            await dispatch<any>(getUserListLog({ id }));
+        }
+        getLogs();
+    }, [dispatch, id]);
 
     return (
         <div>
@@ -96,19 +93,39 @@ const LayoutHome = () => {
                         cardTitle="Daily Summary"
                         subCardTitle="Daily Calories"
                     >
-                        <div className="flex items-center justify-between">
-                            {dailyCalories.map(data => (
-                                <div key={data.key} className="text-center">
-                                    <div>{data.title}</div>
-                                    <div className="text-text-lg font-semibold text-secondary">
-                                        {data.calorie}
-                                    </div>
+                        <div className="grid grid-cols-3 items-center">
+                            <div className="pl-[40px] text-left">
+                                <div>Goal</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {userState?.profile?.data?.calorieTarget}
                                 </div>
-                            ))}
+                            </div>
+                            <div className="text-center">
+                                <div>Consumed</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {/* {userState?.profile?.data?.calorieTarget -
+                                        suggestState?.list?.data?.remaining
+                                            .calories} */}
+                                    {userState?.list?.data?.totals?.calories}
+                                </div>
+                            </div>
+                            <div className="pr-[40px] text-right">
+                                <div>Remaining</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {
+                                        suggestState?.list?.data?.remaining
+                                            ?.calories
+                                    }
+                                </div>
+                            </div>
                         </div>
                         <div className="mt-4">
                             <Progress
-                                value={70}
+                                current={
+                                    userState?.list?.data?.totals?.calories
+                                }
+                                target={userState?.profile?.data?.calorieTarget}
+                                type="calorie"
                                 style="primary"
                                 fullWidth
                                 label="Daily Progress"
@@ -158,17 +175,7 @@ const LayoutHome = () => {
                     </Card>
                 </div>
                 <div className="mt-5">
-                    <Card
-                        cardTitle="Personalized Recommendations"
-                        subCardTitle="Meal Suggestions"
-                        addOns={
-                            <div className="text-text-md">
-                                600 calories remaining
-                            </div>
-                        }
-                    >
-                        <TableListRecommendation />
-                    </Card>
+                    <TableListRecommendation />
                 </div>
             </div>
         </div>

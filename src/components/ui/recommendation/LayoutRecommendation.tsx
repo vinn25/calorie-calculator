@@ -43,17 +43,7 @@ const LayoutRecommendation = () => {
                     )}
                 </div>
                 <div className="w-full max-w-full">
-                    <Card
-                        cardTitle="Personalized Recommendations"
-                        subCardTitle="Meal Suggestions"
-                        addOns={
-                            <div className="text-text-md">
-                                600 calories remaining
-                            </div>
-                        }
-                    >
-                        <TableListRecommendation />
-                    </Card>
+                    <TableListRecommendation />
                 </div>
             </div>
         </div>

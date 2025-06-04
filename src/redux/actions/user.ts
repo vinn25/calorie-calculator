@@ -5,19 +5,19 @@ import { userCreateFoodFavorite, userCreateFoodLog, userDeleteFoodFavorite, user
 interface Props {
     data?: any;
     params?: Object;
-    id: string;
+    id: number;
     callback?: any;
 }
 
 interface PropsPostData {
     data: any;
-    id: string;
+    id: number;
     callback?: any;
 }
 
 interface PropsDetail {
     data?: any;
-    id: string;
+    id: number;
     callback?: any;
     params?: any;
 }
@@ -57,41 +57,43 @@ export const getUserListLog = ({ id, callback }: Props) => async (dispatch: Disp
         }
     }
 }
-export const getUserProfile =
-    ({ id, callback }: PropsDetail) =>
-        async (dispatch: Dispatch, getState: any) => {
+export const getUserProfile = ({ id, callback }: Props) =>
+    async (dispatch: Dispatch, getState: any) => {
+        dispatch({
+            type: 'USER_PROFILE_LOADING',
+        });
+        try {
+            const { token } = getState().auth;
+            const response: any = await userProfile(id);
             dispatch({
-                type: 'USER_PROFILE_LOADING',
+                type: 'USER_PROFILE_SUCCESS',
+                payload: response,
             });
-            try {
-                const { token } = getState().auth;
-                const response: any = await userProfile(id);
-                dispatch({
-                    type: 'USER_PROFILE_SUCCESS',
-                    payload: response,
-                });
-                if (callback) {
-                    callback();
-                }
-            } catch (error: any) {
-                if (error && error.response) {
-                    if (error.response.data.code === 5006) {
-                        dispatch(
-                            postSharedAuthRefresh({
-                                callback: () => {
-                                    dispatch(getUserProfile({ id, callback }));
-                                },
-                            })
-                        );
-                    } else {
-                        dispatch({
-                            type: 'USER_PROFILE_ERROR',
-                            payload: error.response.data,
-                        });
-                    }
+            if (callback) {
+                callback();
+            }
+        } catch (error: any) {
+            if (error && error.response) {
+                if (error.response.data.code === 5006) {
+                    dispatch(
+                        postSharedAuthRefresh({
+                            callback: () => {
+                                dispatch(getUserProfile({
+                                    id,
+                                    callback
+                                }));
+                            },
+                        })
+                    );
+                } else {
+                    dispatch({
+                        type: 'USER_PROFILE_ERROR',
+                        payload: error.response.data,
+                    });
                 }
             }
-        };
+        }
+    };
 export const getUserGap =
     ({ id, callback }: Props) =>
         async (dispatch: Dispatch, getState: any) => {
@@ -241,50 +243,50 @@ export const putUserProfile = ({ data, id, callback }: PropsPostData) => async (
         }
     }
 }
-export const deleteUserDeleteFoodFavorite = ({ id, data, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
-    dispatch({
-        type: 'USER_ACTION_LOADING',
-    });
-    try {
-        const { token } = getState().auth;
-        await userDeleteFoodFavorite(id);
-        dispatch({
-            type: 'USER_ACTION_SUCCESS',
-            payload: {
-                data: 'Food successfully deleted from favorites'
-            },
-        });
-        callback();
-    } catch (error: any) {
-        if (error && error.response) {
-            if (error.response.data.code === 5006) {
-                dispatch(
-                    postSharedAuthRefresh({
-                        callback: () => {
-                            dispatch(
-                                deleteUserDeleteFoodFavorite({
-                                    id,
-                                    data,
-                                    callback,
-                                })
-                            );
-                        },
-                    })
-                );
-            } else {
-                dispatch({
-                    type: 'USER_ACTION_ERROR',
-                    payload: error.response.data,
-                });
-            }
-        } else {
-            dispatch({
-                type: 'USER_ACTION_ERROR',
-                payload: {
-                    message: error.message,
-                    code: error.code,
-                },
-            });
-        }
-    }
-}
+// export const deleteUserDeleteFoodFavorite = ({ id, data, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
+//     dispatch({
+//         type: 'USER_ACTION_LOADING',
+//     });
+//     try {
+//         const { token } = getState().auth;
+//         await userDeleteFoodFavorite(id);
+//         dispatch({
+//             type: 'USER_ACTION_SUCCESS',
+//             payload: {
+//                 data: 'Food successfully deleted from favorites'
+//             },
+//         });
+//         callback();
+//     } catch (error: any) {
+//         if (error && error.response) {
+//             if (error.response.data.code === 5006) {
+//                 dispatch(
+//                     postSharedAuthRefresh({
+//                         callback: () => {
+//                             dispatch(
+//                                 deleteUserDeleteFoodFavorite({
+//                                     id,
+//                                     data,
+//                                     callback,
+//                                 })
+//                             );
+//                         },
+//                     })
+//                 );
+//             } else {
+//                 dispatch({
+//                     type: 'USER_ACTION_ERROR',
+//                     payload: error.response.data,
+//                 });
+//             }
+//         } else {
+//             dispatch({
+//                 type: 'USER_ACTION_ERROR',
+//                 payload: {
+//                     message: error.message,
+//                     code: error.code,
+//                 },
+//             });
+//         }
+//     }
+// }

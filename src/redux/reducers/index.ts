@@ -8,6 +8,7 @@ import { projectReducers } from '@/redux/reducers/projectReducers';
 import { authRegisterReducers } from '@/redux/reducers/authRegisterReducers';
 import { foodReducers } from '@/redux/reducers/foodReducers';
 import { userReducers } from '@/redux/reducers/userReducers';
+import { suggestReducers } from '@/redux/reducers/suggestReducers';
 
 interface PersistProps {
     key: string;
@@ -24,6 +25,7 @@ const appReducer = combineReducers({
     register: authRegisterReducers,
     food: foodReducers,
     user: userReducers,
+    suggest: suggestReducers,
     project: projectReducers,
 });
 

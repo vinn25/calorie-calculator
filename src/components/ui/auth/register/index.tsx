@@ -81,7 +81,7 @@ const RegisterLayout = () => {
             }, 401);
         }
         if (authRegisterState.isRegister) {
-            redirect('/home');
+            redirect('/');
         }
     }, [
         authRegisterState?.actions?.error,

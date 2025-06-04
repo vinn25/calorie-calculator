@@ -30,7 +30,6 @@ const SearchFoodLog = ({ params, setParams }: Props) => {
         }
         replace(`${pathName}?${getParams.toString()}`);
     };
-    console.log('Params: ', params);
     useEffect(() => {
         setParams(searchTerm);
         // eslint-disable-next-line

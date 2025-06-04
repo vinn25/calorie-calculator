@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Avatar from '@/components/badge/Avatar';
@@ -9,11 +9,21 @@ import ClickOutside from '@/components/ClickOutside';
 import { logoutUser } from '@/redux/actions/auth';
 import type { Reducers } from '@/redux/types';
 import { LoadingSpinner } from '@/components/loading';
+import { getUserProfile } from '@/redux/actions/user';
+import { getUserName } from '@/helpers/getUserName';
 
 const DropdownUser = () => {
     const dispatch = useDispatch();
+    const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
+    const id = authState.profile?.data?.userId;
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    useEffect(() => {
+        async function getProfile() {
+            await dispatch<any>(getUserProfile({ id }));
+        }
+        getProfile();
+    }, [dispatch, id]);
 
     return (
         <ClickOutside
@@ -27,31 +37,34 @@ const DropdownUser = () => {
             >
                 <div className="relative grid select-none items-center whitespace-nowrap rounded-full bg-neutral-50 px-10 py-3 font-sans text-xs font-bold uppercase text-black">
                     <div className="absolute bottom-0 left-1.5 top-2 m-auto size-5 -translate-y-2/4">
-                        {/* {authState.profile.loading ? (
+                        {userState.profile.loading ? (
                             <LoadingSpinner />
                         ) : (
                             <Avatar
-                                name={authState?.profile?.data?.data?.name}
-                                type={
-                                    authState?.profile?.data?.data?.photo
-                                        ? 'image'
-                                        : 'text'
-                                }
-                                image={
-                                    authState?.profile?.data?.data?.photo &&
-                                    authState?.profile?.data?.data?.photo
-                                        ?.completedUrl
-                                }
+                                name={userState?.profile?.data?.email}
+                                // type={
+                                //     userState?.profile?.data?.photo
+                                //         ? 'image'
+                                //         : 'text'
+                                // }
+                                type="text"
+                                // image={
+                                //     userState?.profile?.data?.data?.photo &&
+                                //     userState?.profile?.data?.data?.photo
+                                //         ?.completedUrl
+                                // }
                                 size="sm"
                             />
-                        )} */}
-                        <Avatar size="sm" type="image" />
+                        )}
+                        {/* <Avatar size="sm" type="image" /> */}
                     </div>
                     <span className="ml-[18px] text-text-sm font-semibold">
-                        {
-                            authState?.profile?.data?.email.split('@')[0]
-                        }
-                        
+                        {userState?.profile?.loading ? (
+                            <LoadingSpinner />
+                        ) : (
+                            getUserName(userState?.profile?.data.email)
+                        )}
+                        {/* John Doe */}
                     </span>
                     <svg
                         className="absolute inset-y-0 right-3 m-auto fill-current text-neutral-400"

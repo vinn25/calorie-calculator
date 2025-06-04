@@ -13,7 +13,7 @@ const Header = ({ title }: { title: string }) => {
         {
             id: 'home',
             label: 'Home',
-            route: '/home',
+            route: '/',
         },
         {
             id: 'foodlog',
@@ -92,11 +92,13 @@ const Header = ({ title }: { title: string }) => {
                         <Link href="/home">{title}</Link>
                     </h4>
                 </div>
-                <div className="2xsm:gap-7 flex items-center gap-3">
-                    {/* <!-- User Area --> */}
-                    <DropdownUser />
-                    {/* <!-- User Area --> */}
-                </div>
+                {!isBack && (
+                    <div className="2xsm:gap-7 flex items-center gap-3">
+                        {/* <!-- User Area --> */}
+                        <DropdownUser />
+                        {/* <!-- User Area --> */}
+                    </div>
+                )}
             </div>
             {!isBack && (
                 <div className="flex items-center gap-5 rounded-[10px] p-4 md:px-6 2xl:px-11">

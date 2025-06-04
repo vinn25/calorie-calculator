@@ -2,38 +2,23 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
-import Pagination from '@/components/Pagination';
+import Progress from '@/components/progress/Progress';
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from '@/components/tab/tabs';
-import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
+import MicroNutrition from '@/components/ui/nutrition/MicroNutrition';
 import { Reducers } from '@/redux/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const dailyCalories = [
-    {
-        title: 'Goal',
-        calorie: 2000,
-    },
-    {
-        title: 'Consumed',
-        calorie: 1400,
-    },
-    {
-        title: 'Remaining',
-        calorie: 600,
-    },
-];
-
 const LayoutNutrition = () => {
     const dispatch = useDispatch();
-    const [searchTerm, setSearchTerm] = useState('');
     const projectState = useSelector((state: Reducers) => state.project);
+    const [searchTerm, setSearchTerm] = useState('');
     const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState({
         page: 1,
@@ -99,7 +84,7 @@ const LayoutNutrition = () => {
                                 <ChartsNutrition />
                             </TabsContent>
                             <TabsContent value="micro">
-                                Micronutrients
+                                <MicroNutrition />
                             </TabsContent>
                         </Tabs>
                     </Card>

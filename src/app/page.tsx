@@ -6,7 +6,7 @@ import Image from 'next/image';
 export default function Home() {
     return (
         <ReduxProvider>
-            <DefaultLayout>
+            <DefaultLayout title={''}>
                 <LayoutHome />
             </DefaultLayout>
         </ReduxProvider>

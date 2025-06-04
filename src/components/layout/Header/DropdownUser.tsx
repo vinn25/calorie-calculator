@@ -48,12 +48,10 @@ const DropdownUser = () => {
                         <Avatar size="sm" type="image" />
                     </div>
                     <span className="ml-[18px] text-text-sm font-semibold">
-                        {/* {authState.profile.loading ? (
-                            <LoadingSpinner />
-                        ) : (
-                            authState?.profile?.data?.data?.name
-                        )} */}
-                        John Doe
+                        {
+                            authState?.profile?.data?.email.split('@')[0]
+                        }
+                        
                     </span>
                     <svg
                         className="absolute inset-y-0 right-3 m-auto fill-current text-neutral-400"

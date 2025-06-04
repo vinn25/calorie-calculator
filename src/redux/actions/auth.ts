@@ -7,7 +7,6 @@ import {
     sharedUserProfile,
     sharedUserUploadPhoto,
 } from '@/services/sharedService';
-import { userUpdateMobileNumber } from '@/services/userService';
 
 interface Props {
     data?: any;
@@ -24,7 +23,7 @@ export const postAuthLoginUser =
                 const response: any = await publicLoginUser(data);
                 dispatch({
                     type: 'AUTH_SUCCESS',
-                    payload: response.data,
+                    payload: response,
                 });
                 dispatch({
                     type: 'AUTH_ACTION_SUCCESS',
@@ -61,16 +60,16 @@ export const postAuthRegisterUser =
     ({ data, callback }: Props) =>
         async (dispatch: Dispatch) => {
             dispatch({
-                type: 'AUTH_ACTION_LOADING',
+                type: 'REGISTER_ACTION_LOADING',
             });
             try {
                 const response: any = await publicRegisterUser(data);
                 dispatch({
-                    type: 'AUTH_SUCCESS',
+                    type: 'REGISTER_SUCCESS',
                     payload: response.data,
                 });
                 dispatch({
-                    type: 'AUTH_ACTION_SUCCESS',
+                    type: 'REGISTER_ACTION_SUCCESS',
                     payload: {
                         message: response.message,
                         code: response.code,
@@ -217,56 +216,56 @@ export const patchAuthChangePass =
             }
         };
 
-export const putUserUpdateMobileNumber =
-    ({ data, callback }: Props) =>
-        async (dispatch: Dispatch, getState: any) => {
-            dispatch({
-                type: 'AUTH_ACTION_LOADING',
-            });
-            try {
-                const { token } = getState().auth;
-                await userUpdateMobileNumber(token.accessToken, data);
-                dispatch({
-                    type: 'AUTH_ACTION_SUCCESS',
-                    payload: {
-                        data: 'Profile updated successfully',
-                    },
-                });
-                if (callback) {
-                    callback();
-                }
-            } catch (error: any) {
-                if (error && error.response) {
-                    if (error.response.data.statusCode === 5000) {
-                        dispatch(
-                            postSharedAuthRefresh({
-                                callback: () => {
-                                    dispatch(
-                                        putUserUpdateMobileNumber({
-                                            data,
-                                            callback,
-                                        })
-                                    );
-                                },
-                            })
-                        );
-                    } else {
-                        dispatch({
-                            type: 'AUTH_ACTION_ERROR',
-                            payload: error.response.data,
-                        });
-                    }
-                } else {
-                    dispatch({
-                        type: 'AUTH_ACTION_ERROR',
-                        payload: {
-                            message: error.message,
-                            code: error.code,
-                        },
-                    });
-                }
-            }
-        };
+// export const putUserUpdateMobileNumber =
+//     ({ data, callback }: Props) =>
+//         async (dispatch: Dispatch, getState: any) => {
+//             dispatch({
+//                 type: 'AUTH_ACTION_LOADING',
+//             });
+//             try {
+//                 const { token } = getState().auth;
+//                 await userUpdateMobileNumber(token.accessToken, data);
+//                 dispatch({
+//                     type: 'AUTH_ACTION_SUCCESS',
+//                     payload: {
+//                         data: 'Profile updated successfully',
+//                     },
+//                 });
+//                 if (callback) {
+//                     callback();
+//                 }
+//             } catch (error: any) {
+//                 if (error && error.response) {
+//                     if (error.response.data.statusCode === 5000) {
+//                         dispatch(
+//                             postSharedAuthRefresh({
+//                                 callback: () => {
+//                                     dispatch(
+//                                         putUserUpdateMobileNumber({
+//                                             data,
+//                                             callback,
+//                                         })
+//                                     );
+//                                 },
+//                             })
+//                         );
+//                     } else {
+//                         dispatch({
+//                             type: 'AUTH_ACTION_ERROR',
+//                             payload: error.response.data,
+//                         });
+//                     }
+//                 } else {
+//                     dispatch({
+//                         type: 'AUTH_ACTION_ERROR',
+//                         payload: {
+//                             message: error.message,
+//                             code: error.code,
+//                         },
+//                     });
+//                 }
+//             }
+//         };
 
 export const putSharedUserUploadPhoto =
     ({ data, callback }: Props) =>

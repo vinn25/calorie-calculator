@@ -8,10 +8,7 @@ import DropdownUser from './DropdownUser';
 import { ButtonIcon } from '@/components/button';
 import Link from 'next/link';
 
-const Header = (props: {
-    sidebarOpen: string | boolean | undefined;
-    setSidebarOpen: (arg0: boolean) => void;
-}) => {
+const Header = ({ title }: { title: string }) => {
     const navGroups = [
         {
             id: 'home',
@@ -32,6 +29,11 @@ const Header = (props: {
             id: 'recommendation',
             label: 'Recommendations',
             route: '/recommendation',
+        },
+        {
+            id: 'favourites',
+            label: 'Favourites',
+            route: '/favourites',
         },
     ];
 
@@ -87,27 +89,31 @@ const Header = (props: {
                     /> */}
                     {isBack && <ButtonBack />}
                     <h4 className="text-neutral text-text-xl font-semibold text-primary">
-                        <Link href="/">Calorie Tracker</Link>
+                        <Link href="/home">{title}</Link>
                     </h4>
                 </div>
-                <div className="2xsm:gap-7 flex items-center gap-3">
-                    {/* <!-- User Area --> */}
-                    <DropdownUser />
-                    {/* <!-- User Area --> */}
+                {!isBack && (
+                    <div className="2xsm:gap-7 flex items-center gap-3">
+                        {/* <!-- User Area --> */}
+                        <DropdownUser />
+                        {/* <!-- User Area --> */}
+                    </div>
+                )}
+            </div>
+            {!isBack && (
+                <div className="flex items-center gap-5 rounded-[10px] p-4 md:px-6 2xl:px-11">
+                    {navGroups.map(items => (
+                        <Link
+                            key={items.id}
+                            href={items.route}
+                            className={`rounded-md p-1 ${activeItem === items.id ? 'bg-primary text-white' : 'hover:bg-primary-light hover:text-primary-dark'}`}
+                            onClick={() => setActiveItem(items.id)}
+                        >
+                            <div className="px-8">{items.label}</div>
+                        </Link>
+                    ))}
                 </div>
-            </div>
-            <div className="flex items-center gap-5 rounded-[10px] p-4 md:px-6 2xl:px-11">
-                {navGroups.map(items => (
-                    <Link
-                        key={items.id}
-                        href={items.route}
-                        className={`rounded-md p-1 ${activeItem === items.id ? 'bg-primary text-white' : 'hover:bg-primary-light hover:text-primary-dark'}`}
-                        onClick={() => setActiveItem(items.id)}
-                    >
-                        <div className="px-8">{items.label}</div>
-                    </Link>
-                ))}
-            </div>
+            )}
         </header>
     );
 };

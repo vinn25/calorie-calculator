@@ -2,61 +2,72 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
-import { TextField } from '@/components/form';
-import Pagination from '@/components/Pagination';
 import Progress from '@/components/progress/Progress';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
+import TableListFood from '@/components/ui/food-log/TableListFood';
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
-import FilterProject from '@/components/ui/schedule/FilterProject';
-import TableListProject from '@/components/ui/schedule/TableListProject';
+import TableListRecommendation from '@/components/ui/recommendation/TableListRecommendation';
+import { getSuggestions } from '@/redux/actions/suggest';
+import { getUserListLog, getUserProfile } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
+import { parseJwt } from '@/utils/jwt';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const dailyCalories = [
-    {
-        key: 'goal',
-        title: 'Goal',
-        calorie: 2000,
-    },
-    {
-        key: 'consumed',
-        title: 'Consumed',
-        calorie: 1400,
-    },
-    {
-        key: 'remaining',
-        title: 'Remaining',
-        calorie: 600,
-    },
-];
-
 const LayoutHome = () => {
     const dispatch = useDispatch();
-    const [searchTerm, setSearchTerm] = useState('');
-    const projectState = useSelector((state: Reducers) => state.project);
+    const foodState = useSelector((state: Reducers) => state.food);
+    const userState = useSelector((state: Reducers) => state.user);
+    const suggestState = useSelector((state: Reducers) => state.suggest);
+    const authState = useSelector((state: Reducers) => state.auth);
     const [alertMessage, setAlertMessage] = useState(false);
-    const [params, setParams] = useState({
-        page: 1,
-        perPage: 10,
-        search: '',
-        active: 'true',
-    });
-    const handleSearch = (event: any) => {
-        setSearchTerm(event.target.value);
-    };
+    const [params, setParams] = useState('');
+    const id = authState.profile?.data?.userId;
     useEffect(() => {
-        if (projectState.actions?.type) {
+        const token = authState?.token?.accessToken;
+        if (!token) return;
+        const payload = parseJwt(token);
+        if (!payload || !payload.exp) {
+            dispatch({ type: 'LOGOUT' });
+            window.location.href = '/login';
+            return;
+        }
+        const isExpired = Date.now() > payload.exp * 1000;
+        if (isExpired) {
+            dispatch({ type: 'LOGOUT' });
+            window.location.href = '/login';
+        }
+    }, [authState.token?.accessToken, dispatch]);
+    useEffect(() => {
+        if (foodState.actions?.type) {
             setAlertMessage(true);
             setTimeout(() => {
                 setAlertMessage(false);
                 dispatch<any>({
-                    type: 'PROJECT_ACTION_CLEAR',
+                    type: 'food_ACTION_CLEAR',
                 });
             }, 4000);
         }
-    }, [dispatch, projectState.actions?.error, projectState.actions?.type]);
+    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    useEffect(() => {
+        async function getProfile() {
+            await dispatch<any>(getUserProfile({ id }));
+        }
+        getProfile();
+    }, [dispatch, id]);
+    useEffect(() => {
+        async function getSuggestRemaining() {
+            await dispatch<any>(getSuggestions({ id }));
+        }
+        getSuggestRemaining();
+    }, [dispatch, id]);
+    useEffect(() => {
+        async function getLogs() {
+            await dispatch<any>(getUserListLog({ id }));
+        }
+        getLogs();
+    }, [dispatch, id]);
 
     return (
         <div>
@@ -65,14 +76,14 @@ const LayoutHome = () => {
                     {alertMessage && (
                         <Alert
                             type={
-                                projectState?.actions?.type === 'success'
+                                foodState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                projectState?.actions?.type === 'success'
-                                    ? `${projectState?.actions?.message?.data}`
-                                    : `${projectState?.actions?.error?.meta?.code} : ${projectState?.actions?.error?.meta?.message}`
+                                foodState?.actions?.type === 'success'
+                                    ? `${foodState?.actions?.message?.data}`
+                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
@@ -82,19 +93,39 @@ const LayoutHome = () => {
                         cardTitle="Daily Summary"
                         subCardTitle="Daily Calories"
                     >
-                        <div className="flex items-center justify-between">
-                            {dailyCalories.map(data => (
-                                <div key={data.key} className="text-center">
-                                    <div>{data.title}</div>
-                                    <div className="text-text-lg font-semibold text-secondary">
-                                        {data.calorie}
-                                    </div>
+                        <div className="grid grid-cols-3 items-center">
+                            <div className="pl-[40px] text-left">
+                                <div>Goal</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {userState?.profile?.data?.calorieTarget}
                                 </div>
-                            ))}
+                            </div>
+                            <div className="text-center">
+                                <div>Consumed</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {/* {userState?.profile?.data?.calorieTarget -
+                                        suggestState?.list?.data?.remaining
+                                            .calories} */}
+                                    {userState?.list?.data?.totals?.calories}
+                                </div>
+                            </div>
+                            <div className="pr-[40px] text-right">
+                                <div>Remaining</div>
+                                <div className="text-text-lg font-semibold text-secondary">
+                                    {
+                                        suggestState?.list?.data?.remaining
+                                            ?.calories
+                                    }
+                                </div>
+                            </div>
                         </div>
                         <div className="mt-4">
                             <Progress
-                                value={70}
+                                current={
+                                    userState?.list?.data?.totals?.calories
+                                }
+                                target={userState?.profile?.data?.calorieTarget}
+                                type="calorie"
                                 style="primary"
                                 fullWidth
                                 label="Daily Progress"
@@ -102,20 +133,49 @@ const LayoutHome = () => {
                             />
                         </div>
                     </Card>
-                    <SearchFoodLog
+                    <Card
                         cardTitle="Quick Add Food"
                         subCardTitle="Food Log Entry"
-                        searchTerm={searchTerm}
-                        setSearchTerm={setSearchTerm}
-                        handleSearch={handleSearch}
-                        params={params}
-                    />
+                        addOns={
+                            <div className="flex items-center gap-2 rounded-md border border-primary px-2 py-[2px]">
+                                <div>
+                                    <Icon
+                                        icon="fluent:clock-16-regular"
+                                        width="16"
+                                        height="16"
+                                    />
+                                </div>
+                                <div className="text-text-md">Today</div>
+                            </div>
+                        }
+                    >
+                        <SearchFoodLog
+                            params={params}
+                            setParams={setParams}
+                            // searchTerm={searchTerm}
+                            // setSearchTerm={setSearchTerm}
+                        />
+                        <div className="mt-5 min-h-full w-full max-w-full">
+                            {params && (
+                                <TableListFood
+                                    params={params}
+                                    // searchTerm={searchTerm}
+                                    // setSearchTerm={setSearchTerm}
+                                />
+                            )}
+                        </div>
+                    </Card>
                 </div>
                 <div className="mt-5">
-                    <ChartsNutrition
-                        cardTitle="Nutrition Overview"
+                    <Card
+                        cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
-                    />
+                    >
+                        <ChartsNutrition />
+                    </Card>
+                </div>
+                <div className="mt-5">
+                    <TableListRecommendation />
                 </div>
             </div>
         </div>

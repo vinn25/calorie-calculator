@@ -71,52 +71,70 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       include: {
         items: {
           include: {
-            food: true,
+            food: true, // Join ke Food untuk dapatkan data nutrisinya
           },
         },
       },
     });
 
-    const totals = logs.reduce(
-      (acc, log) => {
-        for (const item of log.items) {
-          const qty = item.quantity;
-          const food = item.food;
+    const totals = {
+      calories: 0,
+      fat: 0,
+      carbs: 0,
+      protein: 0,
+      vitaminc: 0,
+      calcium: 0,
+      iron: 0,
+      vitamind: 0,
+      potassium: 0,
+    };
 
-          acc.calories += (food.caloricvalue || 0) * qty;
-          acc.fat += (food.fat || 0) * qty;
-          acc.carbs += (food.carbohydrates || 0) * qty;
-          acc.protein += (food.protein || 0) * qty;
+    const foodsConsumed: any[] = [];
 
-          acc.vitaminc += (food.vitaminc || 0) * qty;
-          acc.calcium += (food.calcium || 0) * qty;
-          acc.iron += (food.iron || 0) * qty;
-          acc.vitamind += (food.vitamind || 0) * qty;
-          acc.potassium += (food.potassium || 0) * qty;
-        }
-        return acc;
-      },
-      {
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-        vitaminc: 0,
-        calcium: 0,
-        iron: 0,
-        vitamind: 0,
-        potassium: 0,
-      }
-    );
+    logs.forEach((log) => {
+      log.items.forEach((item) => {
+        const { food, quantity } = item;
+        if (!food) return;
 
-    // Bulatkan semua nilai ke dua angka di belakang koma
+        const entry = {
+          foodId: food.foodId,
+          name: food.foodName,
+          quantity,
+          calories: (food.caloricvalue || 0) * quantity,
+          fat: (food.fat || 0) * quantity,
+          carbs: (food.carbohydrates || 0) * quantity,
+          protein: (food.protein || 0) * quantity,
+          vitaminc: (food.vitaminc || 0) * quantity,
+          calcium: (food.calcium || 0) * quantity,
+          iron: (food.iron || 0) * quantity,
+          vitamind: (food.vitamind || 0) * quantity,
+          potassium: (food.potassium || 0) * quantity,
+        };
+
+        foodsConsumed.push(entry);
+
+        totals.calories += entry.calories;
+        totals.fat += entry.fat;
+        totals.carbs += entry.carbs;
+        totals.protein += entry.protein;
+        totals.vitaminc += entry.vitaminc;
+        totals.calcium += entry.calcium;
+        totals.iron += entry.iron;
+        totals.vitamind += entry.vitamind;
+        totals.potassium += entry.potassium;
+      });
+    });
+
     const roundedTotals = Object.fromEntries(
-      Object.entries(totals).map(([key, value]) => [key, Math.round(value * 100) / 100])
+      Object.entries(totals).map(([k, v]) => [k, Math.round(v * 100) / 100])
     );
 
-    res.status(200).json({ data: roundedTotals });
+    res.status(200).json({
+      totals: roundedTotals,
+      foods: foodsConsumed,
+    });
   } catch (error) {
-    console.error('Error calculating nutrients:', error);
+    console.error('Failed to fetch logs with foods:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 

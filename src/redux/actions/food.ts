@@ -1,7 +1,7 @@
 import { removeBearer } from "@/helpers/removeBearer";
 import { postSharedAuthRefresh } from "@/redux/actions/auth";
 import { Dispatch } from "@/redux/types";
-import { foodList } from "@/services/foodService";
+import { foodDetail, foodList, foodSearch } from "@/services/foodService";
 import { ktpProjectCreate, ktpProjectDelete, ktpProjectDetail, ktpProjectList, ktpProjectUpdate } from "@/services/ktpService";
 
 interface Props {
@@ -22,16 +22,19 @@ interface PropsDetail {
     params?: any;
 }
 
-export const getFoodList = ({ params, callback }: Props) => async (dispatch: Dispatch, getState: any) => {
+interface PropsSearch {
+    data?: any;
+    query: string;
+    callback?: any;
+}
+
+export const getFoodList = ({ callback }: Props) => async (dispatch: Dispatch, getState: any) => {
     dispatch({
         type: 'FOOD_LIST_LOADING',
     });
     try {
         const { token } = getState().auth;
-        const response: any = await foodList(
-            removeBearer(token.accessToken),
-            params
-        );
+        const response: any = await foodList();
         dispatch({
             type: 'FOOD_LIST_SUCCESS',
             payload: response,
@@ -46,7 +49,7 @@ export const getFoodList = ({ params, callback }: Props) => async (dispatch: Dis
                     postSharedAuthRefresh({
                         callback: () => {
                             dispatch(
-                                getFoodList({ params, callback })
+                                getFoodList({ callback })
                             )
                         }
                     })
@@ -60,18 +63,17 @@ export const getFoodList = ({ params, callback }: Props) => async (dispatch: Dis
         }
     }
 }
-
-export const getKtpProjectDetail =
+export const getfoodDetail =
     ({ id, callback }: PropsDetail) =>
         async (dispatch: Dispatch, getState: any) => {
             dispatch({
-                type: 'PROJECT_DETAIL_LOADING',
+                type: 'FOOD_DETAIL_LOADING',
             });
             try {
                 const { token } = getState().auth;
-                const response: any = await ktpProjectDetail(removeBearer(token.accessToken), id);
+                const response: any = await foodDetail(id);
                 dispatch({
-                    type: 'PROJECT_DETAIL_SUCCESS',
+                    type: 'FOOD_DETAIL_SUCCESS',
                     payload: response,
                 });
                 if (callback) {
@@ -83,142 +85,51 @@ export const getKtpProjectDetail =
                         dispatch(
                             postSharedAuthRefresh({
                                 callback: () => {
-                                    dispatch(getKtpProjectDetail({ id, callback }));
+                                    dispatch(getfoodDetail({ id, callback }));
                                 },
                             })
                         );
                     } else {
                         dispatch({
-                            type: 'PROJECT_DETAIL_ERROR',
+                            type: 'FOOD_DETAIL_ERROR',
                             payload: error.response.data,
                         });
                     }
                 }
             }
         };
-
-export const postKtpProjectCreate = ({ data, callback }: PropsPostData) => async (dispatch: Dispatch, getState: any) => {
-    dispatch({
-        type: 'PROJECT_ACTION_LOADING',
-    });
-    try {
-        const { token } = getState().auth;
-        const response: any = await ktpProjectCreate(
-            removeBearer(token.accessToken),
-            data
-        )
-        dispatch({
-            type: 'PROJECT_ACTION_SUCCESS',
-            payload: {
-                data: 'Project Successfully Created'
-            },
-        });
-        callback(response.data);
-    } catch (error: any) {
-        if (error && error.response) {
-            if (error.response.data.code === 5006) {
-                dispatch(
-                    postSharedAuthRefresh({
-                        callback: () => {
-                            dispatch(
-                                postKtpProjectCreate({
-                                    data,
-                                    callback,
-                                })
-                            );
-                        }
-                    })
-                );
-            } else {
-                dispatch({
-                    type: 'PROJECT_ACTION_ERROR',
-                    payload: error.response.data,
-                });
-            }
-        }
-    }
-}
-
-export const putKtpProjectUpdate = ({ data, id, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
-    dispatch({
-        type: 'PROJECT_ACTION_LOADING',
-    });
-    try {
-        const { token } = getState().auth;
-        await ktpProjectUpdate(removeBearer(token.accessToken), id, data);
-        dispatch({
-            type: 'PROJECT_ACTION_SUCCESS',
-            payload: {
-                data: 'Project Successfully Updated'
-            },
-        });
-        if (callback) {
-            callback();
-        }
-    } catch (error: any) {
-        if (error && error.response) {
-            if (error.response.data.code === 5006) {
-                dispatch(
-                    postSharedAuthRefresh({
-                        callback: () => {
-                            dispatch(putKtpProjectUpdate({ data, id, callback }));
-                        },
-                    })
-                );
-            } else {
-                dispatch({
-                    type: 'PROJECT_ACTION_ERROR',
-                    payload: error.response.data,
-                });
-            }
-        }
-    }
-};
-
-export const deleteKtpProjectDelete = ({ id, data, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
-    dispatch({
-        type: 'PROJECT_ACTION_LOADING',
-    });
-    try {
-        const { token } = getState().auth;
-        await ktpProjectDelete(removeBearer(token.accessToken), id);
-        dispatch({
-            type: 'PROJECT_ACTION_SUCCESS',
-            payload: {
-                data: 'Project successfully deleted'
-            },
-        });
-        callback();
-    } catch (error: any) {
-        if (error && error.response) {
-            if (error.response.data.code === 5006) {
-                dispatch(
-                    postSharedAuthRefresh({
-                        callback: () => {
-                            dispatch(
-                                deleteKtpProjectDelete({
-                                    id,
-                                    data,
-                                    callback,
-                                })
-                            );
-                        },
-                    })
-                );
-            } else {
-                dispatch({
-                    type: 'PROJECT_ACTION_ERROR',
-                    payload: error.response.data,
-                });
-            }
-        } else {
+export const getfoodSearch =
+    ({ query, callback }: PropsSearch) =>
+        async (dispatch: Dispatch, getState: any) => {
             dispatch({
-                type: 'PROJECT_ACTION_ERROR',
-                payload: {
-                    message: error.message,
-                    code: error.code,
-                },
+                type: 'FOOD_SEARCH_LOADING',
             });
-        }
-    }
-}
+            try {
+                const { token } = getState().auth;
+                const response: any = await foodSearch(query);
+                dispatch({
+                    type: 'FOOD_SEARCH_SUCCESS',
+                    payload: response,
+                });
+                if (callback) {
+                    callback();
+                }
+            } catch (error: any) {
+                if (error && error.response) {
+                    if (error.response.data.code === 5006) {
+                        dispatch(
+                            postSharedAuthRefresh({
+                                callback: () => {
+                                    dispatch(getfoodSearch({ query, callback }));
+                                },
+                            })
+                        );
+                    } else {
+                        dispatch({
+                            type: 'FOOD_SEARCH_ERROR',
+                            payload: error.response.data,
+                        });
+                    }
+                }
+            }
+        };

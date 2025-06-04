@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 interface Payload {
     data?: any;
     token?: string;
@@ -24,6 +26,8 @@ export interface Reducers {
     auth: AuthState;
     register: AuthRegisterState;
     food: FoodState,
+    user: UserState,
+    suggest: SuggestState;
     project: ProjectState;
 }
 
@@ -38,7 +42,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: any;
+        data: User
     };
     actions?: {
         loading: boolean;
@@ -51,6 +55,7 @@ export interface AuthState {
 export interface AuthRegisterState {
     loading: boolean;
     isRegister: boolean;
+    isLogin: boolean;
     error: any;
     token: {
         accessToken: string;
@@ -59,7 +64,7 @@ export interface AuthRegisterState {
     profile: {
         loading: boolean;
         error: string;
-        data: any;
+        data: User | null;
     };
     actions?: {
         loading: boolean;
@@ -76,6 +81,49 @@ export interface FoodState {
         data: any;
     }
     detail: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    search: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface UserState {
+    list: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    profile: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    gap: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface SuggestState {
+    list: {
         loading: boolean;
         error: any;
         data: any;

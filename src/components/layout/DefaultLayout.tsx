@@ -10,11 +10,12 @@ import { getAuthUserProfile } from '@/redux/actions/auth';
 
 export default function DefaultLayout({
     children,
+    title,
 }: {
     children: React.ReactNode;
+    title: string;
 }) {
     const dispatch = useDispatch();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const effectRun = useRef(false);
     // const userProfile = useCallback(() => {
     //     dispatch<any>(getAuthUserProfile({ callback: 'success' }));
@@ -32,31 +33,30 @@ export default function DefaultLayout({
     }, [dispatch]);
 
     return (
-        // <AuthWrapper>
-        <div>
-            {/* <!-- ===== Page Wrapper Start ===== --> */}
-            <div className="flex min-h-screen bg-neutral-50 font-Montserrat">
-                {/* <!-- ===== Content Area Start ===== --> ${sidebarOpen ? 'ml-22' : 'ml-72.5'} ease-linear */}
-                <div className={`relative flex flex-1 flex-col duration-300`}>
-                    {/* <!-- ===== Header Start ===== --> */}
-                    <Header
-                        sidebarOpen={sidebarOpen}
-                        setSidebarOpen={setSidebarOpen}
-                    />
-                    {/* <!-- ===== Header End ===== --> */}
+        <AuthWrapper>
+            <div>
+                {/* <!-- ===== Page Wrapper Start ===== --> */}
+                <div className="flex min-h-screen bg-neutral-50 font-Montserrat">
+                    {/* <!-- ===== Content Area Start ===== --> ${sidebarOpen ? 'ml-22' : 'ml-72.5'} ease-linear */}
+                    <div
+                        className={`relative flex flex-1 flex-col duration-300`}
+                    >
+                        {/* <!-- ===== Header Start ===== --> */}
+                        <Header title={title} />
+                        {/* <!-- ===== Header End ===== --> */}
 
-                    {/* <!-- ===== Main Content Start ===== --> */}
-                    <main>
-                        <div className="mx-auto max-w-screen-2xl bg-neutral-50 px-6 pb-15 pt-6">
-                            {children}
-                        </div>
-                    </main>
-                    {/* <!-- ===== Main Content End ===== --> */}
+                        {/* <!-- ===== Main Content Start ===== --> */}
+                        <main>
+                            <div className="mx-auto max-w-screen-2xl bg-neutral-50 px-6 pb-15 pt-6">
+                                {children}
+                            </div>
+                        </main>
+                        {/* <!-- ===== Main Content End ===== --> */}
+                    </div>
+                    {/* <!-- ===== Content Area End ===== --> */}
                 </div>
-                {/* <!-- ===== Content Area End ===== --> */}
+                {/* <!-- ===== Page Wrapper End ===== --> */}
             </div>
-            {/* <!-- ===== Page Wrapper End ===== --> */}
-        </div>
-        // </AuthWrapper>
+        </AuthWrapper>
     );
 }

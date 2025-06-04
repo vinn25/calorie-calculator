@@ -10,11 +10,12 @@ import { getAuthUserProfile } from '@/redux/actions/auth';
 
 export default function DefaultLayout({
     children,
+    title,
 }: {
     children: React.ReactNode;
+    title: string;
 }) {
     const dispatch = useDispatch();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const effectRun = useRef(false);
     // const userProfile = useCallback(() => {
     //     dispatch<any>(getAuthUserProfile({ callback: 'success' }));
@@ -41,10 +42,7 @@ export default function DefaultLayout({
                         className={`relative flex flex-1 flex-col duration-300`}
                     >
                         {/* <!-- ===== Header Start ===== --> */}
-                        <Header
-                            sidebarOpen={sidebarOpen}
-                            setSidebarOpen={setSidebarOpen}
-                        />
+                        <Header title={title} />
                         {/* <!-- ===== Header End ===== --> */}
 
                         {/* <!-- ===== Main Content Start ===== --> */}

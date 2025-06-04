@@ -75,14 +75,13 @@ const DropdownUser = () => {
 
             {/* <!-- Dropdown Start --> */}
             {dropdownOpen && (
-                <div className="absolute right-0 mt-4 flex w-62.5 flex-col rounded-b-xl border border-stroke bg-white shadow-default">
-                    <ul className="flex flex-col border-b border-stroke">
+                <div className="border-stroke absolute right-0 mt-4 flex w-62.5 flex-col rounded-b-xl border bg-white shadow-default">
+                    <ul className="border-stroke flex flex-col border-b">
                         <li className="hover:bg-primary-light hover:text-primary-dark">
                             <Link
-                                href="/"
-                                className="flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium text-neutral duration-300 ease-in-out"
+                                href="/home/profile"
+                                className="text-neutral flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium duration-300 ease-in-out"
                             >
-                                {/* <Person16Regular /> */}
                                 <Icon
                                     icon="fluent:person-16-regular"
                                     width="16"
@@ -91,13 +90,13 @@ const DropdownUser = () => {
                                 My Profile
                             </Link>
                         </li>
-                        <li className="hover:bg-primary-light hover:text-primary-dark">
+                        <li className="hover:bg-primary-light hover:text-red">
                             <Link
                                 onClick={() => {
                                     dispatch<any>(logoutUser());
                                 }}
                                 href="/login"
-                                className="flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium text-danger-600 duration-300 ease-in-out"
+                                className="text-danger-600 flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium duration-300 ease-in-out"
                                 type="button"
                             >
                                 {/* <Delete16Regular /> */}

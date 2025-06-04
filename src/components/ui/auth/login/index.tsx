@@ -31,7 +31,7 @@ const LoginLayout = () => {
         }
         console.log(authState.isLogin)
         if (authState.isLogin) {
-            redirect('/');
+            redirect('/home');
         }
     }, [authState?.actions?.error, authState.isLogin, dispatch]);
 
@@ -74,7 +74,7 @@ const LoginLayout = () => {
                 </div> */}
                 <div className="mt-5">
                     <h1 className="text-title-sm font-semibold text-black">
-                        Calorie Tracker
+                        NutriTrack
                     </h1>
                     <p className="text-text-lg text-black">
                         Login into your account

@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 interface Payload {
     data?: any;
     token?: string;
@@ -39,7 +41,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: any;
+        data: User | null
     };
     actions?: {
         loading: boolean;
@@ -52,6 +54,7 @@ export interface AuthState {
 export interface AuthRegisterState {
     loading: boolean;
     isRegister: boolean;
+    isLogin: boolean;
     error: any;
     token: {
         accessToken: string;
@@ -60,7 +63,7 @@ export interface AuthRegisterState {
     profile: {
         loading: boolean;
         error: string;
-        data: any;
+        data: User | null;
     };
     actions?: {
         loading: boolean;

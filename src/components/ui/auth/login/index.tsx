@@ -29,6 +29,7 @@ const LoginLayout = () => {
                 });
             }, 401);
         }
+        console.log(authState.isLogin)
         if (authState.isLogin) {
             redirect('/');
         }

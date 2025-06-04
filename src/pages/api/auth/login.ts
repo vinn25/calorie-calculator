@@ -40,7 +40,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //   data: { refreshToken }
     // });
 
-    res.status(200).json({ accessToken, refreshToken });
+    const { password: _, ...userWithoutPassword } = user;
+    
+    res.status(200).json({ data: {
+      accessToken, 
+      refreshToken,
+      user: userWithoutPassword
+    }});
+
   } catch (error) {
     res.status(500).json({ message: 'Internal server error', error });
   }

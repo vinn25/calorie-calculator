@@ -7,8 +7,11 @@ import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
 import TableListFood from '@/components/ui/food-log/TableListFood';
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import TableListRecommendation from '@/components/ui/recommendation/TableListRecommendation';
+import reducers from '@/redux/reducers';
 import { Reducers } from '@/redux/types';
+import { parseJwt } from '@/utils/jwt';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Redirect } from 'next';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -33,8 +36,30 @@ const dailyCalories = [
 const LayoutHome = () => {
     const dispatch = useDispatch();
     const foodState = useSelector((state: Reducers) => state.food);
+    const user = useSelector((state: Reducers) => state.auth)
+    console.log(user.profile?.data?.userId)
     const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState('');
+
+    useEffect(() => {
+        const token = user?.token?.accessToken;
+        if (!token) return;
+
+        const payload = parseJwt(token);
+        if (!payload || !payload.exp) {
+            dispatch({ type: 'LOGOUT' });
+            window.location.href = '/login'
+            return;
+        }
+
+        const isExpired = Date.now() > payload.exp * 1000;
+        if (isExpired) {
+            dispatch({ type: 'LOGOUT' });
+            window.location.href = '/login'
+        }
+    }, [user.token?.accessToken, dispatch]);
+
+
     useEffect(() => {
         if (foodState.actions?.type) {
             setAlertMessage(true);

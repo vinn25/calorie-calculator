@@ -119,17 +119,22 @@ const TableListFood = ({ params }: Props) => {
             };
             setLoading(true);
             await dispatch<any>(
-                postUserCreateFoodLog({ data: payload, id: id })
+                postUserCreateFoodLog({
+                    data: payload,
+                    id: id,
+                    callback: () => {
+                        handleOpenFoodLogEntry();
+                        window.location.href = '/foodlog';
+                    },
+                })
             );
             setLoading(false);
-            handleOpenFoodLogEntry();
             console.log(payload);
         },
     });
     const { errors, handleSubmit, touched, setFieldValue } = formik;
     return (
         <div className="max-w-full rounded-lg border border-primary-light bg-white">
-            <LoadingDialog isOpen={loading} />
             {selectedFood && (
                 <FormikProvider value={formik}>
                     <Form noValidate onSubmit={handleSubmit}>
@@ -139,6 +144,7 @@ const TableListFood = ({ params }: Props) => {
                             onClose={handleOpenFoodLogEntry}
                             onClickOutside={handleOpenFoodLogEntry}
                         >
+                            <LoadingDialog isOpen={loading} />
                             <div>
                                 <div className="mb-4 flex items-start justify-between">
                                     <div>

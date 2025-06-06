@@ -1,8 +1,9 @@
 import { Buttons } from '@/components/button';
 import { DialogContent } from '@/components/dialog';
 import { SelectOptions, TextField } from '@/components/form';
-import { LoadingSpinner } from '@/components/loading';
+import { LoadingDialog, LoadingSpinner } from '@/components/loading';
 import { getFoodList, getfoodSearch } from '@/redux/actions/food';
+import { postUserCreateFoodLog } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { Form, FormikProvider, useFormik } from 'formik';
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -68,9 +69,12 @@ const mealTypeFilter = [
 const TableListFood = ({ params }: Props) => {
     const dispatch = useDispatch();
     const foodState = useSelector((state: Reducers) => state.food);
+    const authState = useSelector((state: Reducers) => state.auth);
     const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
     const [portion, setPortion] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
+    const id = authState.profile?.data?.userId;
     const handleOpenFoodLogEntry = () => {
         setOpenFoodLogEntry(!openFoodLogEntry);
     };
@@ -98,26 +102,34 @@ const TableListFood = ({ params }: Props) => {
     });
     const formik = useFormik({
         initialValues: {
-            foodId: selectedFood?.foodId,
-            foodName: selectedFood?.foodName,
             mealType: '',
             portionSize: portion,
         },
         validationSchema: FoodLogSchema,
         onSubmit: async values => {
-            // setIsLoading(true);
-            // await dispatch<any>(
-            //     postAuthLoginUser({
-            //         data: values,
-            //     })
-            // );
-            // setIsLoading(false);
-            console.log(values);
+            const payload = {
+                // userId: id,
+                date: new Date().toISOString(),
+                mealType: values.mealType,
+                notes: '',
+                items: {
+                    foodId: selectedFood?.foodId,
+                    quantity: values.portionSize,
+                },
+            };
+            setLoading(true);
+            await dispatch<any>(
+                postUserCreateFoodLog({ data: payload, id: id })
+            );
+            setLoading(false);
+            handleOpenFoodLogEntry();
+            console.log(payload);
         },
     });
     const { errors, handleSubmit, touched, setFieldValue } = formik;
     return (
         <div className="max-w-full rounded-lg border border-primary-light bg-white">
+            <LoadingDialog isOpen={loading} />
             {selectedFood && (
                 <FormikProvider value={formik}>
                     <Form noValidate onSubmit={handleSubmit}>

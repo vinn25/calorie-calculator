@@ -17,6 +17,8 @@ import {
     TabsTrigger,
 } from '@/components/tab/tabs';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { LoadingSpinner } from '@/components/loading';
+import { getUserListLog } from '@/redux/actions/user';
 
 const dailyCalories = [
     {
@@ -37,7 +39,10 @@ const LayoutFoodLog = () => {
     const [params, setParams] = useState('');
     const dispatch = useDispatch();
     const foodState = useSelector((state: Reducers) => state.food);
+    const userState = useSelector((state: Reducers) => state.user);
+    const authState = useSelector((state: Reducers) => state.auth);
     const [alertMessage, setAlertMessage] = useState(false);
+    const id = authState.profile?.data?.userId;
     useEffect(() => {
         if (foodState.actions?.type) {
             setAlertMessage(true);
@@ -49,6 +54,12 @@ const LayoutFoodLog = () => {
             }, 4000);
         }
     }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    useEffect(() => {
+        async function getLogs() {
+            await dispatch<any>(getUserListLog({ id }));
+        }
+        getLogs();
+    }, [dispatch, id]);
 
     return (
         <div>
@@ -113,7 +124,57 @@ const LayoutFoodLog = () => {
                                 </div>
                             </TabsContent>
                             <TabsContent value="recent">
-                                Recent loggd foods
+                                <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
+                                    {userState?.list?.loading ? (
+                                        <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
+                                            <LoadingSpinner />
+                                        </li>
+                                    ) : userState?.list?.data?.foods ? (
+                                        userState?.list?.data?.foods.map(
+                                            (data: any) => (
+                                                <li
+                                                    key={data.foodId}
+                                                    className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted"
+                                                >
+                                                    <div>
+                                                        <p className="font-medium">
+                                                            {data.name}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="font-medium">
+                                                            <span className="text-secondary">
+                                                                {data.calories}
+                                                            </span>{' '}
+                                                            kcal
+                                                        </p>
+                                                        <p className="text-xs">
+                                                            P:{' '}
+                                                            <span className="text-secondary">
+                                                                {data.protein}
+                                                            </span>
+                                                            g | C:{' '}
+                                                            <span className="text-secondary">
+                                                                {
+                                                                    data.carbohydrates
+                                                                }
+                                                            </span>
+                                                            g | F:{' '}
+                                                            <span className="text-secondary">
+                                                                {data.fat}
+                                                            </span>
+                                                            g
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            )
+                                        )
+                                    ) : (
+                                        <div className="p-4 text-center text-muted-foreground">
+                                            No foods found.
+                                        </div>
+                                    )}
+                                </div>
                             </TabsContent>
                         </Tabs>
                     </Card>

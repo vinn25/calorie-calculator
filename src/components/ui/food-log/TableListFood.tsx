@@ -45,24 +45,24 @@ const mealTypeFilter = [
         value: '',
     },
     {
-        key: 'breakfast',
+        key: 'BREAKFAST',
         text: 'Breakfast',
-        value: 'breakfast',
+        value: 'BREAKFAST',
     },
     {
-        key: 'lunch',
+        key: 'LUNCH',
         text: 'Lunch',
-        value: 'lunch',
+        value: 'LUNCH',
     },
     {
-        key: 'dinner',
+        key: 'DINNER',
         text: 'Dinner',
-        value: 'dinner',
+        value: 'DINNER',
     },
     {
-        key: 'snack',
+        key: 'SNACK',
         text: 'Snack',
-        value: 'snack',
+        value: 'SNACK',
     },
 ];
 
@@ -108,11 +108,11 @@ const TableListFood = ({ params }: Props) => {
         validationSchema: FoodLogSchema,
         onSubmit: async values => {
             const payload = {
-                // userId: id,
+                userId: id,
                 date: new Date().toISOString(),
                 mealType: values.mealType,
                 notes: '',
-                items: {
+                item: {
                     foodId: selectedFood?.foodId,
                     quantity: values.portionSize,
                 },

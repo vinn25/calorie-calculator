@@ -59,13 +59,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { calories: 0, protein: 0, fat: 0, carbs: 0 }
     );
 
-    // Cek kekurangan
+    // Cek status konsumsi terhadap target
     const alerts: string[] = [];
 
     if (totals.calories < user.calorieTarget) alerts.push('Calories below target');
+    else if (totals.calories > user.calorieTarget) alerts.push('Calories exceed target');
+
     if (totals.protein < user.proteinTarget) alerts.push('Protein below target');
+    else if (totals.protein > user.proteinTarget) alerts.push('Protein exceed target');
+
     if (totals.fat < user.fatTarget) alerts.push('Fat below target');
+    else if (totals.fat > user.fatTarget) alerts.push('Fat exceed target');
+
     if (totals.carbs < user.carbTarget) alerts.push('Carbohydrates below target');
+    else if (totals.carbs > user.carbTarget) alerts.push('Carbohydrates exceed target');
 
     res.status(200).json({
       totals,

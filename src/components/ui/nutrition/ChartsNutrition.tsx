@@ -54,11 +54,15 @@ const ChartsNutrition = (
                 <div className="rounded-[12px] border border-primary-dark bg-white p-6">
                     <div>Macronutrient Distribution</div>
                     <div className="mb-6">
-                        <PieCharts />
+                        <PieCharts
+                            carbs={userState?.list?.data?.totals?.carbs}
+                            protein={userState?.list?.data?.totals?.protein}
+                            fat={userState?.list?.data?.totals?.fat}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col justify-between rounded-[12px] border border-primary-dark bg-white p-6">
-                    <div>Daily Target vs. Actual</div>
+                    <div>Consumed vs. Daily Target</div>
                     <div className="mb-7 grid grid-cols-1 gap-10">
                         <Progress
                             current={userState?.list?.data?.totals?.protein}

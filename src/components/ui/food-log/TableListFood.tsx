@@ -259,6 +259,8 @@ const TableListFood = ({ params }: Props) => {
                                 </div>
                                 <div className="w-full">
                                     <Buttons
+                                        icon="fluent:add-16-regular"
+                                        iconSize={16}
                                         color="primary"
                                         size="sm"
                                         text="Add to food log"
@@ -266,7 +268,56 @@ const TableListFood = ({ params }: Props) => {
                                         variant="contained"
                                         fullWidth
                                     />
+                                    {/* <div className="table-cell w-[47.5%]">
+                                        <Buttons
+                                            icon="fluent:add-16-regular"
+                                            iconSize={16}
+                                            color="primary"
+                                            size="sm"
+                                            text="Add to food log"
+                                            type="submit"
+                                            variant="outline"
+                                            fullWidth
+                                        />
+                                    </div>
+                                    <div className="table-cell w-[5%]" />
+                                    <div className="table-cell w-[47.5%]">
+                                        <Buttons
+                                            icon="fluent:add-16-regular"
+                                            iconSize={16}
+                                            color="primary"
+                                            size="sm"
+                                            text="Add to food log"
+                                            type="submit"
+                                            variant="contained"
+                                            fullWidth
+                                        />
+                                    </div> */}
                                 </div>
+
+                                {/* <div className="table-cell w-[47.5%]">
+                                    <Buttons
+                                        variant="text"
+                                        size="lg"
+                                        type="reset"
+                                        text="Cancel"
+                                        fullWidth
+                                        onClick={() => window.history.back()}
+                                        color="primary"
+                                    />
+                                </div>
+                                <div className="table-cell w-[5%]" />
+                                <div className="table-cell w-[47.5%]">
+                                    <Buttons
+                                        variant="contained"
+                                        size="lg"
+                                        type="submit"
+                                        text="Save"
+                                        fullWidth
+                                        // loading={userState?.actions?.loading}
+                                        color="primary"
+                                    />
+                                </div> */}
                             </div>
                         </DialogContent>
                     </Form>

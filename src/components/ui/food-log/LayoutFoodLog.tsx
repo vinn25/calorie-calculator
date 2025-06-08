@@ -155,9 +155,7 @@ const LayoutFoodLog = () => {
                                                             </span>
                                                             g | C:{' '}
                                                             <span className="text-secondary">
-                                                                {
-                                                                    data.carbohydrates
-                                                                }
+                                                                {data.carbs}
                                                             </span>
                                                             g | F:{' '}
                                                             <span className="text-secondary">

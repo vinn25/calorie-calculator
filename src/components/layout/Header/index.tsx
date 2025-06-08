@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import ButtonBack from '@/components/button/ButtonBack';
 
 import DropdownUser from './DropdownUser';
-import { ButtonIcon } from '@/components/button';
 import Link from 'next/link';
+import DropdownAlert from '@/components/layout/Header/DropdownAlert';
 
 const Header = ({ title }: { title: string }) => {
     const navGroups = [
@@ -95,6 +95,7 @@ const Header = ({ title }: { title: string }) => {
                 {!isBack && (
                     <div className="2xsm:gap-7 flex items-center gap-3">
                         {/* <!-- User Area --> */}
+                        <DropdownAlert />
                         <DropdownUser />
                         {/* <!-- User Area --> */}
                     </div>

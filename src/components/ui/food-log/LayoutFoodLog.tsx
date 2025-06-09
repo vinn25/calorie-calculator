@@ -2,24 +2,21 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
-import Pagination from '@/components/Pagination';
 import SearchFoodLog from '@/components/ui/food-log/SearchFoodLog';
 import TableListFood from '@/components/ui/food-log/TableListFood';
-import useDebouncedSearch from '@/hooks/useDebounceSearch';
 import { Reducers } from '@/redux/types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
 } from '@/components/tab/tabs';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { LoadingSpinner } from '@/components/loading';
 import { getUserFavorite, getUserListLog } from '@/redux/actions/user';
 import { SelectOptions } from '@/components/form';
+import FavoriteListFood from '@/components/ui/food-log/FavoriteListFood';
 
 const filterRange = [
     {
@@ -71,7 +68,6 @@ const LayoutFoodLog = () => {
     const handleChangeRange = (e: any) => {
         const value = e.target.value;
         setGetRange(value);
-        console.log(value);
     };
     useEffect(() => {
         if (foodState.actions?.type) {
@@ -184,22 +180,46 @@ const LayoutFoodLog = () => {
                                                     <div className="text-right">
                                                         <p className="font-medium">
                                                             <span className="text-secondary">
-                                                                {data.calories}
+                                                                {data?.calories %
+                                                                    1 !==
+                                                                0
+                                                                    ? data.calories.toFixed(
+                                                                          1
+                                                                      )
+                                                                    : data.calories}
                                                             </span>{' '}
                                                             kcal
                                                         </p>
                                                         <p className="text-xs">
                                                             P:{' '}
                                                             <span className="text-secondary">
-                                                                {data.protein}
+                                                                {data?.protein %
+                                                                    1 !==
+                                                                0
+                                                                    ? data.protein.toFixed(
+                                                                          1
+                                                                      )
+                                                                    : data.protein}
                                                             </span>
                                                             g | C:{' '}
                                                             <span className="text-secondary">
-                                                                {data.carbs}
+                                                                {data?.carbs %
+                                                                    1 !==
+                                                                0
+                                                                    ? data.carbs.toFixed(
+                                                                          1
+                                                                      )
+                                                                    : data.carbs}
                                                             </span>
                                                             g | F:{' '}
                                                             <span className="text-secondary">
-                                                                {data.fat}
+                                                                {data?.fat %
+                                                                    1 !==
+                                                                0
+                                                                    ? data.fat.toFixed(
+                                                                          1
+                                                                      )
+                                                                    : data.fat}
                                                             </span>
                                                             g
                                                         </p>
@@ -215,57 +235,7 @@ const LayoutFoodLog = () => {
                                 </div>
                             </TabsContent>
                             <TabsContent value="favorite">
-                                <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
-                                    {userState?.favorite?.loading ? (
-                                        <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
-                                            <LoadingSpinner />
-                                        </li>
-                                    ) : userState?.favorite?.data?.favorites &&
-                                      userState?.favorite?.data?.favorites
-                                          .lenght > 0 ? (
-                                        userState?.favorite?.data?.favorites.map(
-                                            (data: any) => (
-                                                <li
-                                                    key={data.foodId}
-                                                    className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted"
-                                                >
-                                                    <div>
-                                                        <p className="font-medium">
-                                                            {data.name}
-                                                        </p>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <p className="font-medium">
-                                                            <span className="text-secondary">
-                                                                {data.calories}
-                                                            </span>{' '}
-                                                            kcal
-                                                        </p>
-                                                        <p className="text-xs">
-                                                            P:{' '}
-                                                            <span className="text-secondary">
-                                                                {data.protein}
-                                                            </span>
-                                                            g | C:{' '}
-                                                            <span className="text-secondary">
-                                                                {data.carbs}
-                                                            </span>
-                                                            g | F:{' '}
-                                                            <span className="text-secondary">
-                                                                {data.fat}
-                                                            </span>
-                                                            g
-                                                        </p>
-                                                    </div>
-                                                </li>
-                                            )
-                                        )
-                                    ) : (
-                                        <div className="p-4 text-center text-muted-foreground">
-                                            No favorites found.
-                                        </div>
-                                    )}
-                                </div>
+                                <FavoriteListFood />
                             </TabsContent>
                         </Tabs>
                     </Card>

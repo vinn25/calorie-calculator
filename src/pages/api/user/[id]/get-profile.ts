@@ -1,5 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '@/lib/prisma';
+import { calculateMacros } from '@/utils/calculateMacros';
+import { getWHOMicronutrientTargets } from '@/utils/calculateMicros';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const userId = parseInt(req.query.id as string);
@@ -35,6 +37,11 @@ async function getUserProfile(userId: number, res: NextApiResponse) {
         proteinTarget: true,
         fatTarget: true,
         carbTarget: true,
+        vitaminCTarget: true,
+        calciumTarget: true,
+        ironTarget: true,
+        vitaminDTarget: true,
+        potassiumTarget: true,
         createdAt: true,
       },
     });
@@ -59,13 +66,22 @@ async function updateUserProfile(userId: number, req: NextApiRequest, res: NextA
     weight,
     activity,
     goal,
-    calorieTarget,
-    proteinTarget,
-    fatTarget,
-    carbTarget,
   } = req.body;
 
   try {
+    // Hitung ulang target makronutrien
+    const { calories, protein, fat, carbs } = calculateMacros({
+      gender,
+      weight,
+      height,
+      age,
+      activity,
+      goal,
+    });
+
+    // Hitung ulang target mikronutrien WHO
+    const micronutrients = getWHOMicronutrientTargets(gender);
+
     const updatedUser = await prisma.user.update({
       where: { userId },
       data: {
@@ -76,10 +92,11 @@ async function updateUserProfile(userId: number, req: NextApiRequest, res: NextA
         weight,
         activity,
         goal,
-        calorieTarget,
-        proteinTarget,
-        fatTarget,
-        carbTarget,
+        calorieTarget: calories,
+        proteinTarget: protein,
+        fatTarget: fat,
+        carbTarget: carbs,
+        ...micronutrients,
       },
     });
 

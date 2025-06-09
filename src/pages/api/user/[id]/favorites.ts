@@ -4,6 +4,26 @@ import prisma from '@/lib/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const userId = parseInt(req.query.id as string);
 
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: 'Valid userId is required in the URL.' });
+  }
+
+  if (req.method === 'GET') {
+    try {
+      const favorites = await prisma.favoriteFood.findMany({
+        where: { userId },
+        include: {
+          food: true, // include food details if needed
+        },
+      });
+
+      return res.status(200).json({ favorites });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Failed to fetch favorites' });
+    }
+  }
+
   if (req.method === 'POST') {
     const { foodId, quantity } = req.body;
 

@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const favorites = await prisma.favoriteFood.findMany({
         where: { userId },
         include: {
-          food: true, // include food details if needed
+          food: true,
         },
       });
 
@@ -27,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const { foodId, quantity } = req.body;
 
-    if (!foodId || !quantity) {
-      return res.status(400).json({ message: 'foodId and quantity are required.' });
+    if (!foodId) {
+      return res.status(400).json({ message: 'foodId is required.' });
     }
 
     try {
@@ -36,8 +36,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
           userId_foodId: { userId, foodId },
         },
-        update: { quantity },
-        create: { userId, foodId, quantity },
+        update: {
+          quantity: quantity ?? 1,
+        },
+        create: {
+          userId,
+          foodId,
+          quantity: quantity ?? 1,
+        },
       });
 
       return res.status(201).json({ message: 'Favorite saved', favorite });

@@ -18,7 +18,7 @@ import {
 } from '@/components/tab/tabs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LoadingSpinner } from '@/components/loading';
-import { getUserListLog } from '@/redux/actions/user';
+import { getUserFavorite, getUserListLog } from '@/redux/actions/user';
 import { SelectOptions } from '@/components/form';
 
 const filterRange = [
@@ -90,6 +90,12 @@ const LayoutFoodLog = () => {
         }
         getLogs();
     }, [dispatch, id, getRange]);
+    useEffect(() => {
+        async function getFavorites() {
+            await dispatch<any>(getUserFavorite({ id }));
+        }
+        getFavorites();
+    }, [dispatch, id]);
 
     return (
         <div>
@@ -210,9 +216,55 @@ const LayoutFoodLog = () => {
                             </TabsContent>
                             <TabsContent value="favorite">
                                 <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
-                                    <li className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted">
-                                        Favorite
-                                    </li>
+                                    {userState?.favorite?.loading ? (
+                                        <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
+                                            <LoadingSpinner />
+                                        </li>
+                                    ) : userState?.favorite?.data?.favorites &&
+                                      userState?.favorite?.data?.favorites
+                                          .lenght > 0 ? (
+                                        userState?.favorite?.data?.favorites.map(
+                                            (data: any) => (
+                                                <li
+                                                    key={data.foodId}
+                                                    className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted"
+                                                >
+                                                    <div>
+                                                        <p className="font-medium">
+                                                            {data.name}
+                                                        </p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="font-medium">
+                                                            <span className="text-secondary">
+                                                                {data.calories}
+                                                            </span>{' '}
+                                                            kcal
+                                                        </p>
+                                                        <p className="text-xs">
+                                                            P:{' '}
+                                                            <span className="text-secondary">
+                                                                {data.protein}
+                                                            </span>
+                                                            g | C:{' '}
+                                                            <span className="text-secondary">
+                                                                {data.carbs}
+                                                            </span>
+                                                            g | F:{' '}
+                                                            <span className="text-secondary">
+                                                                {data.fat}
+                                                            </span>
+                                                            g
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            )
+                                        )
+                                    ) : (
+                                        <div className="p-4 text-center text-muted-foreground">
+                                            No favorites found.
+                                        </div>
+                                    )}
                                 </div>
                             </TabsContent>
                         </Tabs>

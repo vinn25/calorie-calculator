@@ -14,11 +14,14 @@ export const userListLog = async (id: number, range?: string) => {
 }
 export const userProfile = async (id: number) => {
     const response = await request.get(`api/user/${id}/get-profile`, {});
-    // const response = await request.get(`api/user/5/get-profile`, {});
     return response;
 }
 export const userGap = async (id: number) => {
     const response = await request.get(`api/user/${id}/gap`, {});
+    return response;
+}
+export const userFoodFavorite = async (id: number) => {
+    const response = await request.get(`api/user/${id}/favorites`, {});
     return response;
 }
 export const userCreateFoodLog = async (id: number, data: any) => {

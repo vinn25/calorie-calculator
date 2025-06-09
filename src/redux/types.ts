@@ -114,6 +114,11 @@ export interface UserState {
         error: any;
         data: any;
     }
+    favorite: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
     actions?: {
         loading: boolean;
         error: any;

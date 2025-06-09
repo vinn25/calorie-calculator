@@ -99,6 +99,9 @@ const PersonalInformationProfile = () => {
                 putUserProfile({
                     data: values,
                     id,
+                    callback: () => {
+                        window.history.back();
+                    },
                 })
             );
             setIsLoading(false);
@@ -133,7 +136,7 @@ const PersonalInformationProfile = () => {
                                 />
                             }
                             fullWidth
-                            value={userState?.profile?.data?.email}
+                            defaultValue={userState?.profile?.data?.email}
                             placeholder="Enter your updated email"
                             onChange={formik.handleChange}
                             error={Boolean(touched.email && errors.email)}
@@ -168,7 +171,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={200}
                                 fullWidth
-                                value={userState?.profile?.data?.height}
+                                defaultValue={userState?.profile?.data?.height}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.height && errors.height)}
                                 helperText={touched.height && errors.height}
@@ -190,7 +193,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={200}
                                 fullWidth
-                                value={userState?.profile?.data?.weight}
+                                defaultValue={userState?.profile?.data?.weight}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.weight && errors.weight)}
                                 helperText={touched.weight && errors.weight}
@@ -212,7 +215,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={100}
                                 fullWidth
-                                value={userState?.profile?.data?.age}
+                                defaultValue={userState?.profile?.data?.age}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.age && errors.age)}
                                 helperText={touched.age && errors.age}

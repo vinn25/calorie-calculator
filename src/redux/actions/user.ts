@@ -1,6 +1,6 @@
 import { postSharedAuthRefresh } from "@/redux/actions/auth";
 import { Dispatch } from "@/redux/types";
-import { userCreateFoodFavorite, userCreateFoodLog, userDeleteFoodFavorite, userGap, userListLog, userProfile, userProfileUpdate } from "@/services/userService";
+import { userCreateFoodFavorite, userCreateFoodLog, userDeleteFoodFavorite, userFoodFavorite, userGap, userListLog, userProfile, userProfileUpdate } from "@/services/userService";
 
 interface Props {
     data?: any;
@@ -124,6 +124,41 @@ export const getUserGap =
                     } else {
                         dispatch({
                             type: 'USER_GAP_ERROR',
+                            payload: error.response.data,
+                        });
+                    }
+                }
+            }
+        };
+export const getUserFavorite =
+    ({ id, callback }: Props) =>
+        async (dispatch: Dispatch, getState: any) => {
+            dispatch({
+                type: 'USER_FAVORITE_LOADING',
+            });
+            try {
+                const { token } = getState().auth;
+                const response: any = await userFoodFavorite(id);
+                dispatch({
+                    type: 'USER_FAVORITE_SUCCESS',
+                    payload: response,
+                });
+                if (callback) {
+                    callback();
+                }
+            } catch (error: any) {
+                if (error && error.response) {
+                    if (error.response.data.code === 5006) {
+                        dispatch(
+                            postSharedAuthRefresh({
+                                callback: () => {
+                                    dispatch(getUserGap({ id, callback }));
+                                },
+                            })
+                        );
+                    } else {
+                        dispatch({
+                            type: 'USER_FAVORITE_ERROR',
                             payload: error.response.data,
                         });
                     }

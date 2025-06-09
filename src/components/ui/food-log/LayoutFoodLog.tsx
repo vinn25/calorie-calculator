@@ -19,19 +19,43 @@ import {
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LoadingSpinner } from '@/components/loading';
 import { getUserListLog } from '@/redux/actions/user';
+import { SelectOptions } from '@/components/form';
 
-const dailyCalories = [
+const filterRange = [
     {
-        title: 'Goal',
-        calorie: 2000,
+        key: 'today',
+        text: 'Today',
+        value: '',
     },
     {
-        title: 'Consumed',
-        calorie: 1400,
+        key: 'wekk',
+        text: 'Week',
+        value: 'week',
     },
     {
-        title: 'Remaining',
-        calorie: 600,
+        key: 'month',
+        text: 'Month',
+        value: 'month',
+    },
+    {
+        key: '3month',
+        text: '3 Month',
+        value: '3months',
+    },
+    {
+        key: '6month',
+        text: '6 Month',
+        value: '6months',
+    },
+    {
+        key: 'year',
+        text: 'Year',
+        value: 'year',
+    },
+    {
+        key: 'all',
+        text: 'All Time',
+        value: 'all',
     },
 ];
 
@@ -42,7 +66,13 @@ const LayoutFoodLog = () => {
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
     const [alertMessage, setAlertMessage] = useState(false);
+    const [getRange, setGetRange] = useState('');
     const id = authState.profile?.data?.userId;
+    const handleChangeRange = (e: any) => {
+        const value = e.target.value;
+        setGetRange(value);
+        console.log(value);
+    };
     useEffect(() => {
         if (foodState.actions?.type) {
             setAlertMessage(true);
@@ -56,10 +86,10 @@ const LayoutFoodLog = () => {
     }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id }));
+            await dispatch<any>(getUserListLog({ id, range: getRange }));
         }
         getLogs();
-    }, [dispatch, id]);
+    }, [dispatch, id, getRange]);
 
     return (
         <div>
@@ -85,20 +115,18 @@ const LayoutFoodLog = () => {
                         cardTitle="Food Log"
                         subCardTitle="Food Log Entry"
                         addOns={
-                            <div className="flex items-center gap-2 rounded-md border border-primary px-2 py-[2px]">
-                                <div>
-                                    <Icon
-                                        icon="fluent:clock-16-regular"
-                                        width="16"
-                                        height="16"
-                                    />
-                                </div>
-                                <div className="text-text-md">Today</div>
-                            </div>
+                            <SelectOptions
+                                name="range"
+                                label=""
+                                options={filterRange}
+                                selectSize="sm"
+                                defaultValue={getRange}
+                                onChange={handleChangeRange}
+                            />
                         }
                     >
                         <Tabs defaultValue="search">
-                            <TabsList className="mb-4 grid w-full grid-cols-2 bg-primary-light">
+                            <TabsList className="mb-4 grid w-full grid-cols-3 bg-primary-light">
                                 <TabsTrigger
                                     value="search"
                                     className="data-[state=active]:bg-white data-[state=active]:text-primary"
@@ -110,6 +138,12 @@ const LayoutFoodLog = () => {
                                     className="data-[state=active]:bg-white data-[state=active]:text-primary"
                                 >
                                     Recent Foods
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="favorite"
+                                    className="data-[state=active]:bg-white data-[state=active]:text-primary"
+                                >
+                                    Favorites
                                 </TabsTrigger>
                             </TabsList>
                             <TabsContent value="search">
@@ -172,6 +206,13 @@ const LayoutFoodLog = () => {
                                             No foods found.
                                         </div>
                                     )}
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="favorite">
+                                <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
+                                    <li className="flex cursor-pointer items-center justify-between p-3 hover:bg-muted">
+                                        Favorite
+                                    </li>
                                 </div>
                             </TabsContent>
                         </Tabs>

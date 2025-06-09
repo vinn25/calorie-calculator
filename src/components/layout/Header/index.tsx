@@ -30,11 +30,11 @@ const Header = ({ title }: { title: string }) => {
             label: 'Recommendations',
             route: '/recommendation',
         },
-        {
-            id: 'favourites',
-            label: 'Favourites',
-            route: '/favourites',
-        },
+        // {
+        //     id: 'favourites',
+        //     label: 'Favourites',
+        //     route: '/favourites',
+        // },
     ];
 
     const [isBack, setIsBack] = useState(false);

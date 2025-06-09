@@ -8,8 +8,8 @@ const request = new Api({
 });
 
 // user logs
-export const userListLog = async (id: number) => {
-    const response = await request.get(`api/user/${id}/get-logs`, {});
+export const userListLog = async (id: number, range?: string) => {
+    const response = await request.get(`api/user/${id}/get-logs?range=${range}`, {});
     return response;
 }
 export const userProfile = async (id: number) => {

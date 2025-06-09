@@ -5,17 +5,21 @@ import { Reducers } from '@/redux/types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const MicroNutrition = () => {
+interface Props {
+    getRange: string;
+}
+
+const MicroNutrition = ({ getRange }: Props) => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
     const id = authState.profile?.data?.userId;
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id }));
+            await dispatch<any>(getUserListLog({ id, range: getRange }));
         }
         getLogs();
-    }, [dispatch, id]);
+    }, [dispatch, id, getRange]);
 
     return (
         <div className="flex flex-col justify-between rounded-[12px] border border-primary-dark bg-white p-6">

@@ -9,29 +9,10 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface Props {
-    // searchTerm: string;
-    // setSearchTerm: any;
-    // handleSearch: any;
-    // params: {
-    //     page: number;
-    //     perPage: number;
-    //     search: string;
-    //     active: string;
-    // };
-    // cardTitle: string;
-    // subCardTitle?: string;
+    getRange: string;
 }
 
-const ChartsNutrition = (
-    {
-        // searchTerm,
-        // setSearchTerm,
-        // handleSearch,
-        // params,
-        // cardTitle,
-        // subCardTitle,
-    }: Props
-) => {
+const ChartsNutrition = ({ getRange }: Props) => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
@@ -44,10 +25,10 @@ const ChartsNutrition = (
     }, [dispatch, id]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id }));
+            await dispatch<any>(getUserListLog({ id, range: getRange }));
         }
         getLogs();
-    }, [dispatch, id]);
+    }, [dispatch, id, getRange]);
     return (
         <div className="w-full max-w-full justify-stretch bg-[#ffffff]">
             <div className="grid grid-cols-2 gap-5">

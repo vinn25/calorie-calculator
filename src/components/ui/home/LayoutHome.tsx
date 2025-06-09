@@ -159,7 +159,7 @@ const LayoutHome = () => {
                         cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
                     >
-                        <ChartsNutrition />
+                        <ChartsNutrition getRange="" />
                     </Card>
                 </div>
                 <div className="mt-5">

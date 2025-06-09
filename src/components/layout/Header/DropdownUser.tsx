@@ -90,7 +90,7 @@ const DropdownUser = () => {
                     <ul className="border-stroke flex flex-col border-b">
                         <li className="hover:bg-primary-light hover:text-primary-dark">
                             <Link
-                                href="/home/profile"
+                                href="/profile"
                                 className="text-neutral flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium duration-300 ease-in-out"
                             >
                                 <Icon

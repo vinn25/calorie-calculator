@@ -42,7 +42,7 @@ const Header = ({ title }: { title: string }) => {
     const pathname = usePathname();
     useEffect(() => {
         const splitPathname: any = pathname?.split('/');
-        if (splitPathname?.length > 2) {
+        if (splitPathname[1] === 'profile') {
             setIsBack(true);
         }
         // Set the active item based on the current pathname
@@ -89,7 +89,7 @@ const Header = ({ title }: { title: string }) => {
                     /> */}
                     {isBack && <ButtonBack />}
                     <h4 className="text-neutral text-text-xl font-semibold text-primary">
-                        <Link href="/home">{title}</Link>
+                        <Link href="/">{title}</Link>
                     </h4>
                 </div>
                 {!isBack && (

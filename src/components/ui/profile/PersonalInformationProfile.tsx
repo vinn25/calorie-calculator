@@ -1,10 +1,10 @@
 import { Buttons } from '@/components/button';
 import { SelectOptions, TextField } from '@/components/form';
-import { getUserProfile } from '@/redux/actions/user';
+import { getUserProfile, putUserProfile } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Form, FormikProvider, useFormik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
@@ -15,14 +15,14 @@ const optionGender = [
         value: '',
     },
     {
-        key: 'MALE',
-        text: 'MALE',
-        value: 'MALE',
+        key: 'male',
+        text: 'Male',
+        value: 'male',
     },
     {
-        key: 'FEMALE',
-        text: 'FEMALE',
-        value: 'FEMALE',
+        key: 'female',
+        text: 'Female',
+        value: 'female',
     },
 ];
 
@@ -61,9 +61,9 @@ const optionActivity = [
 
 const PersonalInformationProfile = () => {
     const dispatch = useDispatch();
-    // const [isLoading, setIsLoading] = useState(false);
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
+    const [isLoading, setIsLoading] = useState(false);
     const id = authState.profile?.data?.userId;
     useEffect(() => {
         async function getProfile() {
@@ -94,13 +94,14 @@ const PersonalInformationProfile = () => {
         },
         validationSchema: ProfileSchema,
         onSubmit: async values => {
-            // setIsLoading(true);
-            // await dispatch<any>(
-            //     postAuthRegisterUser({
-            //         data: values,
-            //     })
-            // );
-            // setIsLoading(false);
+            setIsLoading(true);
+            await dispatch<any>(
+                putUserProfile({
+                    data: values,
+                    id,
+                })
+            );
+            setIsLoading(false);
             console.log(values);
         },
     });
@@ -259,8 +260,8 @@ const PersonalInformationProfile = () => {
                             size="md"
                             text="Save Changes"
                             fullWidth
-                            // loading={isLoading}
-                            // disabled={isLoading}
+                            loading={isLoading}
+                            disabled={isLoading}
                             color="primary"
                         />
                     </div>

@@ -2,6 +2,7 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
+import { SelectOptions } from '@/components/form';
 import Progress from '@/components/progress/Progress';
 import {
     Tabs,
@@ -12,22 +13,58 @@ import {
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import MicroNutrition from '@/components/ui/nutrition/MicroNutrition';
 import { Reducers } from '@/redux/types';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+const filterRange = [
+    {
+        key: 'today',
+        text: 'Today',
+        value: '',
+    },
+    {
+        key: 'wekk',
+        text: 'Week',
+        value: 'week',
+    },
+    {
+        key: 'month',
+        text: 'Month',
+        value: 'month',
+    },
+    {
+        key: '3month',
+        text: '3 Month',
+        value: '3months',
+    },
+    {
+        key: '6month',
+        text: '6 Month',
+        value: '6months',
+    },
+    {
+        key: 'year',
+        text: 'Year',
+        value: 'year',
+    },
+    {
+        key: 'all',
+        text: 'All Time',
+        value: 'all',
+    },
+];
 
 const LayoutNutrition = () => {
     const dispatch = useDispatch();
     const projectState = useSelector((state: Reducers) => state.project);
     const [searchTerm, setSearchTerm] = useState('');
     const [alertMessage, setAlertMessage] = useState(false);
-    const [params, setParams] = useState({
-        page: 1,
-        perPage: 10,
-        search: '',
-        active: 'true',
-    });
-    const handleSearch = (event: any) => {
-        setSearchTerm(event.target.value);
+    const [getRange, setGetRange] = useState('');
+    const handleChangeRange = (e: any) => {
+        const value = e.target.value;
+        setGetRange(value);
+        // console.log(value);
     };
     useEffect(() => {
         if (projectState.actions?.type) {
@@ -64,6 +101,16 @@ const LayoutNutrition = () => {
                     <Card
                         cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
+                        addOns={
+                            <SelectOptions
+                                name="range"
+                                label=""
+                                options={filterRange}
+                                selectSize="sm"
+                                defaultValue={getRange}
+                                onChange={handleChangeRange}
+                            />
+                        }
                     >
                         <Tabs defaultValue="macro">
                             <TabsList className="mb-4 grid w-full grid-cols-2 bg-primary-light">
@@ -81,10 +128,10 @@ const LayoutNutrition = () => {
                                 </TabsTrigger>
                             </TabsList>
                             <TabsContent value="macro">
-                                <ChartsNutrition />
+                                <ChartsNutrition getRange={getRange} />
                             </TabsContent>
                             <TabsContent value="micro">
-                                <MicroNutrition />
+                                <MicroNutrition getRange={getRange} />
                             </TabsContent>
                         </Tabs>
                     </Card>

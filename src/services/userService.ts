@@ -32,11 +32,11 @@ export const userCreateFoodFavorite = async (id: number, data: any) => {
     const response = await request.post(`api/user/${id}/favorites`, data, {});
     return response;
 }
-export const userProfileUpdate = async (id: number, data: any) => {
-    const response = await request.put(`api/user/${id}/get-profile`, data, {});
+export const userDeleteFoodFavorite = async (id: number, data: any) => {
+    const response = await request.post(`api/user/${id}/delete-favorites`, data, {});
     return response;
 }
-export const userDeleteFoodFavorite = async (id: number) => {
-    const response = await request.delete(`api/user/${id}/favorites`, {});
+export const userProfileUpdate = async (id: number, data: any) => {
+    const response = await request.put(`api/user/${id}/get-profile`, data, {});
     return response;
 }

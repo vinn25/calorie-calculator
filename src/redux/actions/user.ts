@@ -241,6 +241,53 @@ export const postUserCreateFoodFavorite = ({ data, id, callback }: PropsPostData
         }
     }
 }
+export const postUserDeleteFoodFavorite = ({ id, data, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
+    dispatch({
+        type: 'USER_ACTION_LOADING',
+    });
+    try {
+        const { token } = getState().auth;
+        await userDeleteFoodFavorite(id, data);
+        dispatch({
+            type: 'USER_ACTION_SUCCESS',
+            payload: {
+                data: 'Food successfully deleted from favorites'
+            },
+        });
+        callback();
+    } catch (error: any) {
+        if (error && error.response) {
+            if (error.response.data.code === 5006) {
+                dispatch(
+                    postSharedAuthRefresh({
+                        callback: () => {
+                            dispatch(
+                                postUserDeleteFoodFavorite({
+                                    id,
+                                    data,
+                                    callback,
+                                })
+                            );
+                        },
+                    })
+                );
+            } else {
+                dispatch({
+                    type: 'USER_ACTION_ERROR',
+                    payload: error.response.data,
+                });
+            }
+        } else {
+            dispatch({
+                type: 'USER_ACTION_ERROR',
+                payload: {
+                    message: error.message,
+                    code: error.code,
+                },
+            });
+        }
+    }
+}
 export const putUserProfile = ({ data, id, callback }: PropsPostData) => async (dispatch: Dispatch, getState: any) => {
     dispatch({
         type: 'USER_ACTION_LOADING',
@@ -276,53 +323,6 @@ export const putUserProfile = ({ data, id, callback }: PropsPostData) => async (
                     payload: error.response.data,
                 });
             }
-        }
-    }
-}
-export const deleteUserDeleteFoodFavorite = ({ id, data, callback }: PropsDetail) => async (dispatch: Dispatch, getState: any) => {
-    dispatch({
-        type: 'USER_ACTION_LOADING',
-    });
-    try {
-        const { token } = getState().auth;
-        await userDeleteFoodFavorite(id);
-        dispatch({
-            type: 'USER_ACTION_SUCCESS',
-            payload: {
-                data: 'Food successfully deleted from favorites'
-            },
-        });
-        callback();
-    } catch (error: any) {
-        if (error && error.response) {
-            if (error.response.data.code === 5006) {
-                dispatch(
-                    postSharedAuthRefresh({
-                        callback: () => {
-                            dispatch(
-                                deleteUserDeleteFoodFavorite({
-                                    id,
-                                    data,
-                                    callback,
-                                })
-                            );
-                        },
-                    })
-                );
-            } else {
-                dispatch({
-                    type: 'USER_ACTION_ERROR',
-                    payload: error.response.data,
-                });
-            }
-        } else {
-            dispatch({
-                type: 'USER_ACTION_ERROR',
-                payload: {
-                    message: error.message,
-                    code: error.code,
-                },
-            });
         }
     }
 }

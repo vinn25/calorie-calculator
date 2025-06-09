@@ -5,8 +5,8 @@ import { SelectOptions, TextField } from '@/components/form';
 import { LoadingDialog, LoadingSpinner } from '@/components/loading';
 import { getFoodList, getfoodSearch } from '@/redux/actions/food';
 import {
-    deleteUserDeleteFoodFavorite,
     postUserCreateFoodLog,
+    postUserDeleteFoodFavorite,
 } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -136,7 +136,7 @@ const FavoriteListFood = () => {
             foodId: selectedFavFood?.foodId,
         };
         await dispatch<any>(
-            deleteUserDeleteFoodFavorite({
+            postUserDeleteFoodFavorite({
                 id: id,
                 data: payload,
                 callback: () => {

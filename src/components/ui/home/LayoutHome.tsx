@@ -64,7 +64,7 @@ const LayoutHome = () => {
     }, [dispatch, id]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id }));
+            await dispatch<any>(getUserListLog({ id, range: '' }));
         }
         getLogs();
     }, [dispatch, id]);
@@ -136,18 +136,6 @@ const LayoutHome = () => {
                     <Card
                         cardTitle="Quick Add Food"
                         subCardTitle="Food Log Entry"
-                        addOns={
-                            <div className="flex items-center gap-2 rounded-md border border-primary px-2 py-[2px]">
-                                <div>
-                                    <Icon
-                                        icon="fluent:clock-16-regular"
-                                        width="16"
-                                        height="16"
-                                    />
-                                </div>
-                                <div className="text-text-md">Today</div>
-                            </div>
-                        }
                     >
                         <SearchFoodLog
                             params={params}

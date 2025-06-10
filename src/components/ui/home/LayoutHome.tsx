@@ -23,7 +23,9 @@ const LayoutHome = () => {
     const authState = useSelector((state: Reducers) => state.auth);
     // const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState('');
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     useEffect(() => {
         const token = authState?.token?.accessToken;
         if (!token) return;
@@ -52,19 +54,19 @@ const LayoutHome = () => {
     // }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);
     useEffect(() => {
         async function getSuggestRemaining() {
-            await dispatch<any>(getSuggestions({ id }));
+            await dispatch<any>(getSuggestions({ id: id }));
         }
         getSuggestRemaining();
     }, [dispatch, id]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id, range: '' }));
+            await dispatch<any>(getUserListLog({ id: id, range: '' }));
         }
         getLogs();
     }, [dispatch, id]);

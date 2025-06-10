@@ -64,10 +64,12 @@ const PersonalInformationProfile = () => {
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
     const [isLoading, setIsLoading] = useState(false);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);
@@ -98,7 +100,7 @@ const PersonalInformationProfile = () => {
             await dispatch<any>(
                 putUserProfile({
                     data: values,
-                    id,
+                    id: id,
                     callback: () => {
                         window.location.href = '/profile';
                     },

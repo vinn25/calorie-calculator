@@ -33,16 +33,6 @@ interface FoodProps {
     potassium: number;
 }
 
-interface LoggedFoodProps extends FoodProps {
-    mealType: string;
-    portionSize: number;
-    timestamp: number;
-}
-
-interface FoodLogEntryProps {
-    onAddFood?: (food: FoodProps, mealType: string, portion: number) => void;
-}
-
 const mealTypeFilter = [
     {
         key: 'mealType',
@@ -80,7 +70,9 @@ const TableListFood = ({ params }: Props) => {
     const [portion, setPortion] = useState(0);
     const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const handleOpenFoodLogEntry = () => {
         setOpenFoodLogEntry(!openFoodLogEntry);
     };

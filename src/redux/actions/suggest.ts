@@ -6,7 +6,7 @@ import { userCreateFoodFavorite, userCreateFoodLog, userDeleteFoodFavorite, user
 interface Props {
     data?: any;
     params?: Object;
-    id: number;
+    id: number | null;
     callback?: any;
 }
 

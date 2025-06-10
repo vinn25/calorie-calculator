@@ -59,12 +59,13 @@ const filterRange = [
 const LayoutFoodLog = () => {
     const [params, setParams] = useState('');
     const dispatch = useDispatch();
-    const foodState = useSelector((state: Reducers) => state.food);
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
     const [alertMessage, setAlertMessage] = useState(false);
     const [getRange, setGetRange] = useState('');
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const handleChangeRange = (e: any) => {
         const value = e.target.value;
         setGetRange(value);
@@ -82,13 +83,13 @@ const LayoutFoodLog = () => {
     }, [dispatch, userState.actions?.error, userState.actions?.type]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id, range: getRange }));
+            await dispatch<any>(getUserListLog({ id: id, range: getRange }));
         }
         getLogs();
     }, [dispatch, id, getRange]);
     useEffect(() => {
         async function getFavorites() {
-            await dispatch<any>(getUserFavorite({ id }));
+            await dispatch<any>(getUserFavorite({ id: id }));
         }
         getFavorites();
     }, [dispatch, id]);

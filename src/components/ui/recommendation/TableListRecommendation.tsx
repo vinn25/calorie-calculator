@@ -59,7 +59,9 @@ const TableListRecommendation = () => {
     const suggestState = useSelector((state: Reducers) => state.suggest);
     const authState = useSelector((state: Reducers) => state.auth);
     const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const [portion, setPortion] = useState(0);
     const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
@@ -80,7 +82,7 @@ const TableListRecommendation = () => {
     }, [dispatch]);
     useEffect(() => {
         async function getSuggestRemaining() {
-            await dispatch<any>(getSuggestions({ id }));
+            await dispatch<any>(getSuggestions({ id: id }));
         }
         getSuggestRemaining();
     }, [dispatch, id]);

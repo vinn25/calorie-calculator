@@ -9,39 +9,39 @@ import TableListRecommendation from '@/components/ui/recommendation/TableListRec
 
 const LayoutRecommendation = () => {
     const dispatch = useDispatch();
-    const foodState = useSelector((state: Reducers) => state.food);
+    const userState = useSelector((state: Reducers) => state.user);
     const [alertMessage, setAlertMessage] = useState(false);
-    useEffect(() => {
-        if (foodState.actions?.type) {
-            setAlertMessage(true);
-            setTimeout(() => {
-                setAlertMessage(false);
-                dispatch<any>({
-                    type: 'FOOD_ACTION_CLEAR',
-                });
-            }, 4000);
-        }
-    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    // useEffect(() => {
+    //     if (userState.actions?.type) {
+    //         setAlertMessage(true);
+    //         setTimeout(() => {
+    //             setAlertMessage(false);
+    //             dispatch<any>({
+    //                 type: 'FOOD_ACTION_CLEAR',
+    //             });
+    //         }, 4000);
+    //     }
+    // }, [dispatch, userState.actions?.error, userState.actions?.type]);
 
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                {/* <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                foodState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                foodState?.actions?.type === 'success'
-                                    ? `${foodState?.actions?.message?.data}`
-                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
-                </div>
+                </div> */}
                 <div className="w-full max-w-full">
                     <TableListRecommendation />
                 </div>

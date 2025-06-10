@@ -100,7 +100,7 @@ const PersonalInformationProfile = () => {
                     data: values,
                     id,
                     callback: () => {
-                        window.history.back();
+                        window.location.href = '/profile';
                     },
                 })
             );
@@ -110,7 +110,7 @@ const PersonalInformationProfile = () => {
     });
     const { errors, handleSubmit, touched } = formik;
     return (
-        <div className="container mx-auto max-w-[850px] rounded-md border border-[#cfcfcf] bg-white p-8 shadow-md">
+        <div>
             <div className="text-neutral mb-6 flex items-start justify-between">
                 <span>
                     <div className="w-full text-title-xsm font-semibold">

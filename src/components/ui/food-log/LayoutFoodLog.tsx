@@ -70,7 +70,7 @@ const LayoutFoodLog = () => {
         setGetRange(value);
     };
     useEffect(() => {
-        if (foodState.actions?.type) {
+        if (userState.actions?.type) {
             setAlertMessage(true);
             setTimeout(() => {
                 setAlertMessage(false);
@@ -79,7 +79,7 @@ const LayoutFoodLog = () => {
                 });
             }, 4000);
         }
-    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    }, [dispatch, userState.actions?.error, userState.actions?.type]);
     useEffect(() => {
         async function getLogs() {
             await dispatch<any>(getUserListLog({ id, range: getRange }));
@@ -96,18 +96,18 @@ const LayoutFoodLog = () => {
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                foodState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                foodState?.actions?.type === 'success'
-                                    ? `${foodState?.actions?.message?.data}`
-                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
@@ -165,7 +165,9 @@ const LayoutFoodLog = () => {
                                         <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
                                             <LoadingSpinner />
                                         </li>
-                                    ) : userState?.list?.data?.foods ? (
+                                    ) : userState?.list?.data?.foods &&
+                                      userState?.list?.data?.foods.length >
+                                          0 ? (
                                         userState?.list?.data?.foods.map(
                                             (data: any) => (
                                                 <li

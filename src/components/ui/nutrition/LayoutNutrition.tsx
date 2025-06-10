@@ -57,8 +57,7 @@ const filterRange = [
 
 const LayoutNutrition = () => {
     const dispatch = useDispatch();
-    const projectState = useSelector((state: Reducers) => state.project);
-    const [searchTerm, setSearchTerm] = useState('');
+    const userState = useSelector((state: Reducers) => state.user);
     const [alertMessage, setAlertMessage] = useState(false);
     const [getRange, setGetRange] = useState('');
     const handleChangeRange = (e: any) => {
@@ -66,37 +65,41 @@ const LayoutNutrition = () => {
         setGetRange(value);
         // console.log(value);
     };
-    useEffect(() => {
-        if (projectState.actions?.type) {
-            setAlertMessage(true);
-            setTimeout(() => {
-                setAlertMessage(false);
-                dispatch<any>({
-                    type: 'PROJECT_ACTION_CLEAR',
-                });
-            }, 4000);
-        }
-    }, [dispatch, projectState.actions?.error, projectState.actions?.type]);
+    const handleAlertMessage = () => {
+        setAlertMessage(!alertMessage);
+    };
+    // useEffect(() => {
+    //     if (userState.actions?.type) {
+    //         setAlertMessage(true);
+    //         // handleAlertMessage();
+    //         setTimeout(() => {
+    //             setAlertMessage(false);
+    //             dispatch<any>({
+    //                 type: 'FOOD_ACTION_CLEAR',
+    //             });
+    //         }, 4000);
+    //     }
+    // }, [dispatch, userState.actions?.error, userState.actions?.type]);
 
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                {/* <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                projectState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                projectState?.actions?.type === 'success'
-                                    ? `${projectState?.actions?.message?.data}`
-                                    : `${projectState?.actions?.error?.meta?.code} : ${projectState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
-                </div>
+                </div> */}
                 <div className="w-full max-w-full">
                     <Card
                         cardTitle="Nutrition Analytics"

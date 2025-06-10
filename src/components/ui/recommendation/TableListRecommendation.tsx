@@ -113,7 +113,7 @@ const TableListRecommendation = () => {
                     id: id,
                     callback: () => {
                         handleOpenFoodLogEntry();
-                        window.location.href = '/recommendation';
+                        window.location.href = '/foodlog';
                     },
                 })
             );
@@ -273,12 +273,13 @@ const TableListRecommendation = () => {
                 </FormikProvider>
             )}
             <div className="max-h-[300px] overflow-y-auto">
-                <ul className="grid grid-cols-3 gap-2">
+                <ul className="grid grid-cols-2 gap-2">
                     {suggestState?.list?.loading ? (
                         <li className="flex cursor-pointer items-center justify-center rounded-md border border-[#cfcfcf] p-4 hover:bg-muted">
                             <LoadingSpinner />
                         </li>
-                    ) : suggestState?.list?.data?.suggestions ? (
+                    ) : suggestState?.list?.data?.suggestions &&
+                      suggestState?.list?.data?.suggestions.length > 0 ? (
                         suggestState?.list?.data?.suggestions.map(
                             (data: any) => (
                                 <li
@@ -316,7 +317,6 @@ const TableListRecommendation = () => {
                                             }}
                                         />
                                     </div>
-                                    <p></p>
                                 </li>
                             )
                         )

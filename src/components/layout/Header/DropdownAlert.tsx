@@ -69,7 +69,7 @@ const DropdownAlert = () => {
                     <div className="border-stroke dark:border-strokedark dark:bg-boxdark absolute -right-16 mt-2.5 flex h-90 w-75 flex-col rounded-sm border bg-white shadow-default sm:right-0 sm:w-80">
                         <div className="border border-b-body px-4.5 py-3">
                             <h5 className="flex items-center gap-2 text-sm font-medium text-bodydark2">
-                                Notifications
+                                Alerts
                                 <span className="rounded-md bg-accent-red px-[6px] py-[1.5px] text-white">
                                     {/* {gapLenght} */}4
                                 </span>

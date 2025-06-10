@@ -356,7 +356,7 @@ const FavoriteListFood = () => {
                         <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
                             <LoadingSpinner />
                         </li>
-                    ) : searchResults ? (
+                    ) : searchResults && searchResults.length > 0 ? (
                         searchResults.map((data: any) => (
                             <li
                                 key={data.foodId}

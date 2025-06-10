@@ -17,11 +17,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const LayoutHome = () => {
     const dispatch = useDispatch();
-    const foodState = useSelector((state: Reducers) => state.food);
+    // const foodState = useSelector((state: Reducers) => state.food);
     const userState = useSelector((state: Reducers) => state.user);
     const suggestState = useSelector((state: Reducers) => state.suggest);
     const authState = useSelector((state: Reducers) => state.auth);
-    const [alertMessage, setAlertMessage] = useState(false);
+    // const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState('');
     const id = authState.profile?.data?.userId;
     useEffect(() => {
@@ -39,17 +39,17 @@ const LayoutHome = () => {
             window.location.href = '/login';
         }
     }, [authState.token?.accessToken, dispatch]);
-    useEffect(() => {
-        if (foodState.actions?.type) {
-            setAlertMessage(true);
-            setTimeout(() => {
-                setAlertMessage(false);
-                dispatch<any>({
-                    type: 'food_ACTION_CLEAR',
-                });
-            }, 4000);
-        }
-    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    // useEffect(() => {
+    //     if (foodState.actions?.type) {
+    //         setAlertMessage(true);
+    //         setTimeout(() => {
+    //             setAlertMessage(false);
+    //             dispatch<any>({
+    //                 type: 'food_ACTION_CLEAR',
+    //             });
+    //         }, 4000);
+    //     }
+    // }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
     useEffect(() => {
         async function getProfile() {
             await dispatch<any>(getUserProfile({ id }));
@@ -72,22 +72,22 @@ const LayoutHome = () => {
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                {/* <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                foodState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                foodState?.actions?.type === 'success'
-                                    ? `${foodState?.actions?.message?.data}`
-                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 gap-4">
                     <Card
                         cardTitle="Daily Summary"
@@ -103,9 +103,6 @@ const LayoutHome = () => {
                             <div className="text-center">
                                 <div>Consumed</div>
                                 <div className="text-text-lg font-semibold text-secondary">
-                                    {/* {userState?.profile?.data?.calorieTarget -
-                                        suggestState?.list?.data?.remaining
-                                            .calories} */}
                                     {userState?.list?.data?.totals?.calories}
                                 </div>
                             </div>

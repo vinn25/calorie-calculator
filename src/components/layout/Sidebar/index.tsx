@@ -6,7 +6,7 @@ import Link from 'next/link';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import LogoImage from '@/app/next.svg';
+import LogoImage from '@/assets/logo/next.svg';
 import SidebarAdmin from '@/components/layout/Sidebar/SidebarAdmin';
 import type { Reducers } from '@/redux/types';
 import { ButtonIcon } from '@/components/button';

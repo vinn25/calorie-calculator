@@ -1,12 +1,26 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import AuthWrapper from '@/components/AuthWrapper';
 import Header from '@/components/layout/Header';
-import Sidebar from '@/components/layout/Sidebar';
 import { getAuthUserProfile } from '@/redux/actions/auth';
+
+const gaps = [
+    {
+        nutrient: 'Calorie: ',
+    },
+    {
+        nutrient: 'Protein: ',
+    },
+    {
+        nutrient: 'Fat: ',
+    },
+    {
+        nutrient: 'Carbohydrate: ',
+    },
+];
 
 export default function DefaultLayout({
     children,
@@ -16,7 +30,6 @@ export default function DefaultLayout({
     title: string;
 }) {
     const dispatch = useDispatch();
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const effectRun = useRef(false);
     // const userProfile = useCallback(() => {
     //     dispatch<any>(getAuthUserProfile({ callback: 'success' }));
@@ -34,41 +47,43 @@ export default function DefaultLayout({
     }, [dispatch]);
 
     return (
-        // <AuthWrapper>
-        <div>
-            {/* <!-- ===== Page Wrapper Start ===== --> */}
-            <div className="flex min-h-screen bg-neutral-50 font-Montserrat">
-                {/* <!-- ===== Sidebar Start ===== --> */}
-                <Sidebar
-                    sidebarOpen={sidebarOpen}
-                    setSidebarOpen={setSidebarOpen}
-                />
-                {/* <!-- ===== Sidebar End ===== --> */}
+        <AuthWrapper>
+            <div>
+                {/* <!-- ===== Page Wrapper Start ===== --> */}
+                <div className="flex min-h-screen bg-neutral-50 font-Montserrat">
+                    {/* <!-- ===== Content Area Start ===== --> ${sidebarOpen ? 'ml-22' : 'ml-72.5'} ease-linear */}
+                    <div
+                        className={`relative flex flex-1 flex-col duration-300`}
+                    >
+                        {/* <!-- ===== Header Start ===== --> */}
+                        <Header title={title} />
+                        {/* <!-- ===== Header End ===== --> */}
 
-                {/* <!-- ===== Content Area Start ===== --> */}
-                <div
-                    className={`relative flex flex-1 flex-col ${sidebarOpen ? 'ml-22' : 'ml-72.5'} duration-300 ease-linear`}
-                >
-                    {/* <!-- ===== Header Start ===== --> */}
-                    <Header
-                        sidebarOpen={sidebarOpen}
-                        setSidebarOpen={setSidebarOpen}
-                        title={title}
-                    />
-                    {/* <!-- ===== Header End ===== --> */}
-
-                    {/* <!-- ===== Main Content Start ===== --> */}
-                    <main>
-                        <div className="mx-auto max-w-screen-2xl bg-neutral-50 px-6 pb-15 pt-6">
-                            {children}
-                        </div>
-                    </main>
-                    {/* <!-- ===== Main Content End ===== --> */}
+                        {/* <!-- ===== Main Content Start ===== --> */}
+                        <main>
+                            <div className="mx-auto max-w-screen-2xl bg-neutral-50 px-6 pb-15 pt-6">
+                                {/* <div className="flex gap-2">
+                                    {userState?.gap?.data?.alerts ? (
+                                        userState?.gap?.data?.alerts.map(
+                                            (data: any) => (
+                                                <div className="rounded-[12px] border border-accent-red bg-[#FEF4F4] p-6 text-accent-red">
+                                                    {data}
+                                                </div>
+                                            )
+                                        )
+                                    ) : (
+                                        <div />
+                                    )}
+                                </div> */}
+                                {children}
+                            </div>
+                        </main>
+                        {/* <!-- ===== Main Content End ===== --> */}
+                    </div>
+                    {/* <!-- ===== Content Area End ===== --> */}
                 </div>
-                {/* <!-- ===== Content Area End ===== --> */}
+                {/* <!-- ===== Page Wrapper End ===== --> */}
             </div>
-            {/* <!-- ===== Page Wrapper End ===== --> */}
-        </div>
-        // </AuthWrapper>
+        </AuthWrapper>
     );
 }

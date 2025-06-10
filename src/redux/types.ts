@@ -1,3 +1,5 @@
+import { User } from "@prisma/client";
+
 interface Payload {
     data?: any;
     token?: string;
@@ -22,8 +24,10 @@ export interface Action {
 
 export interface Reducers {
     auth: AuthState;
-    project: ProjectState;
-    vendor: VendorState;
+    register: AuthRegisterState;
+    food: FoodState,
+    user: UserState,
+    suggest: SuggestState;
 }
 
 export interface AuthState {
@@ -37,7 +41,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: any;
+        data: User
     };
     actions?: {
         loading: boolean;
@@ -47,7 +51,29 @@ export interface AuthState {
     };
 }
 
-export interface ProjectState {
+export interface AuthRegisterState {
+    loading: boolean;
+    isRegister: boolean;
+    isLogin: boolean;
+    error: any;
+    token: {
+        accessToken: string;
+        refreshToken: string;
+    };
+    profile: {
+        loading: boolean;
+        error: string;
+        data: User | null;
+    };
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface FoodState {
     list: {
         loading: boolean;
         error: any;
@@ -58,6 +84,11 @@ export interface ProjectState {
         error: any;
         data: any;
     }
+    search: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
     actions?: {
         loading: boolean;
         error: any;
@@ -66,13 +97,37 @@ export interface ProjectState {
     };
 }
 
-export interface VendorState {
+export interface UserState {
     list: {
         loading: boolean;
         error: any;
         data: any;
     }
-    detail: {
+    profile: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    gap: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    favorite: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
+    actions?: {
+        loading: boolean;
+        error: any;
+        type: 'success' | 'failed' | null;
+        message: any;
+    };
+}
+
+export interface SuggestState {
+    list: {
         loading: boolean;
         error: any;
         data: any;

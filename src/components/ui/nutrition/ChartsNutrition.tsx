@@ -16,16 +16,18 @@ const ChartsNutrition = ({ getRange }: Props) => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id, range: getRange }));
+            await dispatch<any>(getUserListLog({ id: id, range: getRange }));
         }
         getLogs();
     }, [dispatch, id, getRange]);

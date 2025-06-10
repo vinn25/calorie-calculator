@@ -4,7 +4,6 @@ import storage from 'redux-persist/lib/storage';
 
 import { authReducers } from '@/redux/reducers/authReducers';
 import type { Action } from '@/redux/types';
-import { projectReducers } from '@/redux/reducers/projectReducers';
 import { authRegisterReducers } from '@/redux/reducers/authRegisterReducers';
 import { foodReducers } from '@/redux/reducers/foodReducers';
 import { userReducers } from '@/redux/reducers/userReducers';
@@ -26,7 +25,6 @@ const appReducer = combineReducers({
     food: foodReducers,
     user: userReducers,
     suggest: suggestReducers,
-    project: projectReducers,
 });
 
 const rootReducer = (state: any, action: Action) => {

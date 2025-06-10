@@ -9,14 +9,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const userId = parseInt(req.query.id as string);
-  const { date, mealType, items, notes } = req.body;
+  const { date, mealType, item, notes } = req.body;
 
-  if (!userId || !date || !mealType || !items || !Array.isArray(items)) {
-    return res.status(400).json({ error: 'Missing required fields' });
+  // Validasi input
+  if (!userId || !date || !mealType || !item || typeof item !== 'object') {
+    return res.status(400).json({ error: 'Missing or invalid required fields' });
+  }
+
+  const { foodId, quantity } = item;
+
+  if (!foodId || !quantity) {
+    return res.status(400).json({ error: 'Item must include foodId and quantity' });
   }
 
   try {
-    // Buat entri MealLog
     const mealLog = await prisma.mealLog.create({
       data: {
         userId,
@@ -24,20 +30,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         mealType,
         notes,
         items: {
-          create: items.map((item: { foodId: number, quantity: number }) => ({
-            foodId: item.foodId,
-            quantity: item.quantity,
-          })),
+          create: {
+            foodId,
+            quantity,
+          },
         },
       },
       include: {
-        items: true,
+        items: {
+          include: {
+            food: true,
+          },
+        },
       },
     });
 
-    res.status(201).json({message: "Success to log food intake"});
+    return res.status(201).json({ message: 'Success to log food intake', mealLog });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to log food intake' });
+    console.error('Error creating meal log:', error);
+    return res.status(500).json({ error: 'Failed to log food intake' });
   }
 }

@@ -1,12 +1,26 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import AuthWrapper from '@/components/AuthWrapper';
 import Header from '@/components/layout/Header';
-import Sidebar from '@/components/layout/Sidebar';
 import { getAuthUserProfile } from '@/redux/actions/auth';
+
+const gaps = [
+    {
+        nutrient: 'Calorie: ',
+    },
+    {
+        nutrient: 'Protein: ',
+    },
+    {
+        nutrient: 'Fat: ',
+    },
+    {
+        nutrient: 'Carbohydrate: ',
+    },
+];
 
 export default function DefaultLayout({
     children,
@@ -48,6 +62,19 @@ export default function DefaultLayout({
                         {/* <!-- ===== Main Content Start ===== --> */}
                         <main>
                             <div className="mx-auto max-w-screen-2xl bg-neutral-50 px-6 pb-15 pt-6">
+                                {/* <div className="flex gap-2">
+                                    {userState?.gap?.data?.alerts ? (
+                                        userState?.gap?.data?.alerts.map(
+                                            (data: any) => (
+                                                <div className="rounded-[12px] border border-accent-red bg-[#FEF4F4] p-6 text-accent-red">
+                                                    {data}
+                                                </div>
+                                            )
+                                        )
+                                    ) : (
+                                        <div />
+                                    )}
+                                </div> */}
                                 {children}
                             </div>
                         </main>

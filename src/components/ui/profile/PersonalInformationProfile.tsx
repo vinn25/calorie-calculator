@@ -1,8 +1,11 @@
 import { Buttons } from '@/components/button';
 import { SelectOptions, TextField } from '@/components/form';
+import { getUserProfile, putUserProfile } from '@/redux/actions/user';
+import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Form, FormikProvider, useFormik } from 'formik';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 const optionGender = [
@@ -12,14 +15,14 @@ const optionGender = [
         value: '',
     },
     {
-        key: 'MALE',
-        text: 'MALE',
-        value: 'MALE',
+        key: 'male',
+        text: 'Male',
+        value: 'male',
     },
     {
-        key: 'FEMALE',
-        text: 'FEMALE',
-        value: 'FEMALE',
+        key: 'female',
+        text: 'Female',
+        value: 'female',
     },
 ];
 
@@ -57,7 +60,17 @@ const optionActivity = [
 ];
 
 const PersonalInformationProfile = () => {
-    // const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
+    const userState = useSelector((state: Reducers) => state.user);
+    const authState = useSelector((state: Reducers) => state.auth);
+    const [isLoading, setIsLoading] = useState(false);
+    const id = authState.profile?.data?.userId;
+    useEffect(() => {
+        async function getProfile() {
+            await dispatch<any>(getUserProfile({ id }));
+        }
+        getProfile();
+    }, [dispatch, id]);
     const ProfileSchema = Yup.object().shape({
         email: Yup.string()
             .email('Incorrect email format')
@@ -71,29 +84,33 @@ const PersonalInformationProfile = () => {
     });
     const formik = useFormik({
         initialValues: {
-            email: '',
+            email: userState?.profile?.data?.email,
             // password: '',
-            height: '',
-            weight: '',
-            age: '',
-            gender: '',
-            activity: '',
+            height: userState?.profile?.data?.height,
+            weight: userState?.profile?.data?.weight,
+            age: userState?.profile?.data?.age,
+            gender: userState?.profile?.data?.gender,
+            activity: userState?.profile?.data?.activity,
         },
         validationSchema: ProfileSchema,
         onSubmit: async values => {
-            // setIsLoading(true);
-            // await dispatch<any>(
-            //     postAuthRegisterUser({
-            //         data: values,
-            //     })
-            // );
-            // setIsLoading(false);
+            setIsLoading(true);
+            await dispatch<any>(
+                putUserProfile({
+                    data: values,
+                    id,
+                    callback: () => {
+                        window.location.href = '/profile';
+                    },
+                })
+            );
+            setIsLoading(false);
             console.log(values);
         },
     });
     const { errors, handleSubmit, touched } = formik;
     return (
-        <div className="container mx-auto max-w-[850px] rounded-md border border-[#cfcfcf] bg-white p-8 shadow-md">
+        <div>
             <div className="text-neutral mb-6 flex items-start justify-between">
                 <span>
                     <div className="w-full text-title-xsm font-semibold">
@@ -119,6 +136,7 @@ const PersonalInformationProfile = () => {
                                 />
                             }
                             fullWidth
+                            defaultValue={userState?.profile?.data?.email}
                             placeholder="Enter your updated email"
                             onChange={formik.handleChange}
                             error={Boolean(touched.email && errors.email)}
@@ -153,7 +171,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={200}
                                 fullWidth
-                                value={formik.values.height}
+                                defaultValue={userState?.profile?.data?.height}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.height && errors.height)}
                                 helperText={touched.height && errors.height}
@@ -175,7 +193,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={200}
                                 fullWidth
-                                value={formik.values.weight}
+                                defaultValue={userState?.profile?.data?.weight}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.weight && errors.weight)}
                                 helperText={touched.weight && errors.weight}
@@ -197,7 +215,7 @@ const PersonalInformationProfile = () => {
                                 min={1}
                                 max={100}
                                 fullWidth
-                                value={formik.values.age}
+                                defaultValue={userState?.profile?.data?.age}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.age && errors.age)}
                                 helperText={touched.age && errors.age}
@@ -209,7 +227,7 @@ const PersonalInformationProfile = () => {
                                 label=""
                                 options={optionGender}
                                 selectSize="md"
-                                defaultValue={formik.values.gender}
+                                defaultValue={userState?.profile?.data?.gender}
                                 onChange={formik.handleChange}
                                 error={Boolean(touched.gender && errors.gender)}
                                 helperText={touched.gender && errors.gender}
@@ -223,7 +241,7 @@ const PersonalInformationProfile = () => {
                             label=""
                             options={optionActivity}
                             selectSize="md"
-                            defaultValue={formik.values.activity}
+                            defaultValue={userState?.profile?.data?.activity}
                             onChange={formik.handleChange}
                             error={Boolean(touched.activity && errors.activity)}
                             helperText={touched.activity && errors.activity}
@@ -245,8 +263,8 @@ const PersonalInformationProfile = () => {
                             size="md"
                             text="Save Changes"
                             fullWidth
-                            // loading={isLoading}
-                            // disabled={isLoading}
+                            loading={isLoading}
+                            disabled={isLoading}
                             color="primary"
                         />
                     </div>

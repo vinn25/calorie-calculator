@@ -74,7 +74,7 @@ interface ApiPaginationResponse<T = Record<string, any>>
     data: T[];
 }
 
-interface ApiErrorResponse extends ApiResponse {}
+interface ApiErrorResponse extends ApiResponse { }
 
 export default class Api {
     private readonly maxRedirects: number = 3;

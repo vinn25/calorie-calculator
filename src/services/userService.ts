@@ -8,17 +8,20 @@ const request = new Api({
 });
 
 // user logs
-export const userListLog = async (id: number) => {
-    const response = await request.get(`api/user/${id}/get-logs`, {});
+export const userListLog = async (id: number, range?: string) => {
+    const response = await request.get(`api/user/${id}/get-logs?range=${range}`, {});
     return response;
 }
 export const userProfile = async (id: number) => {
     const response = await request.get(`api/user/${id}/get-profile`, {});
-    // const response = await request.get(`api/user/5/get-profile`, {});
     return response;
 }
 export const userGap = async (id: number) => {
     const response = await request.get(`api/user/${id}/gap`, {});
+    return response;
+}
+export const userFoodFavorite = async (id: number) => {
+    const response = await request.get(`api/user/${id}/favorites`, {});
     return response;
 }
 export const userCreateFoodLog = async (id: number, data: any) => {
@@ -29,11 +32,11 @@ export const userCreateFoodFavorite = async (id: number, data: any) => {
     const response = await request.post(`api/user/${id}/favorites`, data, {});
     return response;
 }
-export const userProfileUpdate = async (id: number, data: any) => {
-    const response = await request.put(`api/user/${id}/get-profile`, data, {});
+export const userDeleteFoodFavorite = async (id: number, data: any) => {
+    const response = await request.post(`api/user/${id}/delete-favorites`, data, {});
     return response;
 }
-export const userDeleteFoodFavorite = async (id: number) => {
-    const response = await request.delete(`api/user/${id}/favorites`, {});
+export const userProfileUpdate = async (id: number, data: any) => {
+    const response = await request.put(`api/user/${id}/get-profile`, data, {});
     return response;
 }

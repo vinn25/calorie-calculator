@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import ButtonBack from '@/components/button/ButtonBack';
 
 import DropdownUser from './DropdownUser';
-import { ButtonIcon } from '@/components/button';
 import Link from 'next/link';
+import DropdownAlert from '@/components/layout/Header/DropdownAlert';
 
 const Header = ({ title }: { title: string }) => {
     const navGroups = [
@@ -30,11 +30,11 @@ const Header = ({ title }: { title: string }) => {
             label: 'Recommendations',
             route: '/recommendation',
         },
-        {
-            id: 'favourites',
-            label: 'Favourites',
-            route: '/favourites',
-        },
+        // {
+        //     id: 'favourites',
+        //     label: 'Favourites',
+        //     route: '/favourites',
+        // },
     ];
 
     const [isBack, setIsBack] = useState(false);
@@ -42,7 +42,7 @@ const Header = ({ title }: { title: string }) => {
     const pathname = usePathname();
     useEffect(() => {
         const splitPathname: any = pathname?.split('/');
-        if (splitPathname?.length > 2) {
+        if (splitPathname[1] === 'profile') {
             setIsBack(true);
         }
         // Set the active item based on the current pathname
@@ -89,12 +89,13 @@ const Header = ({ title }: { title: string }) => {
                     /> */}
                     {isBack && <ButtonBack />}
                     <h4 className="text-neutral text-text-xl font-semibold text-primary">
-                        <Link href="/home">{title}</Link>
+                        <Link href="/">{title}</Link>
                     </h4>
                 </div>
                 {!isBack && (
                     <div className="2xsm:gap-7 flex items-center gap-3">
                         {/* <!-- User Area --> */}
+                        <DropdownAlert />
                         <DropdownUser />
                         {/* <!-- User Area --> */}
                     </div>

@@ -4,11 +4,31 @@ import prisma from '@/lib/prisma';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const userId = parseInt(req.query.id as string);
 
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: 'Valid userId is required in the URL.' });
+  }
+
+  if (req.method === 'GET') {
+    try {
+      const favorites = await prisma.favoriteFood.findMany({
+        where: { userId },
+        include: {
+          food: true,
+        },
+      });
+
+      return res.status(200).json({ favorites });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Failed to fetch favorites' });
+    }
+  }
+
   if (req.method === 'POST') {
     const { foodId, quantity } = req.body;
 
-    if (!foodId || !quantity) {
-      return res.status(400).json({ message: 'foodId and quantity are required.' });
+    if (!foodId) {
+      return res.status(400).json({ message: 'foodId is required.' });
     }
 
     try {
@@ -16,8 +36,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         where: {
           userId_foodId: { userId, foodId },
         },
-        update: { quantity },
-        create: { userId, foodId, quantity },
+        update: {
+          quantity: quantity ?? 1,
+        },
+        create: {
+          userId,
+          foodId,
+          quantity: quantity ?? 1,
+        },
       });
 
       return res.status(201).json({ message: 'Favorite saved', favorite });

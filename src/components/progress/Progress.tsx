@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 
 interface ProgressBarProps {
@@ -32,6 +33,18 @@ const Progress = ({
             {label && (
                 <div className="mb-1 flex justify-between text-text-sm font-medium text-primary">
                     <span>{label}</span>
+                    {/* <span className="flex items-center gap-1">
+                        <span>{label}</span>
+                        <span>
+                            <Icon
+                                icon="fluent:info-16-regular"
+                                width="16"
+                                height="16"
+                                color="#2196F3"
+                                className="hover:cursor-pointer"
+                            />
+                        </span>
+                    </span> */}
                     {type === 'nutrient' && (
                         <span>
                             {current} / {target}

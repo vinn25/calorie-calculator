@@ -29,7 +29,7 @@ const LayoutProfile = () => {
     }, [dispatch, userState.actions?.error, userState.actions?.type]);
     return (
         <div>
-            <div className="fixed left-1/2 top-5 z-999">
+            <div className="fixed left-[35%] top-5 z-999">
                 {alertMessage && (
                     <Alert
                         type={
@@ -45,7 +45,10 @@ const LayoutProfile = () => {
                     />
                 )}
             </div>
-            <Tabs defaultValue="personal">
+            <div className="container mx-auto max-w-[850px] rounded-md border border-[#cfcfcf] bg-white p-8 shadow-md">
+                <PersonalInformationProfile />
+            </div>
+            {/* <Tabs defaultValue="personal">
                 <TabsList className="mx-auto mb-4 grid max-w-[850px] grid-cols-2 bg-primary-light">
                     <TabsTrigger
                         value="personal"
@@ -68,7 +71,7 @@ const LayoutProfile = () => {
                         Calorie Target
                     </div>
                 </TabsContent>
-            </Tabs>
+            </Tabs> */}
         </div>
     );
 };

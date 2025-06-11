@@ -17,13 +17,15 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const LayoutHome = () => {
     const dispatch = useDispatch();
-    const foodState = useSelector((state: Reducers) => state.food);
+    // const foodState = useSelector((state: Reducers) => state.food);
     const userState = useSelector((state: Reducers) => state.user);
     const suggestState = useSelector((state: Reducers) => state.suggest);
     const authState = useSelector((state: Reducers) => state.auth);
-    const [alertMessage, setAlertMessage] = useState(false);
+    // const [alertMessage, setAlertMessage] = useState(false);
     const [params, setParams] = useState('');
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     useEffect(() => {
         const token = authState?.token?.accessToken;
         if (!token) return;
@@ -39,32 +41,32 @@ const LayoutHome = () => {
             window.location.href = '/login';
         }
     }, [authState.token?.accessToken, dispatch]);
-    useEffect(() => {
-        if (foodState.actions?.type) {
-            setAlertMessage(true);
-            setTimeout(() => {
-                setAlertMessage(false);
-                dispatch<any>({
-                    type: 'food_ACTION_CLEAR',
-                });
-            }, 4000);
-        }
-    }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
+    // useEffect(() => {
+    //     if (foodState.actions?.type) {
+    //         setAlertMessage(true);
+    //         setTimeout(() => {
+    //             setAlertMessage(false);
+    //             dispatch<any>({
+    //                 type: 'food_ACTION_CLEAR',
+    //             });
+    //         }, 4000);
+    //     }
+    // }, [dispatch, foodState.actions?.error, foodState.actions?.type]);
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);
     useEffect(() => {
         async function getSuggestRemaining() {
-            await dispatch<any>(getSuggestions({ id }));
+            await dispatch<any>(getSuggestions({ id: id }));
         }
         getSuggestRemaining();
     }, [dispatch, id]);
     useEffect(() => {
         async function getLogs() {
-            await dispatch<any>(getUserListLog({ id }));
+            await dispatch<any>(getUserListLog({ id: id, range: '' }));
         }
         getLogs();
     }, [dispatch, id]);
@@ -72,22 +74,22 @@ const LayoutHome = () => {
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                {/* <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                foodState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                foodState?.actions?.type === 'success'
-                                    ? `${foodState?.actions?.message?.data}`
-                                    : `${foodState?.actions?.error?.meta?.code} : ${foodState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 gap-4">
                     <Card
                         cardTitle="Daily Summary"
@@ -103,9 +105,6 @@ const LayoutHome = () => {
                             <div className="text-center">
                                 <div>Consumed</div>
                                 <div className="text-text-lg font-semibold text-secondary">
-                                    {/* {userState?.profile?.data?.calorieTarget -
-                                        suggestState?.list?.data?.remaining
-                                            .calories} */}
                                     {userState?.list?.data?.totals?.calories}
                                 </div>
                             </div>
@@ -136,18 +135,6 @@ const LayoutHome = () => {
                     <Card
                         cardTitle="Quick Add Food"
                         subCardTitle="Food Log Entry"
-                        addOns={
-                            <div className="flex items-center gap-2 rounded-md border border-primary px-2 py-[2px]">
-                                <div>
-                                    <Icon
-                                        icon="fluent:clock-16-regular"
-                                        width="16"
-                                        height="16"
-                                    />
-                                </div>
-                                <div className="text-text-md">Today</div>
-                            </div>
-                        }
                     >
                         <SearchFoodLog
                             params={params}
@@ -171,7 +158,7 @@ const LayoutHome = () => {
                         cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
                     >
-                        <ChartsNutrition />
+                        <ChartsNutrition getRange="" />
                     </Card>
                 </div>
                 <div className="mt-5">

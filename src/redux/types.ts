@@ -28,7 +28,6 @@ export interface Reducers {
     food: FoodState,
     user: UserState,
     suggest: SuggestState;
-    project: ProjectState;
 }
 
 export interface AuthState {
@@ -42,7 +41,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: User
+        data: User | null
     };
     actions?: {
         loading: boolean;
@@ -114,6 +113,11 @@ export interface UserState {
         error: any;
         data: any;
     }
+    favorite: {
+        loading: boolean;
+        error: any;
+        data: any;
+    }
     actions?: {
         loading: boolean;
         error: any;
@@ -124,25 +128,6 @@ export interface UserState {
 
 export interface SuggestState {
     list: {
-        loading: boolean;
-        error: any;
-        data: any;
-    }
-    actions?: {
-        loading: boolean;
-        error: any;
-        type: 'success' | 'failed' | null;
-        message: any;
-    };
-}
-
-export interface ProjectState {
-    list: {
-        loading: boolean;
-        error: any;
-        data: any;
-    }
-    detail: {
         loading: boolean;
         error: any;
         data: any;

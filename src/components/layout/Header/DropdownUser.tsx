@@ -16,11 +16,13 @@ const DropdownUser = () => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const [dropdownOpen, setDropdownOpen] = useState(false);
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);
@@ -90,7 +92,7 @@ const DropdownUser = () => {
                     <ul className="border-stroke flex flex-col border-b">
                         <li className="hover:bg-primary-light hover:text-primary-dark">
                             <Link
-                                href="/home/profile"
+                                href="/profile"
                                 className="text-neutral flex items-center gap-4 px-[14px] py-[10px] text-text-xs font-medium duration-300 ease-in-out"
                             >
                                 <Icon

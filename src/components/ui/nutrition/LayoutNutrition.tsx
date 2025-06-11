@@ -2,6 +2,7 @@
 
 import Alert from '@/components/alert/Alert';
 import Card from '@/components/card/Card';
+import { SelectOptions } from '@/components/form';
 import Progress from '@/components/progress/Progress';
 import {
     Tabs,
@@ -12,58 +13,107 @@ import {
 import ChartsNutrition from '@/components/ui/nutrition/ChartsNutrition';
 import MicroNutrition from '@/components/ui/nutrition/MicroNutrition';
 import { Reducers } from '@/redux/types';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+const filterRange = [
+    {
+        key: 'today',
+        text: 'Today',
+        value: '',
+    },
+    {
+        key: 'wekk',
+        text: 'Week',
+        value: 'week',
+    },
+    {
+        key: 'month',
+        text: 'Month',
+        value: 'month',
+    },
+    {
+        key: '3month',
+        text: '3 Month',
+        value: '3months',
+    },
+    {
+        key: '6month',
+        text: '6 Month',
+        value: '6months',
+    },
+    {
+        key: 'year',
+        text: 'Year',
+        value: 'year',
+    },
+    {
+        key: 'all',
+        text: 'All Time',
+        value: 'all',
+    },
+];
+
 const LayoutNutrition = () => {
     const dispatch = useDispatch();
-    const projectState = useSelector((state: Reducers) => state.project);
-    const [searchTerm, setSearchTerm] = useState('');
+    const userState = useSelector((state: Reducers) => state.user);
     const [alertMessage, setAlertMessage] = useState(false);
-    const [params, setParams] = useState({
-        page: 1,
-        perPage: 10,
-        search: '',
-        active: 'true',
-    });
-    const handleSearch = (event: any) => {
-        setSearchTerm(event.target.value);
+    const [getRange, setGetRange] = useState('');
+    const handleChangeRange = (e: any) => {
+        const value = e.target.value;
+        setGetRange(value);
+        // console.log(value);
     };
-    useEffect(() => {
-        if (projectState.actions?.type) {
-            setAlertMessage(true);
-            setTimeout(() => {
-                setAlertMessage(false);
-                dispatch<any>({
-                    type: 'PROJECT_ACTION_CLEAR',
-                });
-            }, 4000);
-        }
-    }, [dispatch, projectState.actions?.error, projectState.actions?.type]);
+    const handleAlertMessage = () => {
+        setAlertMessage(!alertMessage);
+    };
+    // useEffect(() => {
+    //     if (userState.actions?.type) {
+    //         setAlertMessage(true);
+    //         // handleAlertMessage();
+    //         setTimeout(() => {
+    //             setAlertMessage(false);
+    //             dispatch<any>({
+    //                 type: 'FOOD_ACTION_CLEAR',
+    //             });
+    //         }, 4000);
+    //     }
+    // }, [dispatch, userState.actions?.error, userState.actions?.type]);
 
     return (
         <div>
             <div className="container relative mx-auto max-w-full py-6">
-                <div className="fixed left-1/2 top-5 z-999">
+                {/* <div className="fixed left-[35%] top-5 z-999">
                     {alertMessage && (
                         <Alert
                             type={
-                                projectState?.actions?.type === 'success'
+                                userState?.actions?.type === 'success'
                                     ? 'success'
                                     : 'error'
                             }
                             text={
-                                projectState?.actions?.type === 'success'
-                                    ? `${projectState?.actions?.message?.data}`
-                                    : `${projectState?.actions?.error?.meta?.code} : ${projectState?.actions?.error?.meta?.message}`
+                                userState?.actions?.type === 'success'
+                                    ? `${userState?.actions?.message?.data}`
+                                    : `${userState?.actions?.error?.meta?.code} : ${userState?.actions?.error?.meta?.message}`
                             }
                         />
                     )}
-                </div>
+                </div> */}
                 <div className="w-full max-w-full">
                     <Card
                         cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
+                        addOns={
+                            <SelectOptions
+                                name="range"
+                                label=""
+                                options={filterRange}
+                                selectSize="sm"
+                                defaultValue={getRange}
+                                onChange={handleChangeRange}
+                            />
+                        }
                     >
                         <Tabs defaultValue="macro">
                             <TabsList className="mb-4 grid w-full grid-cols-2 bg-primary-light">
@@ -81,10 +131,10 @@ const LayoutNutrition = () => {
                                 </TabsTrigger>
                             </TabsList>
                             <TabsContent value="macro">
-                                <ChartsNutrition />
+                                <ChartsNutrition getRange={getRange} />
                             </TabsContent>
                             <TabsContent value="micro">
-                                <MicroNutrition />
+                                <MicroNutrition getRange={getRange} />
                             </TabsContent>
                         </Tabs>
                     </Card>

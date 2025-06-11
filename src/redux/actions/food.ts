@@ -2,7 +2,6 @@ import { removeBearer } from "@/helpers/removeBearer";
 import { postSharedAuthRefresh } from "@/redux/actions/auth";
 import { Dispatch } from "@/redux/types";
 import { foodDetail, foodList, foodSearch } from "@/services/foodService";
-import { ktpProjectCreate, ktpProjectDelete, ktpProjectDetail, ktpProjectList, ktpProjectUpdate } from "@/services/ktpService";
 
 interface Props {
     data?: any;

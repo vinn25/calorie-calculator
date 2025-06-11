@@ -16,6 +16,11 @@ const initialState: UserState = {
         error: '',
         data: '',
     },
+    favorite: {
+        loading: false,
+        error: '',
+        data: '',
+    },
     actions: {
         loading: false,
         error: '',
@@ -113,6 +118,35 @@ export const userReducers = (
             return {
                 ...state,
                 gap: {
+                    loading: false,
+                    data: '',
+                    error: action.payload,
+                },
+            };
+
+        // favorite
+        case 'USER_FAVORITE_SUCCESS':
+            return {
+                ...state,
+                favorite: {
+                    ...state.favorite,
+                    loading: false,
+                    data: action.payload,
+                },
+            };
+        case 'USER_FAVORITE_LOADING':
+            return {
+                ...state,
+                favorite: {
+                    ...state.favorite,
+                    loading: true,
+                    error: '',
+                },
+            };
+        case 'USER_FAVORITE_ERROR':
+            return {
+                ...state,
+                favorite: {
                     loading: false,
                     data: '',
                     error: action.payload,

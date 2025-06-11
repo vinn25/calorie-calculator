@@ -75,7 +75,7 @@ const Buttons = ({
                     icon={`${icon}`}
                     width={iconSize}
                     height={iconSize}
-                    className="m-auto"
+                    // className=""
                 />
             )}
             {text && !loading && <span>{text}</span>}
@@ -99,7 +99,7 @@ const Buttons = ({
                     icon={`${icon}`}
                     width={iconSize}
                     height={iconSize}
-                    className="m-auto"
+                    // className="m-auto"
                 />
             )}
             {text && !loading && <span>{text}</span>}
@@ -123,7 +123,7 @@ const Buttons = ({
                     icon={`${icon}`}
                     width={iconSize}
                     height={iconSize}
-                    className="m-auto"
+                    // className="m-auto"
                 />
             )}
             {text && !loading && <span>{text}</span>}

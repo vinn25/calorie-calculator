@@ -3,10 +3,9 @@ import { DialogContent } from '@/components/dialog';
 import DialogConfirmation from '@/components/dialog/DialogConfirmation';
 import { SelectOptions, TextField } from '@/components/form';
 import { LoadingDialog, LoadingSpinner } from '@/components/loading';
-import { getFoodList, getfoodSearch } from '@/redux/actions/food';
 import {
-    postUserCreateFoodFavorite,
     postUserCreateFoodLog,
+    postUserDeleteFoodFavorite,
 } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -15,8 +14,51 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
-interface Props {
-    params: any;
+interface FavoriteFoodProps {
+    foodId: number;
+    foodName: string;
+    caloricvalue: number;
+    fat: number;
+    saturatedfats: number;
+    monounsaturatedfats: number;
+    polyunsaturatedfats: number;
+    carbohydrates: number;
+    sugars: number;
+    protein: number;
+    dietaryfiber: number;
+    cholesterol: number;
+    sodium: number;
+    water: number;
+    vitamina: number;
+    vitaminb1: number;
+    vitaminb11: number;
+    vitaminb12: number;
+    vitaminb2: number;
+    vitaminb3: number;
+    vitaminb5: number;
+    vitaminb6: number;
+    vitaminc: number;
+    vitamind: number;
+    vitamine: number;
+    vitamink: number;
+    calcium: number;
+    copper: number;
+    iron: number;
+    magnesium: number;
+    manganese: number;
+    phosphorus: number;
+    potassium: number;
+    selenium: number;
+    zinc: number;
+    nutritiondensity: number;
+}
+
+interface FavoriteProps {
+    id: number;
+    userId: number;
+    foodId: number;
+    quantity: number;
+    food: FavoriteFoodProps; // This is the food object
 }
 
 interface FoodProps {
@@ -61,12 +103,14 @@ const mealTypeFilter = [
     },
 ];
 
-const TableListFood = ({ params }: Props) => {
+const FavoriteListFood = () => {
     const dispatch = useDispatch();
-    const foodState = useSelector((state: Reducers) => state.food);
+    const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
     const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
-    const [openFavorite, setOpenFavorite] = useState(false);
+    const [selectedFavFood, setSelectedFavFood] =
+        useState<FavoriteProps | null>(null);
+    const [openDelete, setOpenFavorite] = useState(false);
     const [portion, setPortion] = useState(0);
     const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
@@ -79,18 +123,21 @@ const TableListFood = ({ params }: Props) => {
     const handleSelectFood = (food: FoodProps) => {
         setSelectedFood(food);
     };
-    const handleOpenFavorite = () => {
-        setOpenFavorite(!openFavorite);
+    const handleSelectFavFood = (favorite: FavoriteProps) => {
+        setSelectedFavFood(favorite);
+    };
+    const handleOpenDelete = () => {
+        setOpenFavorite(!openDelete);
     };
     const calculateAdjustedNutrition = (value: number) => {
         return Math.round(value * portion * 10) / 10;
     };
-    const addFoodFavorite = async () => {
+    const deleteFavorite = async () => {
         const payload = {
-            foodId: selectedFood?.foodId,
+            foodId: selectedFavFood?.foodId,
         };
         await dispatch<any>(
-            postUserCreateFoodFavorite({
+            postUserDeleteFoodFavorite({
                 id: id,
                 data: payload,
                 callback: () => {
@@ -99,18 +146,11 @@ const TableListFood = ({ params }: Props) => {
             })
         );
     };
-    useEffect(() => {
-        async function foodSearch() {
-            await dispatch<any>(getfoodSearch({ query: params }));
-        }
-        foodSearch();
-    }, [dispatch, params]);
     const searchResults: FoodProps[] = Array.isArray(
-        foodState?.search?.data?.data
+        userState?.favorite?.data?.favorites
     )
-        ? foodState?.search?.data?.data
+        ? userState?.favorite?.data?.favorites
         : [];
-
     const FoodLogSchema = Yup.object().shape({
         mealType: Yup.string().required('Meal Type is required'),
         portionSize: Yup.number().required('Portion Size is required'),
@@ -150,21 +190,21 @@ const TableListFood = ({ params }: Props) => {
     const { errors, handleSubmit, touched, setFieldValue } = formik;
     return (
         <div>
-            {selectedFood && (
+            {selectedFavFood && (
                 <DialogConfirmation
-                    isOpen={openFavorite}
+                    isOpen={openDelete}
                     title="Confirmation"
-                    textYes="Add to Favorite"
+                    textYes="Delete"
                     textNo="Cancel"
                     color="primary"
-                    onConfirm={addFoodFavorite}
-                    onDecline={handleOpenFavorite}
-                    onClose={handleOpenFavorite}
-                    onClickOutside={handleOpenFavorite}
+                    onConfirm={deleteFavorite}
+                    onDecline={handleOpenDelete}
+                    onClose={handleOpenDelete}
+                    onClickOutside={handleOpenDelete}
                 >
                     <div className="flex-row text-center">
                         <div className="mt-5 text-text-xxl font-semibold">
-                            {selectedFood.foodName}
+                            {selectedFavFood.food.foodName}
                         </div>
                         <div className="bg-warning-50 mt-5 flex w-full items-center justify-center gap-3 px-[18px] py-[10px] text-left text-text-sm">
                             <Icon
@@ -173,7 +213,7 @@ const TableListFood = ({ params }: Props) => {
                                 height="20"
                                 className="text-text-xl"
                             />
-                            Do you want to add this food to favorites?
+                            Do you want to delete this food from favorites?
                         </div>
                     </div>
                 </DialogConfirmation>
@@ -313,12 +353,12 @@ const TableListFood = ({ params }: Props) => {
             )}
             <div className="max-w-full rounded-lg border border-primary-light bg-white">
                 <div className="max-h-60 overflow-y-auto rounded-md border border-[#cfcfcf]">
-                    {foodState?.search?.loading ? (
+                    {userState?.favorite?.loading ? (
                         <li className="flex cursor-pointer items-center justify-center p-3 hover:bg-muted">
                             <LoadingSpinner />
                         </li>
                     ) : searchResults && searchResults.length > 0 ? (
-                        searchResults.map(data => (
+                        searchResults.map((data: any) => (
                             <li
                                 key={data.foodId}
                                 className="flex cursor-pointer items-center gap-4 p-3 hover:bg-muted"
@@ -326,49 +366,50 @@ const TableListFood = ({ params }: Props) => {
                                 <div
                                     className="flex flex-1 cursor-pointer items-center justify-between"
                                     onClick={() => {
-                                        handleSelectFood(data);
+                                        handleSelectFood(data.food);
                                         handleOpenFoodLogEntry();
                                     }}
                                 >
                                     <div>
                                         <p className="font-medium">
-                                            {data.foodName}
+                                            {data.food.foodName}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-4 text-right">
-                                        <div>
-                                            <p className="font-medium">
-                                                <span className="text-secondary">
-                                                    {data.caloricvalue}
-                                                </span>{' '}
-                                                kcal
-                                            </p>
-                                            <p className="text-xs">
-                                                P:{' '}
-                                                <span className="text-secondary">
-                                                    {data.protein}
-                                                </span>
-                                                g | C:{' '}
-                                                <span className="text-secondary">
-                                                    {data.carbohydrates}
-                                                </span>
-                                                g | F:{' '}
-                                                <span className="text-secondary">
-                                                    {data.fat}
-                                                </span>
-                                                g
-                                            </p>
-                                        </div>
+                                    <div className="text-right">
+                                        <p className="font-medium">
+                                            <span className="text-secondary">
+                                                {data.food.caloricvalue}
+                                            </span>{' '}
+                                            kcal
+                                        </p>
+                                        <p className="text-xs">
+                                            P:{' '}
+                                            <span className="text-secondary">
+                                                {data.food.protein}
+                                            </span>
+                                            g | C:{' '}
+                                            <span className="text-secondary">
+                                                {data.food.carbohydrates}
+                                            </span>
+                                            g | F:{' '}
+                                            <span className="text-secondary">
+                                                {data.food.fat}
+                                            </span>
+                                            g
+                                        </p>
                                     </div>
                                 </div>
                                 <div>
                                     <Icon
-                                        icon="fluent:heart-24-filled"
+                                        icon="fluent:delete-24-filled"
                                         width={24}
                                         height={24}
                                         onClick={() => {
-                                            handleSelectFood(data);
-                                            handleOpenFavorite();
+                                            handleSelectFavFood(data);
+                                            handleOpenDelete();
+                                            console.log(
+                                                selectedFavFood?.foodId
+                                            );
                                         }}
                                         className="text-red hover:text-muted-foreground"
                                     />
@@ -377,7 +418,7 @@ const TableListFood = ({ params }: Props) => {
                         ))
                     ) : (
                         <div className="p-4 text-center text-muted-foreground">
-                            No foods found. Try a different search term.
+                            No favorites found.
                         </div>
                     )}
                 </div>
@@ -386,4 +427,4 @@ const TableListFood = ({ params }: Props) => {
     );
 };
 
-export default TableListFood;
+export default FavoriteListFood;

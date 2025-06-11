@@ -63,7 +63,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return { food, score };
       })
       .sort((a, b) => a.score - b.score)
-      .slice(0, 5);
     res.status(200).json({
       remaining: {
         calories: Math.max(0, Math.round(remaining.calories)),

@@ -6,7 +6,7 @@ import { ReduxProvider } from '@/redux/provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'Calorie Calculator',
+    title: 'NutriTrack',
     description: 'Track your calorie intake',
 };
 

@@ -73,10 +73,10 @@ const LoginLayout = () => {
                     <Image src={LogoImage} alt="Logo" width={180} />
                 </div> */}
                 <div className="mt-5">
-                    <h1 className="text-title-sm font-semibold text-black">
+                    <h1 className="text-title-sm font-semibold text-primary">
                         NutriTrack
                     </h1>
-                    <p className="text-text-lg text-black">
+                    <p className="text-text-lg text-primary">
                         Login into your account
                     </p>
                 </div>

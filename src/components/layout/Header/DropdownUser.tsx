@@ -16,11 +16,13 @@ const DropdownUser = () => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const [dropdownOpen, setDropdownOpen] = useState(false);
     useEffect(() => {
         async function getProfile() {
-            await dispatch<any>(getUserProfile({ id }));
+            await dispatch<any>(getUserProfile({ id: id }));
         }
         getProfile();
     }, [dispatch, id]);

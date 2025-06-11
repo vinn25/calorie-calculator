@@ -3,7 +3,6 @@ import { DialogContent } from '@/components/dialog';
 import DialogConfirmation from '@/components/dialog/DialogConfirmation';
 import { SelectOptions, TextField } from '@/components/form';
 import { LoadingDialog, LoadingSpinner } from '@/components/loading';
-import { getFoodList, getfoodSearch } from '@/redux/actions/food';
 import {
     postUserCreateFoodLog,
     postUserDeleteFoodFavorite,
@@ -115,7 +114,9 @@ const FavoriteListFood = () => {
     const [portion, setPortion] = useState(0);
     const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const handleOpenFoodLogEntry = () => {
         setOpenFoodLogEntry(!openFoodLogEntry);
     };

@@ -27,12 +27,14 @@ const DropdownAlert = () => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const authState = useSelector((state: Reducers) => state.auth);
-    const id = authState.profile?.data?.userId;
+    const id = authState.profile?.data?.userId
+        ? authState.profile?.data?.userId
+        : null;
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notifying, setNotifying] = useState(true);
     useEffect(() => {
         async function getGap() {
-            await dispatch<any>(getUserGap({ id }));
+            await dispatch<any>(getUserGap({ id: id }));
         }
         getGap();
     }, [dispatch, id]);

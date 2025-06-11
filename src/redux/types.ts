@@ -41,7 +41,7 @@ export interface AuthState {
     profile: {
         loading: boolean;
         error: string;
-        data: User
+        data: User | null
     };
     actions?: {
         loading: boolean;

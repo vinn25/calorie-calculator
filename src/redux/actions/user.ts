@@ -5,20 +5,20 @@ import { userCreateFoodFavorite, userCreateFoodLog, userDeleteFoodFavorite, user
 interface Props {
     data?: any;
     params?: Object;
-    id: number;
+    id: number | null;
     range?: string;
     callback?: any;
 }
 
 interface PropsPostData {
     data: any;
-    id: number;
+    id: number | null;
     callback?: any;
 }
 
 interface PropsDetail {
     data?: any;
-    id: number;
+    id: number | null;
     callback?: any;
     params?: any;
 }

@@ -8,7 +8,7 @@ const request = new Api({
 });
 
 // user logs
-export const suggestRemaining = async (id: number) => {
+export const suggestRemaining = async (id: number | null) => {
     const response = await request.get(`api/suggest/remaining?userId=${id}`, {});
     return response;
 }

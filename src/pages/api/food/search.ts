@@ -6,19 +6,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { query } = req.query;
+  const { query, userId } = req.query;
 
   if (!query || typeof query !== 'string') {
     return res.status(400).json({ message: 'Query parameter is required' });
   }
 
   try {
-    // Ambil semua data yang relevan dari database
     const allFoods = await prisma.food.findMany({
       select: {
         foodId: true,
         foodName: true,
-        // category: true,
         caloricvalue: true,
         protein: true,
         fat: true,
@@ -28,20 +26,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         iron: true,
         vitamind: true,
         potassium: true,
+        FavoriteFood: typeof userId === 'string'
+          ? {
+              where: {
+                userId: parseInt(userId),
+              },
+              select: {
+                id: true,
+              },
+            }
+          : false,
       },
     });
 
     const queryLower = query.toLowerCase();
 
-    // Filter data di JavaScript menggunakan lowercase
-    const data = allFoods.filter(item =>
-      item.foodName.toLowerCase().includes(queryLower) 
-    //   ||
-    //   item.category.toLowerCase().includes(queryLower)
+    // Filter berdasarkan nama makanan
+    const filtered = allFoods.filter(item =>
+      item.foodName.toLowerCase().includes(queryLower)
     );
 
+    // Tambahkan properti isFavorite
+    const result = filtered.map(({ FavoriteFood, ...rest }) => ({
+      ...rest,
+      isFavorite: FavoriteFood && Array.isArray(FavoriteFood) && FavoriteFood.length > 0,
+    }));
 
-    res.status(200).json({ data });
+    res.status(200).json({ data: result });
   } catch (error) {
     console.error('Error searching foods:', error);
     res.status(500).json({ message: 'Internal Server Error' });

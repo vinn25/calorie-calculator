@@ -15,7 +15,7 @@ export function calculateMacros({
   activity,
   goal,
 }: MacroInput) {
-  // Hitung BMR (Harris-Benedict)
+  // Hitung BMR (Mifflin-St Jeor)
   let bmr = gender === 'male'
     ? 10 * weight + 6.25 * height - 5 * age + 5
     : 10 * weight + 6.25 * height - 5 * age - 161;

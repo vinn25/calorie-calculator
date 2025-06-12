@@ -16,22 +16,7 @@ export const foodDetail = async (id: string) => {
     const response = await request.get(`api/food/${id}`, {});
     return response;
 }
-export const foodSearch = async (query: string) => {
-    const response = await request.get(`api/food/search?query=${query}`, {});
-    return response;
-}
-
-export const ktpProjectCreate = async (token: string, data: any) => {
-    const response = await request.post('/projects', data, { token });
-    return response;
-}
-
-export const ktpProjectUpdate = async (token: string, id: string, data: any) => {
-    const response = await request.put(`/projects/${id}`, data, { token });
-    return response;
-}
-
-export const ktpProjectDelete = async (token: string, id: string) => {
-    const response = await request.delete(`/projects/${id}`, { token });
+export const foodSearch = async (query: string, id: number | null) => {
+    const response = await request.get(`api/food/search?query=${query}&userId=${id}`, {});
     return response;
 }

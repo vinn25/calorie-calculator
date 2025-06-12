@@ -44,17 +44,7 @@ const DropdownUser = () => {
                         ) : (
                             <Avatar
                                 name={userState?.profile?.data?.email}
-                                // type={
-                                //     userState?.profile?.data?.photo
-                                //         ? 'image'
-                                //         : 'text'
-                                // }
                                 type="text"
-                                // image={
-                                //     userState?.profile?.data?.data?.photo &&
-                                //     userState?.profile?.data?.data?.photo
-                                //         ?.completedUrl
-                                // }
                                 size="sm"
                             />
                         )}

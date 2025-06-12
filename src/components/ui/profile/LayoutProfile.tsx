@@ -301,16 +301,20 @@ const LayoutProfile = () => {
                         Activity Multipliers:
                     </div>
                     <ul className="mb-2 text-text-sm text-muted-foreground">
-                        <li>- Sedentary (little/no exercise): BMR × 1.2 </li>
-                        <li>- Light (exercise 1-3 times/week): BMR × 1.375</li>
-                        <li>
+                        <li className="mb-1">
+                            - Sedentary (little/no exercise): BMR × 1.2
+                        </li>
+                        <li className="mb-1">
+                            - Light (exercise 1-3 times/week): BMR × 1.375
+                        </li>
+                        <li className="mb-1">
                             - Moderate (exercise 3-5 times/week): BMR × 1.55
                         </li>
-                        <li>
+                        <li className="mb-1">
                             - Very Active (hard exercise 6-7 times/week): BMR ×
                             1.725
                         </li>
-                        <li>
+                        <li className="mb-1">
                             - Extra Active (very hard exercise + phyisical job):
                             BMR × 1.9
                         </li>

@@ -284,7 +284,7 @@ const LayoutProfile = () => {
                     </div>
                     <div className="text-text-sm text-muted-foreground">
                         Your TDEE is the total number of calories you burn in a
-                        day, including all activities and exercise.v
+                        day, including all activities and exercise.
                     </div>
                 </div>
                 <div className="mb-5">

@@ -8,6 +8,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
+interface Props {
+    id: number | null;
+}
+
 const optionGender = [
     {
         key: 'selectGender',
@@ -38,9 +42,9 @@ const optionActivity = [
         value: 'sedentary',
     },
     {
-        key: 'lightly',
+        key: 'light',
         text: 'Lightly active (light exercise/sports 1–3 days)',
-        value: 'lightly',
+        value: 'light',
     },
     {
         key: 'moderate',
@@ -48,25 +52,25 @@ const optionActivity = [
         value: 'moderate',
     },
     {
-        key: 'very_active',
+        key: 'active',
         text: 'Very active (hard exercise 6–7 days/week)',
-        value: 'very_active',
+        value: 'active',
     },
     {
-        key: 'extra_active',
+        key: 'veryactive',
         text: 'Extra active (very hard exercise + physical job)',
-        value: 'extra_active',
+        value: 'veryactive',
     },
 ];
 
-const PersonalInformationProfile = () => {
+const PersonalInformationProfile = ({ id }: Props) => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
-    const authState = useSelector((state: Reducers) => state.auth);
+    // const authState = useSelector((state: Reducers) => state.auth);
     const [isLoading, setIsLoading] = useState(false);
-    const id = authState.profile?.data?.userId
-        ? authState.profile?.data?.userId
-        : null;
+    // const id = authState.profile?.data?.userId
+    //     ? authState.profile?.data?.userId
+    //     : null;
     useEffect(() => {
         async function getProfile() {
             await dispatch<any>(getUserProfile({ id: id }));
@@ -113,7 +117,7 @@ const PersonalInformationProfile = () => {
     const { errors, handleSubmit, touched } = formik;
     return (
         <div>
-            <div className="text-neutral mb-6 flex items-start justify-between">
+            {/* <div className="text-neutral mb-6 flex items-start justify-between">
                 <span>
                     <div className="w-full text-title-xsm font-semibold">
                         Personal Information
@@ -122,7 +126,7 @@ const PersonalInformationProfile = () => {
                         Update your personal details and physical measurements.
                     </div>
                 </span>
-            </div>
+            </div> */}
             <FormikProvider value={formik}>
                 <Form noValidate onSubmit={handleSubmit} className="w-full">
                     <div className="mt-5">

@@ -401,7 +401,7 @@ const FavoriteListFood = () => {
                                 </div>
                                 <div>
                                     <Icon
-                                        icon="fluent:delete-24-filled"
+                                        icon="fluent:heart-24-filled"
                                         width={24}
                                         height={24}
                                         onClick={() => {

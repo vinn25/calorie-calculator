@@ -370,7 +370,7 @@ const TableListFood = ({ params }: Props) => {
                                             handleSelectFood(data);
                                             handleOpenFavorite();
                                         }}
-                                        className="text-red hover:text-muted-foreground"
+                                        className="text-muted-foreground hover:text-red"
                                     />
                                 </div>
                             </li>

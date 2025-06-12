@@ -24,6 +24,7 @@ interface PropsDetail {
 interface PropsSearch {
     data?: any;
     query: string;
+    id: number | null;
     callback?: any;
 }
 
@@ -98,14 +99,14 @@ export const getfoodDetail =
             }
         };
 export const getfoodSearch =
-    ({ query, callback }: PropsSearch) =>
+    ({ query, id, callback }: PropsSearch) =>
         async (dispatch: Dispatch, getState: any) => {
             dispatch({
                 type: 'FOOD_SEARCH_LOADING',
             });
             try {
                 const { token } = getState().auth;
-                const response: any = await foodSearch(query);
+                const response: any = await foodSearch(query, id);
                 dispatch({
                     type: 'FOOD_SEARCH_SUCCESS',
                     payload: response,
@@ -119,7 +120,7 @@ export const getfoodSearch =
                         dispatch(
                             postSharedAuthRefresh({
                                 callback: () => {
-                                    dispatch(getfoodSearch({ query, callback }));
+                                    dispatch(getfoodSearch({ query, id, callback }));
                                 },
                             })
                         );

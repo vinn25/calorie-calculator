@@ -111,7 +111,6 @@ const LayoutProfile = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* -- Profile Info -- */}
                 <div className="mx-auto mb-5 grid max-w-[850px] grid-cols-2 gap-6">
                     {/* -- Personal -- */}
@@ -168,13 +167,13 @@ const LayoutProfile = () => {
                                 'sedentary'
                                     ? 'Sedentary (little/no exercise)'
                                     : userState?.profile?.data?.activity ===
-                                        'lightly'
+                                        'light'
                                       ? 'Light (exercise 1-3 times/week)'
                                       : userState?.profile?.data?.activity ===
                                           'moderate'
                                         ? 'Moderate (exercise 3-5 times/week)'
                                         : userState?.profile?.data?.activity ===
-                                            'very_active'
+                                            'active'
                                           ? 'Very Active (hard exercise 6-7 times/week)'
                                           : 'Extra Active (very hard exercise + phyisical job)'}
                             </div>
@@ -190,7 +189,6 @@ const LayoutProfile = () => {
                     </div>
                 </div>
             </div>
-
             {/* -- Profile BMR -- */}
             <div className="container mx-auto mb-5 max-w-[850px] rounded-md border border-[#cfcfcf] bg-white p-8 shadow-md">
                 <div className="mb-5 text-text-md font-semibold">
@@ -330,20 +328,19 @@ const LayoutProfile = () => {
                         ×{' '}
                         {userState?.profile?.data?.activity === 'sedentary'
                             ? '1.2'
-                            : userState?.profile?.data?.activity === 'lightly'
+                            : userState?.profile?.data?.activity === 'light'
                               ? '1.375'
                               : userState?.profile?.data?.activity ===
                                   'moderate'
                                 ? '1.55'
                                 : userState?.profile?.data?.activity ===
-                                    'very_active'
+                                    'active'
                                   ? '1.725'
                                   : '1.9'}{' '}
                         = {userState?.profile?.data?.calorieTarget} kcal
                     </div>
                 </div>
             </div>
-
             {/* -- Profile Calorie Goal -- */}
             {/* <div className="container mx-auto mb-5 max-w-[850px] rounded-md border border-[#cfcfcf] bg-white p-8 shadow-md">
                 <div className="mb-5 text-text-md font-semibold">

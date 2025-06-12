@@ -7,6 +7,7 @@ import { getFoodList, getfoodSearch } from '@/redux/actions/food';
 import {
     postUserCreateFoodFavorite,
     postUserCreateFoodLog,
+    postUserDeleteFoodFavorite,
 } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -31,6 +32,7 @@ interface FoodProps {
     iron: number;
     vitamind: number;
     potassium: number;
+    isFavorite: boolean;
 }
 
 const mealTypeFilter = [
@@ -67,6 +69,7 @@ const TableListFood = ({ params }: Props) => {
     const authState = useSelector((state: Reducers) => state.auth);
     const [selectedFood, setSelectedFood] = useState<FoodProps | null>(null);
     const [openFavorite, setOpenFavorite] = useState(false);
+    const [openDeleteFavorite, setOpenDeleteFavorite] = useState(false);
     const [portion, setPortion] = useState(0);
     const [loading, setLoading] = useState(false);
     const [openFoodLogEntry, setOpenFoodLogEntry] = useState(false);
@@ -81,6 +84,9 @@ const TableListFood = ({ params }: Props) => {
     };
     const handleOpenFavorite = () => {
         setOpenFavorite(!openFavorite);
+    };
+    const handleOpenDeleteFavorite = () => {
+        setOpenDeleteFavorite(!openDeleteFavorite);
     };
     const calculateAdjustedNutrition = (value: number) => {
         return Math.round(value * portion * 10) / 10;
@@ -99,12 +105,26 @@ const TableListFood = ({ params }: Props) => {
             })
         );
     };
+    const deleteFavorite = async () => {
+        const payload = {
+            foodId: selectedFood?.foodId,
+        };
+        await dispatch<any>(
+            postUserDeleteFoodFavorite({
+                id: id,
+                data: payload,
+                callback: () => {
+                    window.location.href = '/foodlog';
+                },
+            })
+        );
+    };
     useEffect(() => {
         async function foodSearch() {
-            await dispatch<any>(getfoodSearch({ query: params }));
+            await dispatch<any>(getfoodSearch({ query: params, id: id }));
         }
         foodSearch();
-    }, [dispatch, params]);
+    }, [dispatch, params, id]);
     const searchResults: FoodProps[] = Array.isArray(
         foodState?.search?.data?.data
     )
@@ -174,6 +194,34 @@ const TableListFood = ({ params }: Props) => {
                                 className="text-text-xl"
                             />
                             Do you want to add this food to favorites?
+                        </div>
+                    </div>
+                </DialogConfirmation>
+            )}
+            {selectedFood && (
+                <DialogConfirmation
+                    isOpen={openDeleteFavorite}
+                    title="Confirmation"
+                    textYes="Delete"
+                    textNo="Cancel"
+                    color="primary"
+                    onConfirm={deleteFavorite}
+                    onDecline={handleOpenDeleteFavorite}
+                    onClose={handleOpenDeleteFavorite}
+                    onClickOutside={handleOpenDeleteFavorite}
+                >
+                    <div className="flex-row text-center">
+                        <div className="mt-5 text-text-xxl font-semibold">
+                            {selectedFood.foodName}
+                        </div>
+                        <div className="bg-warning-50 mt-5 flex w-full items-center justify-center gap-3 px-[18px] py-[10px] text-left text-text-sm">
+                            <Icon
+                                icon="fluent:info-20-regular"
+                                width="20"
+                                height="20"
+                                className="text-text-xl"
+                            />
+                            Do you want to delete this food from favorites?
                         </div>
                     </div>
                 </DialogConfirmation>
@@ -362,16 +410,29 @@ const TableListFood = ({ params }: Props) => {
                                     </div>
                                 </div>
                                 <div>
-                                    <Icon
-                                        icon="fluent:heart-24-filled"
-                                        width={24}
-                                        height={24}
-                                        onClick={() => {
-                                            handleSelectFood(data);
-                                            handleOpenFavorite();
-                                        }}
-                                        className="text-muted-foreground hover:text-red"
-                                    />
+                                    {data.isFavorite === true ? (
+                                        <Icon
+                                            icon="fluent:heart-24-filled"
+                                            width={24}
+                                            height={24}
+                                            onClick={() => {
+                                                handleSelectFood(data);
+                                                handleOpenDeleteFavorite();
+                                            }}
+                                            className="text-red hover:text-muted-foreground"
+                                        />
+                                    ) : (
+                                        <Icon
+                                            icon="fluent:heart-24-filled"
+                                            width={24}
+                                            height={24}
+                                            onClick={() => {
+                                                handleSelectFood(data);
+                                                handleOpenFavorite();
+                                            }}
+                                            className="text-muted-foreground hover:text-red"
+                                        />
+                                    )}
                                 </div>
                             </li>
                         ))

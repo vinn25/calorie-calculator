@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ message: 'User ID is required' });
   }
 
-  let dateFilter: { gte?: Date; lt?: Date } = {};
+  const userId = parseInt(id);
   const now = new Date();
+  let dateFilter: { gte?: Date; lt?: Date } = {};
 
   switch (range) {
     case 'today':
@@ -47,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         lt: now,
       };
       break;
-    case '1year':
+    case 'year':
       dateFilter = {
         gte: new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000),
         lt: now,
@@ -65,79 +66,158 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const logs = await prisma.mealLog.findMany({
       where: {
-        userId: parseInt(id),
+        userId,
         ...(range !== 'all' ? { date: dateFilter } : {}),
       },
       include: {
         items: {
           include: {
-            food: true, // Join ke Food untuk dapatkan data nutrisinya
+            food: true,
           },
         },
       },
+      orderBy: { date: 'asc' },
     });
 
-    const totals = {
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-      vitaminc: 0,
-      calcium: 0,
-      iron: 0,
-      vitamind: 0,
-      potassium: 0,
-    };
+    if (range === 'today') {
+      const foodMap: Record<number, any> = {};
+      let foodsConsumed: any[] = [];
 
-    const foodsConsumed: any[] = [];
+      // Akumulasi total untuk hari ini
+      const totals = {
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+        vitaminc: 0,
+        calcium: 0,
+        iron: 0,
+        vitamind: 0,
+        potassium: 0,
+      };
 
-    logs.forEach((log) => {
-      log.items.forEach((item) => {
-        const { food, quantity } = item;
-        if (!food) return;
+      logs.forEach((log) => {
+        log.items.forEach((item) => {
+          const { food, quantity } = item;
+          if (!food) return;
 
-        const entry = {
-          foodId: food.foodId,
-          name: food.foodName,
-          quantity,
-          calories: (food.caloricvalue || 0) * quantity,
-          fat: (food.fat || 0) * quantity,
-          carbs: (food.carbohydrates || 0) * quantity,
-          protein: (food.protein || 0) * quantity,
-          vitaminc: (food.vitaminc || 0) * quantity,
-          calcium: (food.calcium || 0) * quantity,
-          iron: (food.iron || 0) * quantity,
-          vitamind: (food.vitamind || 0) * quantity,
-          potassium: (food.potassium || 0) * quantity,
-        };
+          const foodId = food.foodId;
 
-        foodsConsumed.push(entry);
+          if (!foodMap[foodId]) {
+            foodMap[foodId] = {
+              foodId,
+              name: food.foodName,
+              quantity: 0,
+              calories: 0,
+              fat: 0,
+              carbs: 0,
+              protein: 0,
+              vitaminc: 0,
+              calcium: 0,
+              iron: 0,
+              vitamind: 0,
+              potassium: 0,
+            };
+          }
 
-        totals.calories += entry.calories;
-        totals.fat += entry.fat;
-        totals.carbs += entry.carbs;
-        totals.protein += entry.protein;
-        totals.vitaminc += entry.vitaminc;
-        totals.calcium += entry.calcium;
-        totals.iron += entry.iron;
-        totals.vitamind += entry.vitamind;
-        totals.potassium += entry.potassium;
+          foodMap[foodId].quantity += quantity;
+          foodMap[foodId].calories += (food.caloricvalue || 0) * quantity;
+          foodMap[foodId].fat += (food.fat || 0) * quantity;
+          foodMap[foodId].carbs += (food.carbohydrates || 0) * quantity;
+          foodMap[foodId].protein += (food.protein || 0) * quantity;
+          foodMap[foodId].vitaminc += (food.vitaminc || 0) * quantity;
+          foodMap[foodId].calcium += (food.calcium || 0) * quantity;
+          foodMap[foodId].iron += (food.iron || 0) * quantity;
+          foodMap[foodId].vitamind += (food.vitamind || 0) * quantity;
+          foodMap[foodId].potassium += (food.potassium || 0) * quantity;
+
+          totals.calories += (food.caloricvalue || 0) * quantity;
+          totals.fat += (food.fat || 0) * quantity;
+          totals.carbs += (food.carbohydrates || 0) * quantity;
+          totals.protein += (food.protein || 0) * quantity;
+          totals.vitaminc += (food.vitaminc || 0) * quantity;
+          totals.calcium += (food.calcium || 0) * quantity;
+          totals.iron += (food.iron || 0) * quantity;
+          totals.vitamind += (food.vitamind || 0) * quantity;
+          totals.potassium += (food.potassium || 0) * quantity;
+        });
       });
-    });
 
-    const roundedTotals = Object.fromEntries(
-      Object.entries(totals).map(([k, v]) => [k, Math.round(v * 100) / 100])
-    );
+      const roundedTotals = Object.fromEntries(
+        Object.entries(totals).map(([k, v]) => [k, Math.round(v * 100) / 100])
+      );
 
-    res.status(200).json({
-      totals: roundedTotals,
-      foods: foodsConsumed,
-    });
+      foodsConsumed = Object.values(foodMap).map((food) =>
+        Object.fromEntries(
+          Object.entries(food).map(([k, v]) => [k, typeof v === 'number' ? Math.round(v * 100) / 100 : v])
+        )
+      );
+
+      return res.status(200).json({ totals: roundedTotals, foods: foodsConsumed });
+    } else {
+      
+      type NutrientTotals = {
+        calories: number;
+        fat: number;
+        carbs: number;
+        protein: number;
+        vitaminc: number;
+        calcium: number;
+        iron: number;
+        vitamind: number;
+        potassium: number;
+      };
+      // Group by tanggal
+      const dailyTotals: Record<string, NutrientTotals> = {};
+      const output: any[] = [];
+
+      const emptyTotals = () => ({
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+        vitaminc: 0,
+        calcium: 0,
+        iron: 0,
+        vitamind: 0,
+        potassium: 0,
+      });
+
+      logs.forEach((log) => {
+        const date = log.date;
+        const dateKey = `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+
+        if (!dailyTotals[dateKey]) {
+          dailyTotals[dateKey] = emptyTotals();
+        }
+
+        log.items.forEach((item) => {
+          const { food, quantity } = item;
+          if (!food) return;
+
+          dailyTotals[dateKey].calories += (food.caloricvalue || 0) * quantity;
+          dailyTotals[dateKey].fat += (food.fat || 0) * quantity;
+          dailyTotals[dateKey].carbs += (food.carbohydrates || 0) * quantity;
+          dailyTotals[dateKey].protein += (food.protein || 0) * quantity;
+          dailyTotals[dateKey].vitaminc += (food.vitaminc || 0) * quantity;
+          dailyTotals[dateKey].calcium += (food.calcium || 0) * quantity;
+          dailyTotals[dateKey].iron += (food.iron || 0) * quantity;
+          dailyTotals[dateKey].vitamind += (food.vitamind || 0) * quantity;
+          dailyTotals[dateKey].potassium += (food.potassium || 0) * quantity;
+        });
+      });
+
+      for (const [date, value] of Object.entries(dailyTotals)) {
+        output.push({
+          date,
+          ...Object.fromEntries(Object.entries(value).map(([k, v]) => [k, Math.round(v * 100) / 100])),
+        });
+      }
+
+      return res.status(200).json({ daily: output });
+    }
   } catch (error) {
     console.error('Failed to fetch logs with foods:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
-
-
-
 }

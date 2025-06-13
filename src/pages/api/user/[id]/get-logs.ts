@@ -80,6 +80,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (range === 'today') {
+      const foodMap: Record<number, any> = {};
+      let foodsConsumed: any[] = [];
+
       // Akumulasi total untuk hari ini
       const totals = {
         calories: 0,
@@ -98,6 +101,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const { food, quantity } = item;
           if (!food) return;
 
+          const foodId = food.foodId;
+
+          if (!foodMap[foodId]) {
+            foodMap[foodId] = {
+              foodId,
+              name: food.foodName,
+              quantity: 0,
+              calories: 0,
+              fat: 0,
+              carbs: 0,
+              protein: 0,
+              vitaminc: 0,
+              calcium: 0,
+              iron: 0,
+              vitamind: 0,
+              potassium: 0,
+            };
+          }
+
+          foodMap[foodId].quantity += quantity;
+          foodMap[foodId].calories += (food.caloricvalue || 0) * quantity;
+          foodMap[foodId].fat += (food.fat || 0) * quantity;
+          foodMap[foodId].carbs += (food.carbohydrates || 0) * quantity;
+          foodMap[foodId].protein += (food.protein || 0) * quantity;
+          foodMap[foodId].vitaminc += (food.vitaminc || 0) * quantity;
+          foodMap[foodId].calcium += (food.calcium || 0) * quantity;
+          foodMap[foodId].iron += (food.iron || 0) * quantity;
+          foodMap[foodId].vitamind += (food.vitamind || 0) * quantity;
+          foodMap[foodId].potassium += (food.potassium || 0) * quantity;
+
           totals.calories += (food.caloricvalue || 0) * quantity;
           totals.fat += (food.fat || 0) * quantity;
           totals.carbs += (food.carbohydrates || 0) * quantity;
@@ -114,7 +147,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         Object.entries(totals).map(([k, v]) => [k, Math.round(v * 100) / 100])
       );
 
-      return res.status(200).json({ totals: roundedTotals });
+      foodsConsumed = Object.values(foodMap).map((food) =>
+        Object.fromEntries(
+          Object.entries(food).map(([k, v]) => [k, typeof v === 'number' ? Math.round(v * 100) / 100 : v])
+        )
+      );
+
+      return res.status(200).json({ totals: roundedTotals, foods: foodsConsumed });
     } else {
       
       type NutrientTotals = {

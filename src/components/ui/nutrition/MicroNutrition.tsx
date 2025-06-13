@@ -5,6 +5,9 @@ import { getUserListLog, getUserProfile } from '@/redux/actions/user';
 import { Reducers } from '@/redux/types';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ChartAggregateNutrition from './AggregateMacroNutrition';
+import AggregateMicroNutrition from './AggregateMicroNutrition';
+import TodayMicroNutrition from './TodayMicroNutrition';
 
 interface Props {
     getRange: string;
@@ -58,46 +61,12 @@ const MicroNutrition = ({ getRange }: Props) => {
                         label="Carbohydrates"
                         fullWidth
                     /> */}
-                    <Progress
-                        current={userState?.list?.data?.totals?.vitaminc}
-                        target={userState?.profile?.data?.vitaminCTarget}
-                        type="nutrient"
-                        style="secondary"
-                        label="Vitamin C"
-                        fullWidth
-                    />
-                    <Progress
-                        current={userState?.list?.data?.totals?.calcium}
-                        target={userState?.profile?.data?.calciumTarget}
-                        type="nutrient"
-                        style="secondary"
-                        label="Calcium"
-                        fullWidth
-                    />
-                    <Progress
-                        current={userState?.list?.data?.totals?.iron}
-                        target={userState?.profile?.data?.ironTarget}
-                        type="nutrient"
-                        style="secondary"
-                        label="Iron"
-                        fullWidth
-                    />
-                    <Progress
-                        current={userState?.list?.data?.totals?.vitamind}
-                        target={userState?.profile?.data?.vitaminDTarget}
-                        type="nutrient"
-                        style="secondary"
-                        label="Vitamin D"
-                        fullWidth
-                    />
-                    <Progress
-                        current={userState?.list?.data?.totals?.potassium}
-                        target={userState?.profile?.data?.potassiumTarget}
-                        type="nutrient"
-                        style="secondary"
-                        label="Potassium"
-                        fullWidth
-                    />
+                    {getRange === 'today' ? (
+                        <TodayMicroNutrition user={userState} />
+                    ) : (
+                        <AggregateMicroNutrition user={userState} />
+                    )}
+
                 </div>
             </div>
         </div>

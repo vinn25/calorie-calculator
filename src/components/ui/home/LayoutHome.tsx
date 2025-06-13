@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const LayoutHome = () => {
     const dispatch = useDispatch();
     // const foodState = useSelector((state: Reducers) => state.food);
+    const [getRange, setGetRange] = useState<string>('today');
     const userState = useSelector((state: Reducers) => state.user);
     const suggestState = useSelector((state: Reducers) => state.suggest);
     const authState = useSelector((state: Reducers) => state.auth);
@@ -158,7 +159,7 @@ const LayoutHome = () => {
                         cardTitle="Nutrition Analytics"
                         subCardTitle="Nutrition Analytics"
                     >
-                        <ChartsNutrition getRange="" />
+                        <ChartsNutrition getRange={getRange} />
                     </Card>
                 </div>
                 <div className="mt-5">

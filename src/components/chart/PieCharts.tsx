@@ -21,6 +21,7 @@ const PieCharts = ({ carbs, protein, fat }: Props) => {
         { name: 'Proteins', value: protein },
         { name: 'Fats', value: fat },
     ];
+
     return (
         <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -32,7 +33,7 @@ const PieCharts = ({ carbs, protein, fat }: Props) => {
                     cy="50%"
                     outerRadius={100}
                     fill="#8884d8"
-                    label
+                    label={({ name, value }) => `${name}: ${value} g`}
                 >
                     {macroData.map((entry, index) => (
                         <Cell
@@ -41,7 +42,9 @@ const PieCharts = ({ carbs, protein, fat }: Props) => {
                         />
                     ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip
+                    formatter={(value: number) => `${value} g`}
+                />
                 <Legend />
             </PieChart>
         </ResponsiveContainer>

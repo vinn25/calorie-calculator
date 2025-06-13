@@ -21,7 +21,7 @@ const filterRange = [
     {
         key: 'today',
         text: 'Today',
-        value: '',
+        value: 'today',
     },
     {
         key: 'wekk',
@@ -59,11 +59,11 @@ const LayoutNutrition = () => {
     const dispatch = useDispatch();
     const userState = useSelector((state: Reducers) => state.user);
     const [alertMessage, setAlertMessage] = useState(false);
-    const [getRange, setGetRange] = useState('');
+    const [getRange, setGetRange] = useState<string>('today');
     const handleChangeRange = (e: any) => {
         const value = e.target.value;
         setGetRange(value);
-        // console.log(value);
+        console.log(value);
     };
     const handleAlertMessage = () => {
         setAlertMessage(!alertMessage);

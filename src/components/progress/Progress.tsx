@@ -9,6 +9,7 @@ interface ProgressBarProps {
     label?: string;
     showPercentage?: boolean;
     fullWidth?: boolean;
+    unit?: string
 }
 
 const Progress = ({
@@ -19,6 +20,7 @@ const Progress = ({
     label,
     showPercentage,
     fullWidth,
+    unit = 'g'
 }: ProgressBarProps) => {
     const value = target > 0 ? (current / target) * 100 : 0;
     const color =
@@ -47,7 +49,7 @@ const Progress = ({
                     </span> */}
                     {type === 'nutrient' && (
                         <span>
-                            {current} / {target}
+                            {current} {unit} / {target} {unit}
                         </span>
                     )}
                 </div>

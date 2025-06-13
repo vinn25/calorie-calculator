@@ -46,9 +46,9 @@ const selectActivity = [
         value: 'sedentary',
     },
     {
-        key: 'lightly',
+        key: 'light',
         text: 'Lightly active (light exercise/sports 1–3 days)',
-        value: 'lightly',
+        value: 'light',
     },
     {
         key: 'moderate',
@@ -56,14 +56,14 @@ const selectActivity = [
         value: 'moderate',
     },
     {
-        key: 'very_active',
+        key: 'active',
         text: 'Very active (hard exercise 6–7 days/week)',
-        value: 'very_active',
+        value: 'active',
     },
     {
-        key: 'extra_active',
+        key: 'veryactive',
         text: 'Extra active (very hard exercise + physical job)',
-        value: 'extra_active',
+        value: 'veryactive',
     },
 ];
 
